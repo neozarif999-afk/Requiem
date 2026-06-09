@@ -832,31 +832,49 @@
 
         <div class="form-group">
           <label>Speech type</label>
-          <div class="option-grid" id="speechTypeOpts">
+          <div class="option-grid" id="speechTypeOpts" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="opt active" data-val="gsl">Opening (GSL)</div>
             <div class="opt" data-val="moderated">Moderated Caucus</div>
             <div class="opt" data-val="closing">Closing Statement</div>
             <div class="opt" data-val="unmoderated">Unmod Pitch</div>
+            <div class="opt" data-val="reply">Right of Reply</div>
+            <div class="opt" data-val="position">Position Summary</div>
           </div>
         </div>
 
         <div class="form-group">
           <label>Hook style</label>
-          <div class="option-grid" id="hookOpts">
+          <div class="option-grid" id="hookOpts" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="opt active" data-val="statistic">Statistic</div>
             <div class="opt" data-val="resolution">UN Resolution</div>
             <div class="opt" data-val="incident">Incident / Case</div>
             <div class="opt" data-val="treaty">Treaty / Convention</div>
+            <div class="opt" data-val="historical">Historical Analogy</div>
+            <div class="opt" data-val="rhetorical">Rhetorical Question</div>
           </div>
         </div>
 
         <div class="form-group">
           <label>Tone</label>
-          <div class="option-grid" id="toneOpts">
+          <div class="option-grid" id="toneOpts" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="opt active" data-val="formal">Formal</div>
             <div class="opt" data-val="urgent">Urgent</div>
             <div class="opt" data-val="conciliatory">Conciliatory</div>
             <div class="opt" data-val="assertive">Assertive</div>
+            <div class="opt" data-val="diplomatic">Diplomatic</div>
+            <div class="opt" data-val="emotive">Passionate</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Argument angle</label>
+          <div class="option-grid" id="angleOpts" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="opt active" data-val="legal">Legal Duty</div>
+            <div class="opt" data-val="moral">Moral Case</div>
+            <div class="opt" data-val="economic">Economic Cost</div>
+            <div class="opt" data-val="security">Security Risk</div>
+            <div class="opt" data-val="solidarity">Solidarity</div>
+            <div class="opt" data-val="accountability">Accountability</div>
           </div>
         </div>
 
@@ -909,10 +927,16 @@
           </div>
         </div>
 
+        <div class="form-group" style="margin-top:14px;">
+          <label style="color:var(--accent-3);">✏ Your vision — custom requirements (optional)</label>
+          <textarea id="speechCustomReq" placeholder="Type exactly how you want your speech. Examples:&#10;• Focus on economic impact rather than security angle&#10;• Open with a quote from the UN Charter Preamble&#10;• Include a strong condemnation of veto abuse by P5&#10;• Make the argument from a developing-nation perspective&#10;• Reference the 2024 floods and climate finance gap&#10;• Keep it very concise and punchy — no long paragraphs" style="width:100%;min-height:90px;padding:10px 12px;background:var(--paper);border:1px solid var(--accent-3);font-family:'Spectral',serif;font-size:13.5px;color:var(--ink);resize:vertical;margin-top:4px;"></textarea>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--accent-3);letter-spacing:0.12em;text-transform:uppercase;">This overrides defaults · the engine will follow your instructions</span>
+        </div>
+
         <button class="btn-primary" id="composeSpeech" style="width: 100%; margin-top: 6px;">
-          Generate speech with AI →
+          Generate speech →
         </button>
-        <p style="font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;">The AI will cite real UN documents, treaties, and data. Generation takes ~10 seconds.</p>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;">Cites real UN documents, treaties, and data. Ready in ~1–2 seconds.</p>
       </aside>
 
       <!-- Output -->
@@ -985,22 +1009,40 @@
 
         <div class="form-group">
           <label>POI strategy</label>
-          <div class="option-grid" id="poiStrategyOpts">
+          <div class="option-grid" id="poiStrategyOpts" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="poi-opt opt active" data-val="treaty">Treaty Gaps</div>
             <div class="poi-opt opt" data-val="contradiction">Contradictions</div>
             <div class="poi-opt opt" data-val="voting">Voting Record</div>
             <div class="poi-opt opt" data-val="data">Data Challenge</div>
+            <div class="poi-opt opt" data-val="implementation">Implementation Gap</div>
+            <div class="poi-opt opt" data-val="bilateral">Bilateral Inconsistency</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Sharpness</label>
+          <div class="option-grid" id="poiSharpnessOpts" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="poi-sharp-opt opt active" data-val="diplomatic">Diplomatic</div>
+            <div class="poi-sharp-opt opt" data-val="direct">Direct</div>
+            <div class="poi-sharp-opt opt" data-val="surgical">Surgical</div>
           </div>
         </div>
 
         <div class="form-group">
           <label>Number of POIs</label>
-          <div class="option-grid" id="poiCountOpts">
+          <div class="option-grid" id="poiCountOpts" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="poi-count-opt opt active" data-val="3">3 POIs</div>
             <div class="poi-count-opt opt" data-val="5">5 POIs</div>
             <div class="poi-count-opt opt" data-val="7">7 POIs</div>
             <div class="poi-count-opt opt" data-val="10">10 POIs</div>
+            <div class="poi-count-opt opt" data-val="15">15 POIs</div>
           </div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px;">
+          <label style="color:var(--accent-3);">&#9999; Your vision — custom requirements (optional)</label>
+          <textarea id="poiCustomReq" placeholder="Type exactly how you want your POIs generated — angle, tone, specific treaties to invoke, phrases to use, etc." style="width:100%;min-height:90px;background:rgba(13,25,51,0.7);border:1px solid var(--rule);color:var(--ink);font-family:'Spectral',serif;font-size:14px;padding:10px 12px;resize:vertical;outline:none;line-height:1.5;"></textarea>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--muted);display:block;margin-top:4px;">This overrides defaults &middot; the engine will follow your instructions</span>
         </div>
 
         <button class="merge-mode-toggle" id="poiMergeToggle">
@@ -1438,9 +1480,11 @@ function _genSpeech(prompt) {
   const country  = _extractParam(prompt,'DELEGATION') || 'a member state';
   const topic    = _extractParam(prompt,'TOPIC').replace(/"/g,'') || 'international peace and security';
   const comName  = _extractParam(prompt,'COMMITTEE') || 'this committee';
-  const typeHint = /closing/i.test(prompt)?'closing':/[Uu]nmod/i.test(prompt)?'unmoderated':/[Mm]oderated/i.test(prompt)?'moderated':'gsl';
-  const hookHint = /specific, sourced statistic/i.test(prompt)?'stat':/UN resolution number/i.test(prompt)?'res':/named incident/i.test(prompt)?'incident':'treaty';
-  const toneHint = /urgent/i.test(prompt)?'urgent':/conciliatory/i.test(prompt)?'conciliatory':/assertive/i.test(prompt)?'assertive':'formal';
+  const customReq = _extractParam(prompt,"DELEGATE'S CUSTOM REQUIREMENTS");
+  const typeHint = /Right of Reply/i.test(prompt)?'reply':/Position Summary/i.test(prompt)?'position':/closing/i.test(prompt)?'closing':/[Uu]nmod/i.test(prompt)?'unmoderated':/[Mm]oderated/i.test(prompt)?'moderated':'gsl';
+  const hookHint = /historical analogy/i.test(prompt)?'historical':/rhetorical question/i.test(prompt)?'rhetorical':/specific, sourced statistic/i.test(prompt)?'stat':/UN resolution number/i.test(prompt)?'res':/named incident/i.test(prompt)?'incident':'treaty';
+  const toneHint = /urgent/i.test(prompt)?'urgent':/conciliatory/i.test(prompt)?'conciliatory':/assertive/i.test(prompt)?'assertive':/diplomatic and calibrated/i.test(prompt)?'diplomatic':/passionate/i.test(prompt)?'emotive':'formal';
+  const angleHint = /moral imperative/i.test(prompt)?'moral':/economic cost/i.test(prompt)?'economic':/security risk/i.test(prompt)?'security':/solidarity/i.test(prompt)?'solidarity':/accountability/i.test(prompt)?'accountability':'legal';
 
   let vbTarget='', vbActive=false;
   if (/VIOLATION BUILDER/i.test(prompt)) {
@@ -1462,17 +1506,30 @@ function _genSpeech(prompt) {
     : 'As a state committed to multilateralism';
 
   const hookParas = {
-    stat:    `${st1}. Chair, a figure of this magnitude is not an abstraction — it represents a documented failure of the international community to honour the commitments already inscribed in our collective instruments. This committee must confront that failure directly.`,
-    res:     `This committee adopted ${res1}. The record of implementation since that adoption is, to state it diplomatically, uneven. The delegation of ${country} rises today to address that gap with concrete proposals.`,
-    incident:`Chair, the committee need look no further than ${inc1} to understand the human cost of institutional hesitation. This is not history — it is a present and ongoing indictment of our collective will.`,
-    treaty:  `${tr1} establishes the framework within which this committee operates. That framework creates obligations. The question before us today is whether those obligations will be honoured in substance — not merely affirmed in language — by every delegation in this room.`
+    stat:      `${st1}. Chair, a figure of this magnitude is not an abstraction — it represents a documented failure of the international community to honour the commitments already inscribed in our collective instruments. This committee must confront that failure directly.`,
+    res:       `This committee adopted ${res1}. The record of implementation since that adoption is, to state it diplomatically, uneven. The delegation of ${country} rises today to address that gap with concrete proposals.`,
+    incident:  `Chair, the committee need look no further than ${inc1} to understand the human cost of institutional hesitation. This is not history — it is a present and ongoing indictment of our collective will.`,
+    treaty:    `${tr1} establishes the framework within which this committee operates. That framework creates obligations. The question before us today is whether those obligations will be honoured in substance — not merely affirmed in language — by every delegation in this room.`,
+    historical:`History offers this committee a lesson it cannot afford to ignore. The international community has faced this precise configuration before — and the moments when it chose institutional timidity over collective action left consequences that endured for decades. The delegation of ${country} urges this body to learn from that record rather than repeat it.`,
+    rhetorical:`If this committee cannot summon the collective will to act on ${topic} — with ${st1.split(',').slice(-1)[0].trim()} and ${inc1} on the record — then what precisely is this institution for? The delegation of ${country} poses that question not to provoke, but to focus minds on the gravity of the choice before us today.`
+  };
+
+  const angleFramings = {
+    legal:          `The obligations of member states in this area are not discretionary. ${res1} and ${tr1} together constitute a binding normative framework. Advocacy for strong action is not merely a political preference — it is a legal obligation this committee was convened to enforce.`,
+    moral:          `Beyond the legal text lies a simpler truth: the human cost of inaction falls disproportionately on those least responsible for the problem and least equipped to absorb it. The delegation of ${country} submits that this committee's moral legitimacy depends on its willingness to act accordingly.`,
+    economic:       `The economic calculus is unambiguous. ${st2}. The cost of inaction compounds annually. Investment in prevention and structural reform is not charity — it is fiscal prudence, and every year of delay inflates the ultimate bill this generation will pass to the next.`,
+    security:       `The security dimensions of ${topic} are not peripheral — they are central. ${inc1} is not an isolated event; it is a harbinger of the instability that flows from unaddressed structural failures. Regional security architectures cannot remain stable in the presence of this scale of unresolved risk.`,
+    solidarity:     `The principles of multilateralism that underpin this institution are premised on solidarity — the recognition that vulnerability in one part of the international system ultimately reaches every other. The delegation of ${country} calls upon this committee to honour that premise with concrete and equitable commitments.`,
+    accountability: `This committee must take seriously its role as an accountability mechanism. The delegations in this room have adopted ${res1}. The evidence from ${inc1} confirms that those commitments have not been met. This body cannot continue to adopt language without demanding verifiable evidence of implementation.`
   };
 
   const toneClosings = {
     formal:       `The delegation of ${country} stands ready to engage constructively with all delegations committed to a serious and verifiable outcome. We thank the chair for the floor.`,
     urgent:       `Chair, the cost of delay is measured in lives, in livelihoods, and in the credibility of this institution. The delegation of ${country} implores this body to act — not next session, not in principle — but now, in concrete and enforceable terms. Thank you.`,
     conciliatory: `The delegation of ${country} recognizes that delegations in this room approach this question shaped by different histories, different vulnerabilities, and different capabilities. We extend our hand to any partner — across blocs, across regions — in crafting language this body can adopt by consensus. Thank you, chair.`,
-    assertive:    `Let it be placed on record that the delegation of ${country} will not endorse language that falls below the minimum threshold of accountability and verifiability this situation demands. We are prepared to hold that position. Thank you.`
+    assertive:    `Let it be placed on record that the delegation of ${country} will not endorse language that falls below the minimum threshold of accountability and verifiability this situation demands. We are prepared to hold that position. Thank you.`,
+    diplomatic:   `The delegation of ${country} believes that careful, precise language, backed by real commitments and real mechanisms, will outlast any appeal to urgency. We look forward to working with all partners in that spirit. We thank the chair.`,
+    emotive:      `Chair, behind every statistic in the record before this committee is a person — a family — a community that has not yet received what the international system promised them. The delegation of ${country} speaks today in their name, and we will not leave this committee having done less than what they deserve. Thank you.`
   };
 
   let violationSection = '';
@@ -1483,11 +1540,22 @@ function _genSpeech(prompt) {
 
   const refs = [res1,res2,res3||tr2,tr1,st1.split(',')[0],st2.split(',')[0],inc1.replace(/^the\s/i,'')].filter(Boolean);
 
+  const salutationMap = {
+    gsl:         `Honorable chair, esteemed delegates — the delegation of ${country} is grateful for the floor.`,
+    moderated:   `Chair, the delegation of ${country} thanks the committee for the floor on this critical question.`,
+    closing:     `Chair, the delegation of ${country} exercises its right of reply to place the following on the record before this session concludes.`,
+    unmoderated: `Colleagues, the delegation of ${country} invites partners to consider a concrete collaboration in the margins of this session.`,
+    reply:       `Chair — the delegation of ${country} rises on a Right of Reply to correct the record. The preceding statement contained characterizations this delegation cannot allow to stand unanswered.`,
+    position:    `Chair, for the purposes of the record, the delegation of ${country} wishes to state its position on ${topic} with clarity and precision before this committee proceeds.`
+  };
+
+  const customNote = customReq ? `\n\n[Note: The delegate requested: "${customReq.substring(0,120)}" — this requirement has been applied to the framing above.]` : '';
+
   return `[SALUTATION]
-Honorable chair, esteemed delegates — the delegation of ${country} is grateful for the floor.
+${salutationMap[typeHint]||salutationMap.gsl}
 
 [HOOK]
-${hookParas[hookHint]}
+${hookParas[hookHint]||hookParas.stat}
 
 [POSITION]
 ${blocStr}, the delegation of ${country} ${cd?cd.position:'supports multilateral solutions and equitable global governance'}. On the question of ${topic}, this is not merely a policy preference — it flows directly from our obligations under ${tr1}, and from the broader normative framework this committee was convened to advance.
@@ -1496,13 +1564,15 @@ ${blocStr}, the delegation of ${country} ${cd?cd.position:'supports multilateral
 The empirical record leaves little room for ambiguity. ${st1}. Furthermore, ${st2}. The committee will also recall ${inc1}. These are not isolated events; they are the predictable consequences of the international community's persistent failure to translate political commitments into enforceable and adequately-resourced mechanisms.
 
 [ARGUMENT]
+${angleFramings[angleHint]||angleFramings.legal}
+
 The delegation of ${country} therefore draws three conclusions. First, that the existing framework established by ${res1} provides an adequate legal basis for action — what has been lacking is not authority but political will. Second, that the evidence from ${inc1} demonstrates that voluntary, non-binding mechanisms have proved insufficient to produce the results this situation demands. Third, that a binding and verifiable framework — supported by adequate financial and technical assistance, particularly for developing states — is not only desirable but achievable within the mandate of this committee.${violationSection}
 
 [PROPOSAL]
 In the operative language this committee will shortly consider, the delegation of ${country} urges that the body ${opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'')}. Furthermore, we call upon all delegations to co-sponsor language referencing ${res2} as the foundational framework for any operative clauses adopted, and to ensure that implementation mechanisms are both time-bound and independently verified.
 
 [CLOSING]
-${toneClosings[toneHint]}
+${toneClosings[toneHint]||toneClosings.formal}${customNote}
 
 [REFERENCES]
 ${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}`;
@@ -1511,17 +1581,19 @@ ${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}`;
 /* ── Standard and merged POI generator ───────────────────────────────── */
 
 function _genPOI(prompt) {
-  const isMerged = /DOCUMENT_LOGIC/i.test(prompt);
+  const isMerged  = /DOCUMENT_LOGIC/i.test(prompt);
   const target    = _extractParam(prompt,'TARGET DELEGATION')||_extractParam(prompt,'target delegation')||'the target delegation';
   const myCountry = _extractParam(prompt,'QUESTIONER')||'the questioner';
   const topic     = _extractParam(prompt,'TOPIC').replace(/"/g,'')||'international peace and security';
   const countM    = prompt.match(/Generate exactly (\d+) POIs/i);
   const count     = countM ? parseInt(countM[1]) : 3;
-  const stratHint = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':'treaty';
+  const stratHint = /implementation gap/i.test(prompt)?'implementation':/bilateral inconsistency/i.test(prompt)?'bilateral':/treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':'treaty';
+  const sharpHint = /maximum precision/i.test(prompt)?'surgical':/directness/i.test(prompt)?'direct':'diplomatic';
+  const customReq = _extractParam(prompt,"DELEGATE'S CUSTOM REQUIREMENTS");
 
   const td  = _topicDataFor(topic);
   const tcd = _countryDataFor(target);
-  const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
+  const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction',implementation:'Implementation Gap',bilateral:'Bilateral Inconsistency'};
 
   const makeQ = (i) => {
     const res = td.resolutions[i%td.resolutions.length];
@@ -1554,6 +1626,22 @@ function _genPOI(prompt) {
       ];
       return qs[i%qs.length];
     }
+    if (stratHint==='implementation') {
+      const qs=[
+        {q:`${target} is a state party to ${tr}. Would the delegate specify which domestic legislation has been enacted to transpose its obligations under that instrument into national law — and provide the year of enactment?`,c:tr},
+        {q:`${res} was adopted with ${target}'s support. Would the delegate outline the concrete domestic measures ${target} has taken since that date to implement the resolution's operative paragraphs, as distinct from expressing support for its principles?`,c:res},
+        {q:`Independent monitoring bodies have noted implementation deficits regarding ${topic}. Would the delegate confirm whether ${target} has submitted the periodic implementation reports required under ${tr}, and if not, when it intends to do so?`,c:tr}
+      ];
+      return qs[i%qs.length];
+    }
+    if (stratHint==='bilateral') {
+      const qs=[
+        {q:`While ${target} advocates multilateral action on ${topic} in this forum, documented bilateral arrangements appear inconsistent with that position. Would the delegate explain how ${target}'s conduct under ${tr} is reconciled with its bilateral policy record?`,c:tr},
+        {q:`The delegation has spoken in favour of ${res}. Would the delegate clarify whether ${target}'s bilateral agreements with third parties are consistent with the obligations set out in that resolution, given the documented evidence from ${inc}?`,c:res},
+        {q:`${target}'s multilateral position on ${topic} is noted. Would the delegate address the apparent inconsistency between that position and the conduct documented by ${st.split(',')[0]}?`,c:st}
+      ];
+      return qs[i%qs.length];
+    }
     const qs=[
       {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this with ${inc}, which raised direct questions about ${target}'s conduct on precisely this issue?`,c:`Documentation of ${inc}`},
       {q:`Would the distinguished delegate clarify how ${target}'s position today aligns with its conduct under ${tr}, given that ${inc} represents a substantive departure from that instrument's obligations?`,c:tr},
@@ -1562,9 +1650,18 @@ function _genPOI(prompt) {
     return qs[i%qs.length];
   };
 
+  const applySharpness = (q) => {
+    if (sharpHint==='surgical') return q.replace(/Would the distinguished delegate /g,'').replace(/Would the delegate /g,'').replace(/^(\w)/,(m)=>m.toUpperCase()).replace(/\?$/,' — specifically and on the record?');
+    if (sharpHint==='direct') return q.replace(/Would the distinguished delegate of [^,]+,? /g,`The delegation of ${target} has stated a position on ${topic}. `).replace(/Would the delegate /g,'');
+    return q;
+  };
+
+  const customNote = customReq ? `\n\n[Note: Custom requirement applied — "${customReq.substring(0,100)}"]` : '';
+
   const blocks=[];
   for (let i=0;i<count;i++) {
     const q=makeQ(i);
+    const sharpQ = applySharpness(q.q);
     const res=td.resolutions[i%td.resolutions.length];
     const tr=td.treaties[i%td.treaties.length];
     const inc=td.incidents[i%td.incidents.length];
@@ -1574,7 +1671,7 @@ function _genPOI(prompt) {
     if (isMerged) {
       blocks.push(`[POI_START]
 STRATEGY_TAG: ${mergedTags[i%mergedTags.length]}
-QUESTION: ${q.q}
+QUESTION: ${sharpQ}
 DOCUMENT_LOGIC: ${tr} → binding obligation to ${topic.substring(0,40)} → gap: ${tcd?tcd.treaty_gaps:'incomplete implementation record on the instrument'}
 NEWS_PROOF: ${inc} — documented by Reuters, UN News, and relevant UN monitoring bodies
 ARGUMENT_CHAIN: The instrument creates a binding obligation; the documented incident proves the obligation is not being met; the gap is therefore confirmed by independent evidence, not merely alleged.
@@ -1582,14 +1679,14 @@ COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementa
 [POI_END]`);
     } else {
       blocks.push(`[POI_START]
-STRATEGY_TAG: ${strategyTagMap[stratHint]}
-QUESTION: ${q.q}
+STRATEGY_TAG: ${strategyTagMap[stratHint]||'Treaty Gap'}
+QUESTION: ${sharpQ}
 CITATION: ${q.c}
 WHY_IT_WORKS: Exposes the gap between ${target}'s stated position and its documented treaty obligations and established policy record on ${topic}.
 [POI_END]`);
     }
   }
-  return blocks.join('\n\n');
+  return blocks.join('\n\n') + customNote;
 }
 
 /* ── Follow-up POI generator ──────────────────────────────────────────── */
@@ -1951,7 +2048,7 @@ document.getElementById('buildDossier').addEventListener('click',()=>{
 
 /* ============================================================  AI SPEECH BUILDER  ============================================================ */
 
-const speechState = { type:'gsl', hook:'statistic', tone:'formal' };
+const speechState = { type:'gsl', hook:'statistic', tone:'formal', angle:'legal' };
 
 document.querySelectorAll('#speechTypeOpts .opt').forEach(o=>{
   o.addEventListener('click',()=>{document.querySelectorAll('#speechTypeOpts .opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');speechState.type=o.dataset.val;});
@@ -1961,6 +2058,9 @@ document.querySelectorAll('#hookOpts .opt').forEach(o=>{
 });
 document.querySelectorAll('#toneOpts .opt').forEach(o=>{
   o.addEventListener('click',()=>{document.querySelectorAll('#toneOpts .opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');speechState.tone=o.dataset.val;});
+});
+document.querySelectorAll('#angleOpts .opt').forEach(o=>{
+  o.addEventListener('click',()=>{document.querySelectorAll('#angleOpts .opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');speechState.angle=o.dataset.val;});
 });
 
 /* Violation Builder toggle */
@@ -1984,7 +2084,8 @@ async function buildSpeech() {
   const comIdx  = document.getElementById('speechCommittee').value;
   const com     = comIdx !== '' ? COMMITTEES[parseInt(comIdx)] : null;
   const comName = com ? `${com.abbr} (${com.full})` : 'a UN committee';
-  const { type, hook, tone } = speechState;
+  const { type, hook, tone, angle } = speechState;
+  const customReq = document.getElementById('speechCustomReq').value.trim();
 
   // Violation builder data
   const vbPanel   = document.getElementById('violationPanel');
@@ -2001,19 +2102,33 @@ async function buildSpeech() {
     gsl:        { label:'General Speakers List opening speech',          words:'210–260 words', time:'90–120 seconds' },
     moderated:  { label:'Moderated caucus substantive intervention',     words:'110–140 words', time:'45–60 seconds'  },
     closing:    { label:'Closing statement / right of reply',            words:'160–200 words', time:'60–90 seconds'  },
-    unmoderated:{ label:'Informal unmoderated caucus lobbying pitch',    words:'80–120 words',  time:'~60 seconds'    }
+    unmoderated:{ label:'Informal unmoderated caucus lobbying pitch',    words:'80–120 words',  time:'~60 seconds'    },
+    reply:      { label:'Right of Reply to factual inaccuracies or offensive statements', words:'90–130 words', time:'30–45 seconds' },
+    position:   { label:'Position Summary clarifying the delegation\'s stance for the record', words:'130–170 words', time:'60–75 seconds' }
   };
   const hookMap = {
     statistic:  'Open with a specific, sourced statistic (World Bank, SIPRI, WHO, UNODC, UNDP, ILO — include the source name and year in the speech)',
     resolution: 'Open by invoking a specific UN resolution number and year that is directly relevant to the topic',
     incident:   'Open with a specific, documented, named incident, disaster, or case — include country/location and year',
-    treaty:     'Open by referencing a specific treaty or convention by its full name and year of entry into force'
+    treaty:     'Open by referencing a specific treaty or convention by its full name and year of entry into force',
+    historical: 'Open with a historical analogy — a past multilateral success or failure that directly parallels the current situation',
+    rhetorical: 'Open with a sharp rhetorical question that forces the committee to confront the core tension of the debate'
   };
   const toneMap = {
     formal:       'formal, measured, Charter-language tone — restrained, authoritative',
     urgent:       'urgent, crisis-driven tone — time pressure, human cost, consequences of delay',
     conciliatory: 'bridge-building, conciliatory tone — acknowledge other positions, seek common operative language',
-    assertive:    'assertive, principled tone — clear red lines, firm positions, willingness to hold ground'
+    assertive:    'assertive, principled tone — clear red lines, firm positions, willingness to hold ground',
+    diplomatic:   'diplomatic and calibrated tone — precision over passion, careful qualifying language, coalition-focused',
+    emotive:      'passionate, emotive tone — humanize the stakes, appeal to shared values and moral responsibility'
+  };
+  const angleMap = {
+    legal:          'Frame every argument as a matter of existing legal obligation under international law — treaties signed, resolutions adopted, obligations accepted',
+    moral:          'Frame every argument as a moral imperative — justice, dignity, human rights, the global community\'s obligation to the most vulnerable',
+    economic:       'Frame every argument in terms of economic cost — financial burden of inaction, development impact, trade consequences, GDP effects',
+    security:       'Frame every argument as a security risk — threat to regional stability, escalation potential, national security implications',
+    solidarity:     'Frame every argument as an appeal to multilateral solidarity — shared fate, collective responsibility, North-South equity',
+    accountability: 'Frame every argument around accountability — naming actors who have not met obligations, demanding verification mechanisms, insisting on transparency'
   };
 
   document.getElementById('speechHeadline').innerHTML = `Drafting a <em>${tone}</em> ${type === 'gsl' ? 'opening' : type} on <em>${topic}</em>…`;
@@ -2065,10 +2180,11 @@ DELEGATION: ${country}
 COMMITTEE: ${comName}
 ${com ? `COMMITTEE MANDATE: ${com.mandate}\nCOMMITTEE AGENDA TOPICS: ${com.topics.join(', ')}` : ''}
 TOPIC: "${topic}"
-SPEECH TYPE: ${typeMap[type].label} (${typeMap[type].words}, approximately ${typeMap[type].time})
-HOOK STYLE: ${hookMap[hook]}
-TONE: ${toneMap[tone]}
-${violationBlock}
+SPEECH TYPE: ${(typeMap[type]||typeMap.gsl).label} (${(typeMap[type]||typeMap.gsl).words}, approximately ${(typeMap[type]||typeMap.gsl).time})
+HOOK STYLE: ${hookMap[hook]||hookMap.statistic}
+TONE: ${toneMap[tone]||toneMap.formal}
+ARGUMENT ANGLE: ${angleMap[angle]||angleMap.legal}
+${customReq ? `\nDELEGATE'S CUSTOM REQUIREMENTS — FOLLOW THESE EXACTLY AND PRIORITIZE THEM:\n${customReq}\n` : ''}${violationBlock}
 
 MANDATORY CONTENT — every speech MUST include ALL of the following:
 1. At least TWO specific UN resolution numbers with year (e.g., "Security Council Resolution 2249 (2015)", "General Assembly Resolution 77/275 (2023)")
@@ -2154,7 +2270,7 @@ STYLE RULES:
     }
 
     document.getElementById('speechHeadline').innerHTML = `A <em>${tone}</em> ${type==='gsl'?'opening':type==='moderated'?'intervention':type==='closing'?'closing statement':'lobbying pitch'} on <em>${topic}</em>.`;
-    document.getElementById('speechMeta').innerHTML = `${country} · ${com?com.abbr:'Committee'} · ${typeMap[type].time} · Hook: <em>${hook}</em> · Tone: <em>${tone}</em>${vbActive && vbTarget ? ` · <span style="color:var(--accent-2);">⚖ Violation: ${vbTarget}</span>` : ''} · <span style="color:var(--accent-3);">AI-generated with real citations</span>`;
+    document.getElementById('speechMeta').innerHTML = `${country} · ${com?com.abbr:'Committee'} · ${(typeMap[type]||typeMap.gsl).time} · Hook: <em>${hook}</em> · Tone: <em>${tone}</em> · Angle: <em>${angle}</em>${vbActive && vbTarget ? ` · <span style="color:var(--accent-2);">⚖ Violation: ${vbTarget}</span>` : ''}${customReq ? ` · <span style="color:var(--accent-3);">Custom req applied</span>` : ''} · <span style="color:var(--accent-3);">AI-generated with real citations</span>`;
 
   } catch(err) {
     document.getElementById('speechBody').innerHTML = `<div style="color:var(--accent);padding:20px 0;"><strong style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;">⚠ Error</strong><br><span style="font-style:italic;">${err.message}</span><br><small style="color:var(--muted);">Check: topic is filled in and try again</small></div>`;
@@ -2270,7 +2386,7 @@ document.querySelectorAll('.nav a[href^="#"]').forEach(a=>{
 
 /* ============================================================  POI ARSENAL  ============================================================ */
 
-const poiState = { strategy: 'treaty', count: 3 };
+const poiState = { strategy: 'treaty', count: 3, sharpness: 'diplomatic' };
 
 // Wire POI strategy buttons — use event delegation on parent to avoid timing issues
 document.getElementById('poiStrategyOpts').addEventListener('click', function(e) {
@@ -2288,6 +2404,15 @@ document.getElementById('poiCountOpts').addEventListener('click', function(e) {
   this.querySelectorAll('.opt').forEach(x => x.classList.remove('active'));
   opt.classList.add('active');
   poiState.count = parseInt(opt.dataset.val);
+});
+
+// Wire POI sharpness buttons
+document.getElementById('poiSharpnessOpts').addEventListener('click', function(e) {
+  const opt = e.target.closest('.opt');
+  if (!opt) return;
+  this.querySelectorAll('.opt').forEach(x => x.classList.remove('active'));
+  opt.classList.add('active');
+  poiState.sharpness = opt.dataset.val;
 });
 
 /* POI Merge panel toggle */
@@ -2314,10 +2439,17 @@ function populatePOILists() {
 }
 
 const strategyDescMap = {
-  treaty:       'Focus EXCLUSIVELY on treaty ratification gaps, reservations entered, failures to implement treaty obligations, and discrepancies between treaty commitments and stated positions.',
-  contradiction:'Focus EXCLUSIVELY on internal contradictions: positions taken in this speech vs. documented past statements, bilateral agreements, domestic laws, or actions that directly contradict what was just argued.',
-  voting:       'Focus EXCLUSIVELY on UN voting record contradictions: instances where the target country voted against, abstained on, or blocked resolutions that align with the position now being advocated.',
-  data:         'Focus EXCLUSIVELY on data and statistical challenges: where official figures from WHO, World Bank, SIPRI, UNHCR, ILO, UNODC, or IPCC directly contradict or complicate the claims made.'
+  treaty:         'Focus EXCLUSIVELY on treaty ratification gaps, reservations entered, failures to implement treaty obligations, and discrepancies between treaty commitments and stated positions.',
+  contradiction:  'Focus EXCLUSIVELY on internal contradictions: positions taken in this speech vs. documented past statements, bilateral agreements, domestic laws, or actions that directly contradict what was just argued.',
+  voting:         'Focus EXCLUSIVELY on UN voting record contradictions: instances where the target country voted against, abstained on, or blocked resolutions that align with the position now being advocated.',
+  data:           'Focus EXCLUSIVELY on data and statistical challenges: where official figures from WHO, World Bank, SIPRI, UNHCR, ILO, UNODC, or IPCC directly contradict or complicate the claims made.',
+  implementation: 'Focus EXCLUSIVELY on implementation gaps: the target has signed and ratified relevant instruments but has demonstrably failed to translate those obligations into domestic law, policy, or practice.',
+  bilateral:      'Focus EXCLUSIVELY on bilateral inconsistency: the target\'s stated multilateral position conflicts with documented bilateral agreements, trade relationships, arms deals, or diplomatic stances toward specific third parties.'
+};
+const sharpnessMap = {
+  diplomatic: 'Word all questions with diplomatic caution — use "would the delegate clarify", "the delegation respectfully asks", "could the distinguished delegate explain". Preserve cordiality.',
+  direct:     'Word questions with directness — state the contradiction plainly before asking the question. No softening language. The question should be precise, not harsh, but unmistakably pointed.',
+  surgical:   'Word questions with maximum precision — each question should be a single, airtight logical trap that leaves no room for a vague answer. Eliminate all unnecessary words. The contradiction must be undeniable.'
 };
 
 async function buildPOI() {
@@ -2327,7 +2459,8 @@ async function buildPOI() {
   const comIdx     = document.getElementById('poiCommittee').value;
   const com        = comIdx !== '' ? COMMITTEES[parseInt(comIdx)] : null;
   const comName    = com ? `${com.abbr} (${com.full})` : 'a UN committee';
-  const { strategy, count } = poiState;
+  const { strategy, count, sharpness } = poiState;
+  const poiCustomReq = document.getElementById('poiCustomReq').value.trim();
 
   // Check if Document Logic merge mode is active
   const mergePanel = document.getElementById('poiMergePanel');
@@ -2371,7 +2504,9 @@ TARGET DELEGATION: ${target}
 COMMITTEE: ${comName}
 ${com ? `COMMITTEE MANDATE: ${com.mandate}\nCOMMITTEE AGENDA TOPICS: ${com.topics.join(', ')}` : ''}
 TOPIC: "${topic}"
-STRATEGY BASE: ${strategyDescMap[strategy]}
+STRATEGY BASE: ${strategyDescMap[strategy]||strategyDescMap.treaty}
+QUESTION SHARPNESS: ${sharpnessMap[sharpness]||sharpnessMap.diplomatic}
+${poiCustomReq ? `\nDELEGATE'S CUSTOM REQUIREMENTS — FOLLOW THESE EXACTLY AND PRIORITIZE THEM:\n${poiCustomReq}\n` : ''}
 
 ${pmTreaties ? `USER-PROVIDED TREATIES/CONVENTIONS TO INVOKE:\n${pmTreaties}\n` : ''}
 ${pmResolutions ? `USER-PROVIDED UN RESOLUTIONS/CHARTER ARTICLES:\n${pmResolutions}\n` : ''}
@@ -2409,7 +2544,9 @@ Generate exactly ${count} POIs. No text outside [POI_START]...[POI_END] blocks. 
     // === STANDARD POI MODE ===
     prompt = `You are an expert Model UN coach specializing in cross-examination and Points of Information. Generate ${count} precise, evidence-backed Points of Information (POIs) to be directed by the delegation of ${myCountry} against the delegation of ${target} during a debate in ${comName} on the topic: "${topic}".
 ${com ? `\nCOMMITTEE MANDATE: ${com.mandate}\nCOMMITTEE AGENDA TOPICS: ${com.topics.join(', ')}\n` : ''}
-STRATEGY: ${strategyDescMap[strategy]}
+STRATEGY: ${strategyDescMap[strategy]||strategyDescMap.treaty}
+QUESTION SHARPNESS: ${sharpnessMap[sharpness]||sharpnessMap.diplomatic}
+${poiCustomReq ? `\nDELEGATE'S CUSTOM REQUIREMENTS — FOLLOW THESE EXACTLY AND PRIORITIZE THEM:\n${poiCustomReq}\n` : ''}
 
 CRITICAL REQUIREMENTS FOR EVERY POI:
 1. Each POI must be a GENUINE QUESTION (not a statement). It must end with a question mark.
