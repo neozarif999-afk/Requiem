@@ -878,10 +878,6 @@
       <a href="#blocs">Blocs</a>
       <a href="#procedure">Procedure</a>
       <a href="#glossary">Glossary</a>
-      <button class="ai-settings-btn" id="aiSettingsBtn">
-        <span class="ai-dot"></span>
-        AI Engine
-      </button>
     </nav>
   </div>
 </header>
@@ -2011,9 +2007,10 @@ function _countryDataFor(countryStr) {
 
 function _genSpeech(prompt) {
   const country  = _extractParam(prompt,'DELEGATION') || 'a member state';
-  const topic    = _extractParam(prompt,'TOPIC').replace(/"/g,'') || 'international peace and security';
+  const topic    = _extractParam(prompt,'TOPIC').replace(/"/g,'').replace(/\.$/, '').trim() || 'international peace and security';
   const comName  = _extractParam(prompt,'COMMITTEE') || 'this committee';
-  const comAbbr  = (comName.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  let comAbbr    = (comName.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  if (!comAbbr) comAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
   const typeHint = /closing/i.test(prompt)?'closing':/[Uu]nmod/i.test(prompt)?'unmoderated':/[Mm]oderated/i.test(prompt)?'moderated':'gsl';
   const hookHint = /specific, sourced statistic/i.test(prompt)?'stat':/UN resolution number/i.test(prompt)?'res':/named incident/i.test(prompt)?'incident':'treaty';
   const toneHint = /urgent/i.test(prompt)?'urgent':/conciliatory/i.test(prompt)?'conciliatory':/assertive/i.test(prompt)?'assertive':'formal';
@@ -2286,9 +2283,10 @@ function _genPOI(prompt) {
   const isMerged   = /DOCUMENT_LOGIC/i.test(prompt);
   const target     = _extractParam(prompt,'TARGET DELEGATION')||_extractParam(prompt,'target delegation')||'the target delegation';
   const myCountry  = _extractParam(prompt,'QUESTIONER')||'the questioner';
-  const topic      = _extractParam(prompt,'TOPIC').replace(/"/g,'')||'international peace and security';
+  const topic      = _extractParam(prompt,'TOPIC').replace(/"/g,'').replace(/\.$/, '').trim()||'international peace and security';
   const comName    = _extractParam(prompt,'COMMITTEE') || '';
-  const comAbbr    = (comName.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  let comAbbr      = (comName.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  if (!comAbbr) comAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
   const countM     = prompt.match(/Generate exactly (\d+) POIs/i);
   const count      = countM ? parseInt(countM[1]) : 3;
   const stratHint  = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':'treaty';
@@ -2315,14 +2313,21 @@ function _genPOI(prompt) {
   const tcd = _countryDataFor(target);
   const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
 
+  /* ── Pre-pick shuffled arrays to avoid repetition across multiple POIs ── */
+  const pickedRes = _pickN(td.resolutions, Math.min(6, td.resolutions.length));
+  const pickedTr  = _pickN(td.treaties, Math.min(6, td.treaties.length));
+  const pickedSt  = _pickN(td.stats, Math.min(6, td.stats.length));
+  const pickedInc = _pickN(td.incidents, Math.min(6, td.incidents.length));
+  const pickedOp  = _pickN(td.operative, Math.min(4, td.operative.length));
+
   /* ── Base question factory (surgical / standard) — expanded for variety ── */
   const makeQ = (i) => {
-    const res = td.resolutions[i%td.resolutions.length];
-    const tr  = td.treaties[i%td.treaties.length];
-    const st  = td.stats[i%td.stats.length];
-    const inc = td.incidents[i%td.incidents.length];
-    const res2 = td.resolutions[(i+1)%td.resolutions.length];
-    const tr2  = td.treaties[(i+1)%td.treaties.length];
+    const res = pickedRes[i % pickedRes.length];
+    const tr  = pickedTr[i % pickedTr.length];
+    const st  = pickedSt[i % pickedSt.length];
+    const inc = pickedInc[i % pickedInc.length];
+    const res2 = pickedRes[(i+1) % pickedRes.length];
+    const tr2  = pickedTr[(i+1) % pickedTr.length];
 
     if (hasCustom && cpContrad) {
       const customQs = [
@@ -2381,12 +2386,12 @@ function _genPOI(prompt) {
 
   /* ── Cascade chain: each POI escalates from the previous ── */
   const makeCascadeChain = () => {
-    const tr   = td.treaties[0];
-    const res  = td.resolutions[0];
-    const st   = td.stats[0];
-    const inc  = td.incidents[0];
-    const tr2  = td.treaties[1%td.treaties.length];
-    const res2 = td.resolutions[1%td.resolutions.length];
+    const tr   = pickedTr[0];
+    const res  = pickedRes[0];
+    const st   = pickedSt[0];
+    const inc  = pickedInc[0];
+    const tr2  = pickedTr[1 % pickedTr.length];
+    const res2 = pickedRes[1 % pickedRes.length];
     const evidBase = cpEvid ? cpEvid.substring(0,160) : inc;
     const contBase = cpContrad ? cpContrad.substring(0,160) : `the delegation's position appears inconsistent with ${tr}`;
 
@@ -2409,10 +2414,10 @@ function _genPOI(prompt) {
 
   /* ── Socratic trap: questions designed to force self-defeat ── */
   const makeSocraticTrap = (i) => {
-    const tr  = td.treaties[i%td.treaties.length];
-    const res = td.resolutions[i%td.resolutions.length];
-    const st  = td.stats[i%td.stats.length];
-    const inc = td.incidents[i%td.incidents.length];
+    const tr  = pickedTr[i % pickedTr.length];
+    const res = pickedRes[i % pickedRes.length];
+    const st  = pickedSt[i % pickedSt.length];
+    const inc = pickedInc[i % pickedInc.length];
     const vulnBase = cpVuln ? cpVuln.substring(0,160) : `implementation gaps under ${tr}`;
 
     const traps = [
@@ -2438,12 +2443,12 @@ function _genPOI(prompt) {
 
   /* ── Maximum exposure: simultaneous multi-angle attack ── */
   const makeMaxExposure = (i) => {
-    const tr  = td.treaties[i%td.treaties.length];
-    const res = td.resolutions[i%td.resolutions.length];
-    const st  = td.stats[i%td.stats.length];
-    const inc = td.incidents[i%td.incidents.length];
-    const tr2 = td.treaties[(i+1)%td.treaties.length];
-    const res2= td.resolutions[(i+1)%td.resolutions.length];
+    const tr  = pickedTr[i % pickedTr.length];
+    const res = pickedRes[i % pickedRes.length];
+    const st  = pickedSt[i % pickedSt.length];
+    const inc = pickedInc[i % pickedInc.length];
+    const tr2 = pickedTr[(i+1) % pickedTr.length];
+    const res2= pickedRes[(i+1) % pickedRes.length];
     const customLayer = cpEvid ? ` The delegation's own research confirms: ${cpEvid.substring(0,100)}.` : '';
     const vulnLayer   = cpVuln ? ` A documented vulnerability: ${cpVuln.substring(0,100)}.` : '';
 
@@ -2462,8 +2467,8 @@ function _genPOI(prompt) {
   if (thinking === 'cascade') {
     const chain = makeCascadeChain();
     chain.forEach((step, i) => {
-      const tr  = td.treaties[i%td.treaties.length];
-      const inc = td.incidents[i%td.incidents.length];
+      const tr  = pickedTr[i % pickedTr.length];
+      const inc = pickedInc[i % pickedInc.length];
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: Cascade Level ${i+1} — ${step.tag}
@@ -2488,8 +2493,8 @@ WHY_IT_WORKS: Part of a ${chain.length}-step cascade: each question builds on th
   } else if (thinking === 'socratic') {
     for (let i = 0; i < count; i++) {
       const trap = makeSocraticTrap(i);
-      const tr   = td.treaties[i%td.treaties.length];
-      const inc  = td.incidents[i%td.incidents.length];
+      const tr   = pickedTr[i % pickedTr.length];
+      const inc  = pickedInc[i % pickedInc.length];
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: Socratic Trap — ${trap.tag}
@@ -2512,8 +2517,8 @@ WHY_IT_WORKS: ${trap.why}
   } else if (thinking === 'devastation') {
     for (let i = 0; i < count; i++) {
       const exp = makeMaxExposure(i);
-      const tr  = td.treaties[i%td.treaties.length];
-      const inc = td.incidents[i%td.incidents.length];
+      const tr  = pickedTr[i % pickedTr.length];
+      const inc = pickedInc[i % pickedInc.length];
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${exp.tag}
@@ -2537,8 +2542,8 @@ WHY_IT_WORKS: ${exp.why}
     /* surgical (default) */
     for (let i = 0; i < count; i++) {
       const q   = makeQ(i);
-      const tr  = td.treaties[i%td.treaties.length];
-      const inc = td.incidents[i%td.incidents.length];
+      const tr  = pickedTr[i % pickedTr.length];
+      const inc = pickedInc[i % pickedInc.length];
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${mergedTags[i%mergedTags.length]}
@@ -2598,7 +2603,8 @@ function _genIntel(prompt) {
   const speakerM   = prompt.match(/speech just delivered by ([^\n]+?) in /i);
   const speaker    = speakerM ? speakerM[1].trim() : (_extractParam(prompt,'TARGET DELEGATION')||'the speaking delegation');
   const context    = _extractParam(prompt,'COMMITTEE')||'this committee';
-  const intelComAbbr = (context.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  let intelComAbbr = (context.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  if (!intelComAbbr) intelComAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
 
   const notesMatch = prompt.match(/DELEGATE SPEECH NOTES[^\n]*\n([\s\S]*?)(?=\n\nYour task|\n\nCRITICAL|\n\nGenerate)/i);
   const notes = notesMatch ? notesMatch[1].trim() : '';
