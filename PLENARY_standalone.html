@@ -2573,7 +2573,8 @@ function _genFollowUp(prompt) {
   const question = _extractParam(prompt,'QUESTION ASKED').replace(/^"|"$/g,'');
   const target   = _extractParam(prompt,'TARGET COUNTRY');
   const topic    = _extractParam(prompt,'TOPIC');
-  const td = _topicDataFor(topic);
+  const fuComAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
+  const td = _topicDataFor(topic, fuComAbbr);
 
   const defenses=[
     `claim that the situation is more complex than the question implies and that implementation is currently under internal review`,
