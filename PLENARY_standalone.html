@@ -616,6 +616,107 @@
   footer .colofon-right { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.8; }
   footer .colofon-right .big { font-family: "Fraunces", serif; font-size: 60px; letter-spacing: -0.04em; text-transform: none; color: var(--ink); font-weight: 900; line-height: 1; }
 
+  /* ===== AI SETTINGS PANEL ===== */
+  .ai-settings-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 6px 12px; border: 1px solid var(--rule-soft);
+    background: transparent; color: var(--accent-3); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .ai-settings-btn:hover { border-color: var(--accent-3); background: rgba(61,184,154,0.08); }
+  .ai-settings-btn.ai-live { border-color: var(--accent-3); color: var(--accent-3); }
+  .ai-settings-btn .ai-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted); display: inline-block; flex-shrink: 0;
+  }
+  .ai-settings-btn.ai-live .ai-dot { background: var(--accent-3); box-shadow: 0 0 6px var(--accent-3); }
+  .ai-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(6,14,32,0.82); backdrop-filter: blur(4px);
+    align-items: flex-start; justify-content: center; padding-top: 80px;
+  }
+  .ai-modal-overlay.open { display: flex; }
+  .ai-modal {
+    background: var(--paper-soft); border: 1px solid var(--accent-3);
+    width: 100%; max-width: 520px; padding: 28px 28px 24px;
+    position: relative;
+  }
+  .ai-modal-title {
+    font-family: "Fraunces", serif; font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .ai-modal-sub {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .ai-field-label {
+    font-family: "JetBrains Mono", monospace; font-size: 9.5px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-3);
+    margin-bottom: 6px; display: block;
+  }
+  .ai-key-input {
+    width: 100%; padding: 9px 12px; background: var(--paper);
+    border: 1px solid var(--rule); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    outline: none; margin-bottom: 14px; letter-spacing: 0.04em;
+  }
+  .ai-key-input:focus { border-color: var(--accent-3); }
+  .ai-model-row { display: flex; gap: 8px; margin-bottom: 18px; }
+  .ai-model-opt {
+    flex: 1; padding: 8px 12px; text-align: center; cursor: pointer;
+    border: 1px solid var(--rule-soft); background: var(--paper);
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2);
+    transition: all 0.15s;
+  }
+  .ai-model-opt:hover { border-color: var(--accent-3); color: var(--ink); }
+  .ai-model-opt.active { background: var(--accent-3); color: var(--paper); border-color: var(--accent-3); }
+  .ai-model-opt .ai-mo-name { font-size: 11px; font-weight: 600; display: block; color: inherit; }
+  .ai-model-opt .ai-mo-desc { font-size: 9px; color: inherit; opacity: 0.7; display: block; margin-top: 2px; }
+  .ai-save-btn {
+    width: 100%; padding: 10px; background: var(--accent-3); color: var(--paper);
+    border: none; cursor: pointer; font-family: "JetBrains Mono", monospace;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; transition: opacity 0.15s; margin-bottom: 10px;
+  }
+  .ai-save-btn:hover { opacity: 0.85; }
+  .ai-clear-btn {
+    width: 100%; padding: 8px; background: transparent; color: var(--muted);
+    border: 1px solid var(--rule-soft); cursor: pointer;
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.13em; text-transform: uppercase; transition: color 0.15s;
+  }
+  .ai-clear-btn:hover { color: var(--ink); border-color: var(--rule); }
+  .ai-status-msg {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.12em; padding: 8px 10px; margin-top: 10px;
+    text-align: center; display: none;
+  }
+  .ai-status-msg.ok { background: rgba(61,184,154,0.1); color: var(--accent-3); border: 1px solid rgba(61,184,154,0.3); }
+  .ai-status-msg.err { background: rgba(200,90,48,0.1); color: #e0804e; border: 1px solid rgba(200,90,48,0.3); }
+  .ai-close-btn {
+    position: absolute; top: 14px; right: 16px; background: none;
+    border: none; color: var(--muted); cursor: pointer; font-size: 20px;
+    line-height: 1; transition: color 0.15s;
+  }
+  .ai-close-btn:hover { color: var(--ink); }
+  .ai-hint {
+    font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--muted);
+    margin-top: -10px; margin-bottom: 14px; line-height: 1.5;
+  }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: "JetBrains Mono", monospace; font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 0;
+    background: rgba(61,184,154,0.12); color: var(--accent-3);
+    border: 1px solid rgba(61,184,154,0.3);
+  }
+  .ai-badge .ai-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-3); }
+
   /* ===== ADVANCED THINKING ENGINE & CUSTOM INTEL ===== */
   .custom-intel-toggle {
     display: flex; align-items: center; gap: 8px;
@@ -777,9 +878,39 @@
       <a href="#blocs">Blocs</a>
       <a href="#procedure">Procedure</a>
       <a href="#glossary">Glossary</a>
+      <button class="ai-settings-btn" id="aiSettingsBtn">
+        <span class="ai-dot"></span>
+        AI Engine
+      </button>
     </nav>
   </div>
 </header>
+
+<!-- AI Settings Modal -->
+<div class="ai-modal-overlay" id="aiModalOverlay">
+  <div class="ai-modal">
+    <button class="ai-close-btn" id="aiModalClose">×</button>
+    <div class="ai-modal-title">AI Engine Settings</div>
+    <div class="ai-modal-sub">Connect Claude for research-grade speech and POI generation</div>
+    <label class="ai-field-label">Anthropic API Key</label>
+    <input class="ai-key-input" id="aiKeyInput" type="password" placeholder="sk-ant-…" autocomplete="off" spellcheck="false" />
+    <p class="ai-hint">Key is stored in your browser's localStorage and never sent anywhere except api.anthropic.com directly from your browser.</p>
+    <label class="ai-field-label">Model</label>
+    <div class="ai-model-row">
+      <div class="ai-model-opt active" data-model="claude-sonnet-4-6">
+        <span class="ai-mo-name">Sonnet 4.6</span>
+        <span class="ai-mo-desc">Fast · High quality</span>
+      </div>
+      <div class="ai-model-opt" data-model="claude-opus-4-8">
+        <span class="ai-mo-name">Opus 4.8</span>
+        <span class="ai-mo-desc">Deepest reasoning</span>
+      </div>
+    </div>
+    <button class="ai-save-btn" id="aiSaveBtn">Save &amp; Activate AI Engine</button>
+    <button class="ai-clear-btn" id="aiClearBtn">Clear Key — Use Offline Generator</button>
+    <div class="ai-status-msg" id="aiStatusMsg"></div>
+  </div>
+</div>
 
 <main class="page">
 
@@ -1744,68 +1875,195 @@ function _genSpeech(prompt) {
   const [st1,st2] = _pickN(td.stats,2);
   const inc1 = _pick(td.incidents);
   const opv  = _pick(td.operative);
+  const opvClean = opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'');
 
-  const blocStr = (cd&&cd.blocs.length>0)
-    ? `As a member of the ${cd.blocs[0]}${cd.blocs.length>1?' and the '+cd.blocs[1]:''}`
-    : 'As a state committed to multilateralism';
+  /* ── Varied salutations — prevent identical openings every time ── */
+  const salutations = [
+    `Honorable chair, esteemed delegates — the delegation of ${country} is grateful for the floor.`,
+    `Madam/Mister Chair — the delegation of ${country} takes the floor with a sense of urgency that the circumstances demand.`,
+    `Chair, distinguished delegates — ${country} rises to address a matter it considers among the most consequential before this body.`,
+    `Honorable chair — the delegation of ${country} stands before this assembly at a moment that will define the credibility of our collective commitments.`,
+    `The delegation of ${country} thanks the chair for the floor and rises to place the following considerations before this distinguished body.`,
+    `Chair, fellow delegates — ${country} addresses this committee having studied the record closely and consulted with its partners across the chamber.`,
+    `Distinguished chair, honored colleagues — the delegation of ${country} welcomes this debate and the opportunity to advance a position grounded in law, evidence, and principle.`,
+    `Chair — ${country} takes the floor not to rehearse familiar arguments but to advance a concrete position that this committee has the authority and obligation to act upon.`,
+    `Honorable chair, the delegation of ${country} extends its appreciation to delegations who have spoken and adds its voice to a deliberation that cannot conclude without meaningful commitments.`,
+    `Chair, this committee was constituted to address exactly the kind of challenge now before it. The delegation of ${country} is honored to contribute to that work.`,
+    `The delegation of ${country} thanks the chair. Distinguished delegates — ${country} rises on behalf of a position it will defend with both principle and evidence.`,
+    `Madam/Mister Chair — before this session concludes, the delegation of ${country} intends to place on record a position that those who come after us will be able to evaluate against the outcome we produce.`
+  ];
 
-  const hookParas = {
-    stat:    `${customFacts ? customFacts.split('\n')[0].trim() : st1}. Chair, a figure of this magnitude is not an abstraction — it represents a documented failure of the international community to honour the commitments already inscribed in our collective instruments. This committee must confront that failure directly.`,
-    res:     `This committee adopted ${res1}. The record of implementation since that adoption is, to state it diplomatically, uneven. The delegation of ${country} rises today to address that gap with concrete proposals.`,
-    incident:`Chair, the committee need look no further than ${inc1} to understand the human cost of institutional hesitation. This is not history — it is a present and ongoing indictment of our collective will.`,
-    treaty:  `${tr1} establishes the framework within which this committee operates. That framework creates obligations. The question before us today is whether those obligations will be honoured in substance — not merely affirmed in language — by every delegation in this room.`
+  /* ── Varied position introductions ── */
+  const positionIntros = [
+    (bloc, pos) => `${bloc}, the delegation of ${country} ${pos}`,
+    (bloc, pos) => `${bloc}, ${country} has consistently ${pos.replace(/^supports?/,'supported').replace(/^believes?/,'believed').replace(/^advocates?/,'advocated')}`,
+    (bloc, pos) => `The record of ${country} on this question is clear: ${pos}`,
+    (bloc, pos) => `${country}'s position — which this delegation will defend in full — is that ${pos}`,
+    (bloc, pos) => `Guided by its obligations and its history, ${country} holds that ${pos}`
+  ];
+
+  const posBase = cd ? cd.position : 'supports multilateral solutions grounded in international law and equitable burden-sharing';
+  const blocStr = (cd && cd.blocs.length > 0)
+    ? `As a member of the ${cd.blocs[0]}${cd.blocs.length > 1 ? ' and the ' + cd.blocs[1] : ''}`
+    : 'As a state committed to the principles of multilateralism';
+  const posIntroFn = _pick(positionIntros);
+  const positionLine = posIntroFn(blocStr, posBase);
+
+  /* ── Varied hook paragraphs — 5 per type ── */
+  const hooksAll = {
+    stat: [
+      `${customFacts ? customFacts.split('\n')[0].trim() : st1}. Chair, a figure of this magnitude is not an abstraction — it is a documented failure inscribed in the very instruments this body exists to uphold. That failure demands a response proportionate to its scale.`,
+      `Let the record begin with data. ${customFacts ? customFacts.split('\n')[0].trim() : st1}. When numbers of this order appear in authoritative independent sources, they are not a backdrop to our deliberations — they are an indictment of our inaction.`,
+      `The delegation of ${country} will not open with rhetoric when the facts themselves are eloquent. ${customFacts ? customFacts.split('\n')[0].trim() : st1}. The committee is invited to sit with that figure before proceeding to procedure.`,
+      `Chair — ${customFacts ? customFacts.split('\n')[0].trim() : st1}. That figure does not represent a projection or a model. It represents a measured, documented, independently verified state of affairs. This committee has been convened to address it. The delegation of ${country} intends to do so.`,
+      `${customFacts ? customFacts.split('\n')[0].trim() : st1}. This is not a statistic produced to advance a political argument. It is what the evidence shows. The delegation of ${country} submits that any operative text this committee produces must be benchmarked against figures of this kind — not aspirations, not averages, but documented reality.`
+    ],
+    res: [
+      `This committee adopted ${res1}. The record of implementation since that adoption is, to state it diplomatically, uneven. The delegation of ${country} rises today to address that gap with concrete proposals — not to relitigate what was agreed, but to ensure that agreement is honoured.`,
+      `${res1} was adopted by this body with broad support. The commitments it encodes were not provisional — they were binding. The delegation of ${country} therefore asks this committee: what does it say about our institution when the language we adopt is treated as aspirational by the very states that voted for it?`,
+      `Chair, ${res1} established a clear normative standard. The gap between that standard and the documented record is not a matter of interpretation — it is measurable. The delegation of ${country} rises to close that gap, not to widen the aperture through which states may avoid accountability.`,
+      `The committee will recall the adoption of ${res1}. What it may be less ready to confront is the implementation record that followed. The delegation of ${country} submits that this committee's credibility depends on its willingness to hold states — all states, without exception — to the language they endorsed.`,
+      `${res1} remains the governing framework for this committee's work on ${topic}. The delegation of ${country} rises not to propose its abandonment but its genuine application — with timelines, with verification, and with consequences for non-compliance that are more than rhetorical.`
+    ],
+    incident: [
+      `Chair, the committee need look no further than ${inc1} to understand the human cost of institutional hesitation. This is not history — it is a present and continuing indictment of the international community's capacity to translate commitments into protection.`,
+      `${inc1} is not a hypothetical constructed to make a political argument. It is a documented event, available in the public record, that illustrates with precision what happens when this body's mandates are not enforced. The delegation of ${country} considers it the appropriate starting point for this debate.`,
+      `Distinguished delegates — ${inc1} occurred not in a vacuum but against the backdrop of norms this committee has repeatedly affirmed. The question the delegation of ${country} places before this body is whether that will be allowed to happen again, or whether we will construct something durable enough to prevent it.`,
+      `Chair, ${inc1} is the kind of documented failure that should make every delegation in this room uncomfortable. Not because it involves one state or one region — but because the norms this committee was convened to uphold failed to prevent it. That is a collective failure, and it demands a collective response.`,
+      `The delegation of ${country} rises having reviewed the full factual record of ${inc1}. What is documented there is not exceptional. It is what is to be expected when the framework this body endorses in language is not matched by accountability in practice.`
+    ],
+    treaty: [
+      `${tr1} establishes the framework within which this committee operates. That framework creates obligations. The question before us today is whether those obligations will be honoured in substance — not merely affirmed in language — by every delegation present.`,
+      `The principles of ${tr1} are not obscure. They are known to every delegation in this room. What is less well understood, apparently, is the consequence of those principles going unenforced. The delegation of ${country} intends to make that consequence concrete.`,
+      `Chair, ${tr1} was not adopted as a statement of intent. It was adopted as a binding commitment. The delegation of ${country} rises because the gap between that instrument's obligations and the conduct of certain parties to it has become too wide to address through goodwill alone.`,
+      `This delegation wishes to begin not with an argument but with a legal point: ${tr1} is in force, it applies to all states parties, and it creates obligations that do not yield to political inconvenience. On that foundation, the delegation of ${country} builds its case.`,
+      `${tr1} represents the international community's considered judgment on how ${topic} should be governed. The delegation of ${country} rises in defence of that judgment — not as a matter of ideology but because the alternative is the progressive erosion of frameworks that took decades to construct.`
+    ]
   };
 
-  const toneClosings = {
-    formal:       `The delegation of ${country} stands ready to engage constructively with all delegations committed to a serious and verifiable outcome. We thank the chair for the floor.`,
-    urgent:       `Chair, the cost of delay is measured in lives, in livelihoods, and in the credibility of this institution. The delegation of ${country} implores this body to act — not next session, not in principle — but now, in concrete and enforceable terms. Thank you.`,
-    conciliatory: `The delegation of ${country} recognizes that delegations in this room approach this question shaped by different histories, different vulnerabilities, and different capabilities. We extend our hand to any partner — across blocs, across regions — in crafting language this body can adopt by consensus. Thank you, chair.`,
-    assertive:    `Let it be placed on record that the delegation of ${country} will not endorse language that falls below the minimum threshold of accountability and verifiability this situation demands. We are prepared to hold that position. Thank you.`
+  /* ── Varied evidence paragraphs ── */
+  const evidenceVariants = [
+    `${customFacts ? customFacts.trim() : st1} Furthermore, ${st2}. The committee will also recall ${inc1}. These are not isolated events; they are the predictable consequences of persistent failure to translate political commitments into enforceable mechanisms.`,
+    `The factual record before this committee is unambiguous. ${customFacts ? customFacts.trim() : st1} Independent verification corroborates this: ${st2}. And in the most tangible terms — ${inc1} — this data acquires human meaning.`,
+    `${customFacts ? customFacts.trim() : `${st1} This figure, drawn from authoritative independent sources, does not support the narrative of steady progress some delegations would prefer.`} ${st2}. The documented incident of ${inc1} further grounds these statistics in observable reality.`,
+    `Three bodies of evidence converge on the same conclusion. First, the quantitative record: ${customFacts ? customFacts.split('\n')[0].trim() : st1}. Second, the comparative dimension: ${st2}. Third, the documented incident that confirms the scale of the problem is not theoretical: ${inc1}.`,
+    `The delegation of ${country} will not ask this committee to accept assertions. ${customFacts ? customFacts.trim() : st1} — independently verified. ${st2} — drawn from authoritative sources. ${inc1} — a matter of public record. The evidence is not contested; the question is what this committee will do about it.`
+  ];
+
+  /* ── Varied closing tones — 4 per tone ── */
+  const closingVariants = {
+    formal: [
+      `The delegation of ${country} stands ready to engage constructively with all delegations committed to a serious and verifiable outcome. We thank the chair for the floor.`,
+      `${country} has stated its position fully and is prepared to defend it in every forum this committee provides. We look forward to engagement and thank the honorable chair.`,
+      `The delegation of ${country} extends its hand to every delegation prepared to negotiate in good faith toward language this body can adopt with integrity. We thank the chair.`,
+      `${country} submits that the course of action outlined today is both principled and practical. We stand available for consultation and thank the chair for the floor.`
+    ],
+    urgent: [
+      `Chair, the cost of delay is measured in lives, in livelihoods, and in the credibility of this institution. The delegation of ${country} implores this body to act — not next session, not in principle — but now, in concrete and enforceable terms. Thank you.`,
+      `Every session in which this committee produces language without enforcement is a session in which the international system fails those who depend on it. The delegation of ${country} will not accept that outcome. Thank you, chair.`,
+      `The delegation of ${country} closes with a warning, not a threat: if this body cannot produce binding language with real accountability, it will have answered the question of its own relevance. We urge the committee to act. Thank you.`,
+      `Time is not a neutral variable in this debate. ${st1.split('.')[0]}. Delay has a cost. The delegation of ${country} asks every delegation present to weigh that cost before reaching for the comfort of ambiguity. Thank you, chair.`
+    ],
+    conciliatory: [
+      `The delegation of ${country} recognizes that delegations in this room approach this question shaped by different histories, vulnerabilities, and capabilities. We extend our hand to any partner — across blocs, across regions — in crafting language this body can adopt by consensus. Thank you, chair.`,
+      `${country} does not approach this debate as a contest to be won. We approach it as a shared obligation to be discharged. We invite every delegation to join us in that spirit, and we thank the chair.`,
+      `The delegation of ${country} is mindful that strong language is only as strong as the coalition behind it. We call upon all parties — particularly those with whom we may disagree — to find in this debate not an adversary but a partner. Thank you.`,
+      `${country} closes by acknowledging the good faith of delegations across the spectrum of this debate. We believe common ground exists — and we will seek it. Thank you, chair.`
+    ],
+    assertive: [
+      `Let it be placed on record that the delegation of ${country} will not endorse language that falls below the minimum threshold of accountability and verifiability this situation demands. We are prepared to hold that position. Thank you.`,
+      `The delegation of ${country} will not accept consensus for its own sake. A weak resolution that provides cover for inaction is worse than no resolution at all. We call upon this committee to produce language with teeth. Thank you, chair.`,
+      `${country} has stated its minimum position. It will not move below it. We invite other delegations to meet us at the level of genuine commitment — and we thank the chair for the floor.`,
+      `The delegation of ${country} closes with clarity: we will not sign onto language that creates the appearance of action without the substance of enforcement. The committee has been put on notice. Thank you.`
+    ]
   };
+
+  /* ── Varied argument structures for standard mode ── */
+  const standardArgPatterns = [
+    () => `The delegation of ${country} draws three conclusions from the evidence before this committee. First, that the existing framework established by ${res1} provides an adequate legal basis for action — what has been lacking is not authority but political will. Second, that ${inc1} demonstrates that voluntary, non-binding mechanisms have proved insufficient. Third, that a binding and verifiable framework — with adequate financial and technical assistance for developing states — is achievable within this committee's mandate.${customArgs ? '\n\n' + customArgs.trim() : ''}`,
+    () => `Two propositions are, in this delegation's view, beyond reasonable dispute. First: ${res1} imposes obligations that are legal, not merely political — and they apply without exception to every state in this room. Second: the documented record, including ${inc1}, establishes that voluntary compliance without accountability has failed. From those two propositions, a single conclusion follows: this committee must adopt language that is binding, verifiable, and time-bound.${customArgs ? '\n\n' + customArgs.trim() : ''}`,
+    () => `The analytical case before this committee is straightforward. The legal framework — anchored in ${res1} and ${tr1} — is adequate. The factual record — illustrated by ${inc1} and corroborated by independent data — is clear. What remains is the question of political will. The delegation of ${country} submits that this committee's role is not to supply political will to states that lack it, but to create structures that make good-faith compliance the path of least resistance.${customArgs ? '\n\n' + customArgs.trim() : ''}`,
+    () => `${country} identifies four interlocking imperatives. Legal: the norms in ${res1} and ${tr1} are not aspirational — they are binding. Factual: the record, including ${inc1}, confirms the gap between those norms and current reality. Institutional: this committee has both the mandate and the mechanisms to act. Political: the cost of inaction — measured in credibility, in precedent, and in human terms — exceeds the cost of any accommodation this body would be asked to make.${customArgs ? '\n\n' + customArgs.trim() : ''}`,
+    () => `Let the argument be stated plainly. We have a legal framework: ${res1}. We have documented evidence of its inadequate implementation: ${inc1}. We have a clear gap between commitment and reality. The only question is whether this committee has the institutional will to close that gap — or whether it will contribute to the long record of rhetorical agreement and structural inaction that defines so many of its predecessors.${customArgs ? '\n\n' + customArgs.trim() : ''}`
+  ];
+
+  /* ── Varied position-to-evidence transitions ── */
+  const transitions = [
+    `On the question of ${topic}, this is not merely a policy preference — it flows directly from our obligations under ${tr1}${customCtx ? ' and from the context in which this delegation operates: ' + customCtx.split('\n')[0].trim() : ', and from the normative framework this committee was convened to advance'}.`,
+    `On ${topic}, ${country}'s position is grounded not in ideology but in law: specifically, in the obligations created by ${tr1}${customCtx ? ', and the specific context of ' + customCtx.split('\n')[0].trim() : ' and the resolutions adopted by this body'}.`,
+    `This position on ${topic} is not reactive — it reflects ${country}'s longstanding obligations under ${tr1}${customCtx ? ' and the particular intelligence available to this delegation: ' + customCtx.split('\n')[0].trim() : ', and its consistent engagement with this committee'}.`,
+    `Regarding ${topic}: ${country}'s position flows from a reading of ${tr1} that is, in this delegation's view, the only reading consistent with the instrument's object and purpose${customCtx ? '. Additional context informing this position: ' + customCtx.split('\n')[0].trim() : ''}.`
+  ];
+
+  /* ── Construct the blocks ── */
+  const salutation = _pick(salutations);
+  const hookPool = hooksAll[hookHint] || hooksAll.treaty;
+  const hookPara = _pick(hookPool);
+  const evidPara = _pick(evidenceVariants);
+  const closingPool = closingVariants[toneHint] || closingVariants.formal;
+  const closingPara = _pick(closingPool);
+  const transitionLine = _pick(transitions);
 
   // ── Advanced argument construction based on thinking depth ──
-  const evidenceBlock = customFacts
-    ? `${customFacts.trim()}. Furthermore, ${st2}. The committee will also recall ${inc1}.`
-    : `${st1}. Furthermore, ${st2}. The committee will also recall ${inc1}. These are not isolated events; they are the predictable consequences of the international community's persistent failure to translate political commitments into enforceable mechanisms.`;
-
   let argumentBlock;
   if (depthHint === 'deep') {
     const syllogism = _pick(ARGUMENT_LOGIC.syllogistic)(tr1, country, topic);
     const burdenShift = _pick(ARGUMENT_LOGIC.burden_shift)(country, topic, st1.substring(0,100));
     const proportionality = _pick(ARGUMENT_LOGIC.proportionality)(country, topic, st1.substring(0,80), st2.substring(0,80));
-    argumentBlock = `Step 1 — Major Premise: ${syllogism}
+    const deepIntros = [
+      `The logical structure of this delegation's case is as follows.`,
+      `The argument proceeds in five steps, each grounded in law or evidence.`,
+      `${country} constructs its case as a chain — each link dependent on the last.`
+    ];
+    argumentBlock = `${_pick(deepIntros)}
 
-Step 2 — Minor Premise: ${customFacts ? customFacts.split('\n')[0].trim() : st1} This is not a contested figure — it is drawn from an authoritative independent source and stands unchallenged in this chamber.
+Step 1 — Major Premise: ${syllogism}
+
+Step 2 — Minor Premise: ${customFacts ? customFacts.split('\n')[0].trim() : st1} This is not a contested figure; it stands unchallenged in this chamber.
 
 Step 3 — Burden Shift: ${burdenShift}
 
 Step 4 — Proportionality Test: ${proportionality}
 
-Step 5 — Conclusion: Therefore, the delegation of ${country} submits that this committee has both the authority and the obligation to ${opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'')}. The legal framework exists. The evidence is documented. The only remaining variable is political will.${customArgs ? '\n\n' + customArgs.trim() : ''}`;
+Step 5 — Conclusion: Therefore, the delegation of ${country} submits that this committee has both the authority and the obligation to ${opvClean}. The legal framework exists. The evidence is documented. The only remaining variable is political will.${customArgs ? '\n\n' + customArgs.trim() : ''}`;
 
   } else if (depthHint === 'adversarial') {
     const counterTemplates = _pickN(COUNTER_ARGUMENT_TEMPLATES, 3);
-    argumentBlock = `Part A — Core Argument: ${_pick(ARGUMENT_LOGIC.consistency_test)(country, topic)}. The foundation is clear: ${res1} provides the legal basis; ${inc1} provides the factual context; and ${st1} provides the quantitative dimension. All three converge on the same conclusion.${customArgs ? ' ' + customArgs.trim() : ''}
+    const advIntros = [
+      `${country} addresses the committee's substance — and anticipates its objections.`,
+      `This delegation will state its case and pre-empt the lines of resistance it expects to encounter.`,
+      `${country} proceeds on the assumption that a persuasive argument must also be a defended one.`
+    ];
+    argumentBlock = `${_pick(advIntros)}
+
+Part A — Core Argument: ${_pick(ARGUMENT_LOGIC.consistency_test)(country, topic)}. The convergence is clear: ${res1} provides the legal basis; ${inc1} provides the factual context; ${st1} provides the quantitative dimension.${customArgs ? ' ' + customArgs.trim() : ''}
 
 Part B — Pre-Emptive Rebuttal:
 Some delegations will argue the ${counterTemplates[0].defense}. ${counterTemplates[0].rebuttal}
 
-A second anticipated response invokes ${counterTemplates[1].defense}. ${counterTemplates[1].rebuttal}
+Others will invoke ${counterTemplates[1].defense}. ${counterTemplates[1].rebuttal}
 
-A third line of resistance cites ${counterTemplates[2].defense}. ${counterTemplates[2].rebuttal}
+A third anticipated objection cites ${counterTemplates[2].defense}. ${counterTemplates[2].rebuttal}
 
 Part C — Consistency Test: ${_pick(ARGUMENT_LOGIC.consistency_test)(country, topic)}`;
 
   } else if (depthHint === 'dialectical') {
     const dp = _pick(DIALECTICAL_PATTERNS);
-    argumentBlock = `${dp.thesis(`unrestricted state discretion on ${topic} is the only politically feasible approach`)}
+    const dialIntros = [
+      `${country}'s argument is dialectical — it engages opposing positions rather than ignoring them.`,
+      `To reach the strongest position, the delegation of ${country} begins by granting the strongest objection.`,
+      `${country} does not build its case by ignoring counterarguments. It builds it through them.`
+    ];
+    argumentBlock = `${_pick(dialIntros)}
+
+${dp.thesis(`unrestricted state discretion on ${topic} is the only politically feasible approach`)}
 
 ${dp.antithesis(`binding multilateral frameworks inevitably impose disproportionate burdens on developing states`)}
 
-Synthesis: ${dp.synthesis(country, `a framework grounded in ${tr1} with differentiated implementation timelines and mandatory technical assistance provisions`, res1)} The synthesis is not a compromise between principle and pragmatism — it is the principled application of the logic embedded in ${res2} itself.${customArgs ? '\n\n' + customArgs.trim() : ''}`;
+Synthesis: ${dp.synthesis(country, `a framework grounded in ${tr1} with differentiated implementation timelines and mandatory technical assistance provisions`, res1)} This synthesis is not a compromise between principle and pragmatism — it is the principled application of the logic already embedded in ${res2}.${customArgs ? '\n\n' + customArgs.trim() : ''}`;
 
   } else {
-    argumentBlock = `The delegation of ${country} therefore draws three conclusions. First, that the existing framework established by ${res1} provides an adequate legal basis for action — what has been lacking is not authority but political will. Second, that the evidence from ${inc1} demonstrates that voluntary, non-binding mechanisms have proved insufficient to produce the results this situation demands. Third, that a binding and verifiable framework — supported by adequate financial and technical assistance, particularly for developing states — is not only desirable but achievable within the mandate of this committee.${customArgs ? '\n\n' + customArgs.trim() : ''}`;
+    argumentBlock = _pick(standardArgPatterns)();
   }
 
   let violationSection = '';
@@ -1813,27 +2071,37 @@ Synthesis: ${dp.synthesis(country, `a framework grounded in ${tr1} with differen
     const vbCd = _countryDataFor(vbTarget);
     const vbSyllogism = _pick(ARGUMENT_LOGIC.syllogistic)(tr1, vbTarget, topic);
     const vbCounter = _pick(COUNTER_ARGUMENT_TEMPLATES);
-    violationSection = `\n\n[VIOLATION]\nThe documented record of ${vbTarget} on this question merits direct address by this committee. ${vbSyllogism} As evidenced by ${inc1}, conduct attributable to ${vbTarget} raises serious questions under ${tr1}. ${vbCd?vbCd.treaty_gaps+'.':''} If ${vbTarget} argues the ${vbCounter.defense} — ${vbCounter.rebuttal} The delegation of ${country} submits, in a spirit of diplomatic candour, that this committee cannot in good conscience ignore that record.`;
+    const vbIntros = [
+      `The documented record of ${vbTarget} on this question merits direct address.`,
+      `The delegation of ${country} must, in a spirit of diplomatic candour, address the conduct of ${vbTarget}.`,
+      `This committee cannot in good conscience proceed without noting what the record shows regarding ${vbTarget}.`,
+      `${country} raises the following — not to assign blame, but because the evidence before this committee requires it.`
+    ];
+    violationSection = `\n\n[VIOLATION]\n${_pick(vbIntros)} ${vbSyllogism} The incident of ${inc1} raises serious questions under ${tr1}. ${vbCd ? vbCd.treaty_gaps + '.' : ''} If ${vbTarget} argues the ${vbCounter.defense} — ${vbCounter.rebuttal}`;
   }
 
   // Build proposal — use custom if provided
-  const proposalText = customProps
-    ? customProps.trim()
-    : `In the operative language this committee will shortly consider, the delegation of ${country} urges that the body ${opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'')}. Furthermore, we call upon all delegations to co-sponsor language referencing ${res2} as the foundational framework, ensuring implementation mechanisms are both time-bound and independently verified.`;
+  const proposalVariants = [
+    `In the operative language this committee will shortly consider, the delegation of ${country} urges that the body ${opvClean}. We call upon all delegations to co-sponsor language referencing ${res2} as the foundational framework, with time-bound and independently verified implementation.`,
+    `The delegation of ${country} advances the following concrete proposal: this committee should ${opvClean}, on a timetable not to exceed eighteen months, with a dedicated verification mechanism reporting to the relevant UN body. The legal basis is ${res2}. The need is documented. The mechanism is available.`,
+    `${country}'s operative proposal is direct: ${opvClean}. Anchored in ${tr2}, supported by the precedent of ${res2}, and structured around independent verification. This delegation is prepared to co-sponsor this language and invites partners to join.`,
+    `The delegation calls upon this committee to go beyond affirmation. Specifically: ${opvClean}. With ${res2} as the framework, with differentiated obligations that account for development status, and with a mandatory review mechanism within one year of adoption.`
+  ];
+  const proposalText = customProps ? customProps.trim() : _pick(proposalVariants);
 
   const refs = [res1,res2,res3||tr2,tr1,st1.split(',')[0],st2.split(',')[0],inc1.replace(/^the\s/i,'')].filter(Boolean);
 
   return `[SALUTATION]
-Honorable chair, esteemed delegates — the delegation of ${country} is grateful for the floor.
+${salutation}
 
 [HOOK]
-${hookParas[hookHint]}
+${hookPara}
 
 [POSITION]
-${blocStr}, the delegation of ${country} ${cd?cd.position:'supports multilateral solutions and equitable global governance'}. On the question of ${topic}, this is not merely a policy preference — it flows directly from our obligations under ${tr1}${customCtx ? ', and from the context in which this delegation stands today: ' + customCtx.split('\n')[0].trim() : ', and from the broader normative framework this committee was convened to advance'}.
+${positionLine}. ${transitionLine}
 
 [EVIDENCE & CONTEXT]
-${evidenceBlock}
+${evidPara}
 
 [ARGUMENT]
 ${argumentBlock}${violationSection}
@@ -1842,7 +2110,7 @@ ${argumentBlock}${violationSection}
 ${proposalText}
 
 [CLOSING]
-${toneClosings[toneHint]}
+${closingPara}
 
 [REFERENCES]
 ${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}`;
@@ -1881,18 +2149,22 @@ function _genPOI(prompt) {
   const tcd = _countryDataFor(target);
   const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
 
-  /* ── Base question factory (surgical / standard) ── */
+  /* ── Base question factory (surgical / standard) — expanded for variety ── */
   const makeQ = (i) => {
     const res = td.resolutions[i%td.resolutions.length];
     const tr  = td.treaties[i%td.treaties.length];
     const st  = td.stats[i%td.stats.length];
     const inc = td.incidents[i%td.incidents.length];
+    const res2 = td.resolutions[(i+1)%td.resolutions.length];
+    const tr2  = td.treaties[(i+1)%td.treaties.length];
 
     if (hasCustom && cpContrad) {
-      return {
-        q:`The delegation of ${target} has taken a position on ${topic}. Would the delegate explain how that position is reconciled with the following documented contradiction: ${cpContrad.substring(0,180)}?`,
-        c:`Delegation research — custom intelligence`
-      };
+      const customQs = [
+        {q:`The delegation of ${target} has staked out a clear position on ${topic}. Would the delegate explain how that position is reconciled with the following documented contradiction: ${cpContrad.substring(0,180)}?`, c:`Delegation research — custom intelligence`},
+        {q:`${target}'s statement today conflicts with research available to this questioner. Specifically: ${cpContrad.substring(0,180)}. Would the delegate address that conflict directly?`, c:`Custom delegation intelligence`},
+        {q:`Would the distinguished delegate of ${target} explain the discrepancy between the position just articulated and the following documented finding: ${cpContrad.substring(0,180)}?`, c:`Documented contradiction — delegation research`}
+      ];
+      return customQs[i % customQs.length];
     }
 
     if (stratHint==='treaty') {
@@ -1900,7 +2172,10 @@ function _genPOI(prompt) {
         {q:`Would the distinguished delegate of ${target} clarify whether ${target} has ratified ${tr}, and if not, how the delegation justifies advocating obligations it has itself not yet accepted?`,c:tr},
         {q:`Regarding ${target}'s obligations under ${tr}, would the delegate explain what specific domestic implementation measures have been enacted since that instrument entered into force, given documented compliance gaps?`,c:tr},
         {q:`Would the delegation of ${target} confirm whether it has submitted its most recent periodic report to the relevant treaty body under ${tr}, as required — and if not, when it intends to do so?`,c:tr},
-        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations, and how those reservations are reconciled with the position just stated?`,c:tr}
+        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations?`,c:tr},
+        {q:`${target} is a party to ${tr}. Article obligations under that instrument require specific and measurable implementation. Would the delegate identify the last time ${target}'s domestic compliance was independently verified under that instrument's reporting mechanism?`,c:tr},
+        {q:`Would the delegation of ${target} confirm whether it supports the strengthening of enforcement mechanisms under ${tr2} — given that its stated position on ${topic} appears to go further than its own ratification record would support?`,c:tr2},
+        {q:`The delegate has invoked the norms of ${tr}. Would ${target} agree that those norms apply universally — and if so, explain how they square with the implementation record this delegation has on file?`,c:tr}
       ];
       return qs[i%qs.length];
     }
@@ -1908,22 +2183,32 @@ function _genPOI(prompt) {
       const qs=[
         {q:`When ${res} came to a vote, what position did the delegation of ${target} record — and how does the delegation reconcile any divergence between that vote and the position articulated today?`,c:res},
         {q:`Would the delegate clarify ${target}'s vote on ${res}? That resolution called for precisely the action the delegation now advocates. Was the delegation's position at the time consistent with the one presented today?`,c:res},
-        {q:`This committee adopted ${res}. ${target} was a member of this body at that time. Would the delegate confirm whether ${target} voted in favour, and if it did not, explain what change in policy accounts for the speech we have just heard?`,c:res}
+        {q:`This committee adopted ${res}. ${target} was a member of this body at that time. Would the delegate confirm whether ${target} voted in favour, and if it did not, explain what change in policy accounts for the speech we have just heard?`,c:res},
+        {q:`${target} supported the broad language of ${res2} but has on other occasions taken positions that appear to qualify it significantly. Would the delegate clarify how those positions are consistent with the full text of that resolution?`,c:res2},
+        {q:`The voting record on ${res} is available to this committee. Would the delegate explain the position ${target} took at the time, and whether that position is consistent with the one the delegation is advancing today?`,c:res},
+        {q:`${res} passed with broad support. Would the delegate confirm whether ${target} was among the states that endorsed it, and if so, what specific implementation steps ${target} has taken since that vote?`,c:res}
       ];
       return qs[i%qs.length];
     }
     if (stratHint==='data') {
+      const stClean = st.replace(/^According to [^,]+, /,'').substring(0,80);
       const qs=[
         {q:`${st}. Would the distinguished delegate of ${target} reconcile this independently verified data with the position just articulated?`,c:st.split(',')[0].replace(/^According to /,'')},
-        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${st.replace(/^According to [^,]+, /,'').substring(0,80)} — suggests a different trajectory?`,c:st},
-        {q:`The delegation has made quantitative claims regarding ${topic}. Would the delegate explain the discrepancy between the official position and ${st}?`,c:st}
+        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${stClean} — suggests a different trajectory?`,c:st},
+        {q:`The delegation has made quantitative claims regarding ${topic}. Would the delegate explain the discrepancy between the official position and the following independently verified data: ${st}?`,c:st},
+        {q:`${target}'s delegate cited figures on ${topic}. Would the delegation confirm the source and methodology — since data from ${st.split(',')[0]} points to a materially different conclusion?`,c:st},
+        {q:`The data the delegation relies upon appears to conflict with independent findings. Specifically, ${stClean}. Would the delegate either corroborate or challenge that figure, with a source?`,c:st}
       ];
       return qs[i%qs.length];
     }
+    /* contradiction / default */
     const qs=[
-      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this with ${inc}, which raised direct questions about ${target}'s conduct on precisely this issue?`,c:`Documentation of ${inc}`},
+      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this position with ${inc}, which raised direct questions about ${target}'s own conduct on this issue?`,c:`Documentation of ${inc}`},
       {q:`Would the distinguished delegate clarify how ${target}'s position today aligns with its conduct under ${tr}, given that ${inc} represents a substantive departure from that instrument's obligations?`,c:tr},
-      {q:`${target}'s statement supports the principles of ${res}. Would the delegation explain how its domestic policy record is consistent with those principles, given the evidence available from ${inc}?`,c:res}
+      {q:`${target}'s statement endorses the principles of ${res}. Would the delegation explain how its domestic policy record is consistent with those principles, given the evidence available from ${inc}?`,c:res},
+      {q:`There is a documented gap between the position ${target} is advancing today and the conduct available in the public record. The most relevant example is ${inc}. Would the delegate address that gap directly?`,c:`Documentation of ${inc}`},
+      {q:`Would the delegate of ${target} explain how the position articulated today is consistent with ${target}'s known policy record under ${tr} — particularly in light of ${inc}, which this committee has the means to verify?`,c:tr},
+      {q:`${inc} is a matter of documented public record. ${target}'s position today appears to rely on a narrative that does not fully account for that incident. Would the delegate address the discrepancy?`,c:`Documentation of ${inc}`}
     ];
     return qs[i%qs.length];
   };
@@ -2211,10 +2496,65 @@ function _localGenerate(prompt) {
   return _genSpeech(prompt);
 }
 
+/* ── AI state — persisted in localStorage ─────────────────────────────── */
+const AI_STATE = {
+  get key()   { return localStorage.getItem('plenary_api_key') || ''; },
+  get model() { return localStorage.getItem('plenary_model') || 'claude-sonnet-4-6'; },
+  set key(v)  { v ? localStorage.setItem('plenary_api_key', v) : localStorage.removeItem('plenary_api_key'); },
+  set model(v){ localStorage.setItem('plenary_model', v); },
+  get active(){ return !!this.key; }
+};
+
+function _updateAIBtn() {
+  const btn = document.getElementById('aiSettingsBtn');
+  if (!btn) return;
+  const dot = btn.querySelector('.ai-dot');
+  if (AI_STATE.active) {
+    btn.classList.add('ai-live');
+    btn.innerHTML = `<span class="ai-dot"></span> ${AI_STATE.model.includes('opus') ? 'Opus' : 'Sonnet'} Live`;
+  } else {
+    btn.classList.remove('ai-live');
+    btn.innerHTML = `<span class="ai-dot"></span> AI Engine`;
+  }
+}
+
 async function anthropicFetch(body) {
-  /* Simulate a realistic generation delay so the loading state is visible */
-  await new Promise(r=>setTimeout(r, 900+Math.random()*900));
-  const prompt = (body.messages||[]).map(m=>(typeof m.content==='string'?m.content:'')).join('\n');
+  const key = AI_STATE.key;
+
+  /* ── Real API path ── */
+  if (key) {
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-allow-browser': 'true'
+        },
+        body: JSON.stringify({
+          model: AI_STATE.model,
+          max_tokens: body.max_tokens || 3000,
+          messages: body.messages || []
+        })
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        const msg = err?.error?.message || `HTTP ${response.status}`;
+        console.warn('[PLENARY] API error:', msg, '— falling back to local generator');
+        /* Fall through to local generator */
+      } else {
+        const data = await response.json();
+        return data?.content?.[0]?.text || '';
+      }
+    } catch (e) {
+      console.warn('[PLENARY] Network error:', e.message, '— falling back to local generator');
+    }
+  }
+
+  /* ── Local fallback ── */
+  await new Promise(r => setTimeout(r, 700 + Math.random() * 600));
+  const prompt = (body.messages || []).map(m => (typeof m.content === 'string' ? m.content : '')).join('\n');
   return _localGenerate(prompt);
 }
 
@@ -3549,6 +3889,93 @@ renderPhrases();
 renderBlocs();
 renderGlossary();
 renderProcedure();
+
+/* ── AI Settings panel ──────────────────────────────────────────────────── */
+(function initAISettings() {
+  const overlay   = document.getElementById('aiModalOverlay');
+  const openBtn   = document.getElementById('aiSettingsBtn');
+  const closeBtn  = document.getElementById('aiModalClose');
+  const keyInput  = document.getElementById('aiKeyInput');
+  const saveBtn   = document.getElementById('aiSaveBtn');
+  const clearBtn  = document.getElementById('aiClearBtn');
+  const statusMsg = document.getElementById('aiStatusMsg');
+  const modelOpts = document.querySelectorAll('.ai-model-opt');
+
+  /* Restore saved state into UI */
+  if (AI_STATE.key) keyInput.value = AI_STATE.key;
+  modelOpts.forEach(o => {
+    o.classList.toggle('active', o.dataset.model === AI_STATE.model);
+  });
+  _updateAIBtn();
+
+  openBtn.addEventListener('click', () => { overlay.classList.add('open'); statusMsg.style.display='none'; });
+  closeBtn.addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  modelOpts.forEach(o => {
+    o.addEventListener('click', () => {
+      modelOpts.forEach(m => m.classList.remove('active'));
+      o.classList.add('active');
+    });
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const key = keyInput.value.trim();
+    const selectedModel = document.querySelector('.ai-model-opt.active')?.dataset?.model || 'claude-sonnet-4-6';
+    if (!key) {
+      statusMsg.textContent = 'Please enter an API key.';
+      statusMsg.className = 'ai-status-msg err';
+      statusMsg.style.display = 'block';
+      return;
+    }
+    /* Quick validation ping */
+    saveBtn.textContent = 'Verifying…';
+    saveBtn.disabled = true;
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-allow-browser': 'true'
+        },
+        body: JSON.stringify({ model: selectedModel, max_tokens: 5, messages: [{ role: 'user', content: 'hi' }] })
+      });
+      if (r.ok || r.status === 400) {
+        /* 400 means key is valid but request was malformed — still means auth works */
+        AI_STATE.key   = key;
+        AI_STATE.model = selectedModel;
+        statusMsg.textContent = `AI Engine active — ${selectedModel} connected.`;
+        statusMsg.className = 'ai-status-msg ok';
+        _updateAIBtn();
+      } else {
+        const err = await r.json().catch(() => ({}));
+        statusMsg.textContent = `Key rejected: ${err?.error?.message || 'HTTP ' + r.status}`;
+        statusMsg.className = 'ai-status-msg err';
+      }
+    } catch (e) {
+      /* Network error — save anyway, will fall back at generation time */
+      AI_STATE.key   = key;
+      AI_STATE.model = selectedModel;
+      statusMsg.textContent = `Saved (network check failed — will verify at generation time).`;
+      statusMsg.className = 'ai-status-msg ok';
+      _updateAIBtn();
+    }
+    saveBtn.textContent = 'Save & Activate AI Engine';
+    saveBtn.disabled = false;
+    statusMsg.style.display = 'block';
+  });
+
+  clearBtn.addEventListener('click', () => {
+    AI_STATE.key = '';
+    keyInput.value = '';
+    _updateAIBtn();
+    statusMsg.textContent = 'API key cleared. Using offline generator.';
+    statusMsg.className = 'ai-status-msg ok';
+    statusMsg.style.display = 'block';
+  });
+})();
 </script>
 </body>
 </html>
