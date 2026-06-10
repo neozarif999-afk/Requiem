@@ -2289,7 +2289,7 @@ function _genPOI(prompt) {
   if (!comAbbr) comAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
   const countM     = prompt.match(/Generate exactly (\d+) POIs/i);
   const count      = countM ? parseInt(countM[1]) : 3;
-  const stratHint  = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':'treaty';
+  const stratHint  = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':_pick(['treaty','voting','data','contradiction']);
 
   /* ── Detect thinking intensity ── */
   const thinkingHint = /THINKING INTENSITY:\s*(\w+)/i.exec(prompt);
@@ -2313,12 +2313,38 @@ function _genPOI(prompt) {
   const tcd = _countryDataFor(target);
   const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
 
-  /* ── Pre-pick shuffled arrays to avoid repetition across multiple POIs ── */
+  /* Country-specific intelligence shortcuts */
+  const tcdPos  = tcd ? tcd.position.substring(0,130)          : '';
+  const tcdGaps = tcd ? tcd.treaty_gaps                         : '';
+  const tcdVote = tcd ? tcd.vote_pattern                        : '';
+  const tcdBloc = tcd && tcd.blocs.length ? tcd.blocs[0]        : 'its regional bloc';
+
+  /* Pre-shuffled arrays to avoid same treaty/resolution/stat repeating every generation */
   const pickedRes = _pickN(td.resolutions, Math.min(6, td.resolutions.length));
-  const pickedTr  = _pickN(td.treaties, Math.min(6, td.treaties.length));
-  const pickedSt  = _pickN(td.stats, Math.min(6, td.stats.length));
-  const pickedInc = _pickN(td.incidents, Math.min(6, td.incidents.length));
-  const pickedOp  = _pickN(td.operative, Math.min(4, td.operative.length));
+  const pickedTr  = _pickN(td.treaties,    Math.min(6, td.treaties.length));
+  const pickedSt  = _pickN(td.stats,       Math.min(6, td.stats.length));
+  const pickedInc = _pickN(td.incidents,   Math.min(6, td.incidents.length));
+  const pickedOp  = _pickN(td.operative,   Math.min(4, td.operative.length));
+
+  /* WHY_IT_WORKS — varied by index so each POI gets a different framing */
+  const whyPool = [
+    `Exposes the gap between ${target}'s stated position and its documented treaty obligations on ${topic}.`,
+    `Forces ${target} to account for its own legal record rather than taking a principled position it has not itself honoured.`,
+    `Places ${target} in a position where it must either admit non-compliance or explain an inconsistency already in the public record.`,
+    `Shifts the burden: ${target} cannot advocate stronger obligations for others while its own implementation record on ${topic} remains unverified.`,
+    `Grounds the argument in independently verifiable evidence — the committee can check the record without relying on the delegate's characterization.`,
+    `The question is not adversarial — it is factual. If ${target}'s record is clean, a direct answer costs nothing. If it is not, the silence will be noted.`,
+    `Combines legal obligation with documented conduct, making a general response insufficient and requiring a specific, verifiable commitment.`
+  ];
+
+  /* ARGUMENT_CHAIN — varied templates for merged mode */
+  const chainPool = [
+    `The instrument creates a binding obligation; the documented incident proves the obligation is not being met; the gap is confirmed by independent evidence.`,
+    `Legal commitment + documented non-compliance + independent verification = a case that a denial cannot close without specific, time-bound counter-evidence.`,
+    `Step 1: obligation established. Step 2: implementation shortfall documented. Step 3: the delegate must either rebut the evidence or account for it directly.`,
+    `The resolution created the norm; the treaty created the obligation; the incident proved neither was implemented. A general reaffirmation is not a rebuttal.`,
+    `Obligation → gap → evidence: each element is independently verifiable. The burden is on ${target} to disprove any of the three — a general statement meets none of them.`
+  ];
 
   /* ── Base question factory (surgical / standard) — expanded for variety ── */
   const makeQ = (i) => {
@@ -2343,10 +2369,15 @@ function _genPOI(prompt) {
         {q:`Would the distinguished delegate of ${target} clarify whether ${target} has ratified ${tr}, and if not, how the delegation justifies advocating obligations it has itself not yet accepted?`,c:tr},
         {q:`Regarding ${target}'s obligations under ${tr}, would the delegate explain what specific domestic implementation measures have been enacted since that instrument entered into force, given documented compliance gaps?`,c:tr},
         {q:`Would the delegation of ${target} confirm whether it has submitted its most recent periodic report to the relevant treaty body under ${tr}, as required — and if not, when it intends to do so?`,c:tr},
-        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations?`,c:tr},
+        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations, and how those reservations are reconciled with the position just stated?`,c:tr},
         {q:`${target} is a party to ${tr}. Article obligations under that instrument require specific and measurable implementation. Would the delegate identify the last time ${target}'s domestic compliance was independently verified under that instrument's reporting mechanism?`,c:tr},
         {q:`Would the delegation of ${target} confirm whether it supports the strengthening of enforcement mechanisms under ${tr2} — given that its stated position on ${topic} appears to go further than its own ratification record would support?`,c:tr2},
-        {q:`The delegate has invoked the norms of ${tr}. Would ${target} agree that those norms apply universally — and if so, explain how they square with the implementation record this delegation has on file?`,c:tr}
+        {q:`The delegate has invoked the norms of ${tr}. Would ${target} agree that those norms apply universally — and if so, explain how they square with the implementation record this delegation has on file for that instrument?`,c:tr},
+        ...(tcdGaps?[{q:`This committee has on record that ${target}'s treaty gaps include: ${tcdGaps.substring(0,140)}. Given this documented record, would the delegate explain how the position advocated today is consistent with ${target}'s own legal obligations?`,c:`${target} treaty ratification record`}]:[]),
+        ...(tcdPos?[{q:`${target} is known to ${tcdPos.toLowerCase()}. Yet the delegation is now calling for stronger multilateral obligations under ${tr}. Would the delegate explain how ${target}'s established policy record supports the position just articulated?`,c:`${target} documented policy position`}]:[]),
+        {q:`The delegation has spoken of the importance of ${tr}. Would the delegate clarify: has ${target} accepted the jurisdiction of the treaty's monitoring body, and has it complied with the most recent periodic review cycle — yes or no?`,c:tr},
+        {q:`${tr2} was adopted precisely to address the gaps identified on the issue of ${topic}. Would the delegate explain ${target}'s current status under that instrument and identify any pending national action plan?`,c:tr2},
+        {q:`Would the delegation of ${target} acknowledge that mere ratification of ${tr} is not compliance — and then explain what operational, budgeted, and time-bound measures ${target} has taken since ratification to fulfil its substantive obligations?`,c:tr}
       ];
       return qs[i%qs.length];
     }
@@ -2356,30 +2387,40 @@ function _genPOI(prompt) {
         {q:`Would the delegate clarify ${target}'s vote on ${res}? That resolution called for precisely the action the delegation now advocates. Was the delegation's position at the time consistent with the one presented today?`,c:res},
         {q:`This committee adopted ${res}. ${target} was a member of this body at that time. Would the delegate confirm whether ${target} voted in favour, and if it did not, explain what change in policy accounts for the speech we have just heard?`,c:res},
         {q:`${target} supported the broad language of ${res2} but has on other occasions taken positions that appear to qualify it significantly. Would the delegate clarify how those positions are consistent with the full text of that resolution?`,c:res2},
-        {q:`The voting record on ${res} is available to this committee. Would the delegate explain the position ${target} took at the time, and whether that position is consistent with the one the delegation is advancing today?`,c:res},
-        {q:`${res} passed with broad support. Would the delegate confirm whether ${target} was among the states that endorsed it, and if so, what specific implementation steps ${target} has taken since that vote?`,c:res}
+        {q:`The voting record on ${res} is available to this committee. Would the delegate explain the position ${target} took at the time, and confirm whether that position is consistent with the one the delegation is advancing today?`,c:res},
+        {q:`${res} passed with broad support. Would the delegate confirm whether ${target} was among the states that endorsed it, and if so, identify what specific implementation steps ${target} has taken since that vote?`,c:res},
+        ...(tcdVote?[{q:`${target}'s documented voting pattern reveals: ${tcdVote.substring(0,150)}. In light of this record, would the delegate explain how the position argued today represents a genuine policy shift rather than selective advocacy?`,c:`${target} UN voting record`}]:[]),
+        {q:`The delegation argues that ${res} reflects binding state obligations. Would the delegate confirm whether ${target} voted for that resolution — and if it abstained or voted against, explain which specific operative clauses ${target} found objectionable?`,c:res},
+        {q:`Would the delegate of ${target} explain whether its position on ${topic} today is consistent with how ${target} voted on related resolutions in the past three General Assembly sessions — and provide specific resolution numbers if the answer is yes?`,c:res2},
+        {q:`${res} called for action that the delegation now supports in principle. Would the delegate clarify why ${target} required a multilateral mandate to reach that position, rather than acting unilaterally on the stated conviction?`,c:res}
       ];
       return qs[i%qs.length];
     }
     if (stratHint==='data') {
-      const stClean = st.replace(/^According to [^,]+, /,'').substring(0,80);
+      const stClean = st.replace(/^According to [^,]+, /,'').substring(0,90);
       const qs=[
-        {q:`${st}. Would the distinguished delegate of ${target} reconcile this independently verified data with the position just articulated?`,c:st.split(',')[0].replace(/^According to /,'')},
-        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${stClean} — suggests a different trajectory?`,c:st},
+        {q:`${st}. Would the distinguished delegate of ${target} reconcile this independently verified data point with the position just articulated?`,c:st.split(',')[0].replace(/^According to /,'')},
+        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${stClean} — suggests a materially different trajectory?`,c:st},
         {q:`The delegation has made quantitative claims regarding ${topic}. Would the delegate explain the discrepancy between the official position and the following independently verified data: ${st}?`,c:st},
-        {q:`${target}'s delegate cited figures on ${topic}. Would the delegation confirm the source and methodology — since data from ${st.split(',')[0]} points to a materially different conclusion?`,c:st},
-        {q:`The data the delegation relies upon appears to conflict with independent findings. Specifically, ${stClean}. Would the delegate either corroborate or challenge that figure, with a source?`,c:st}
+        {q:`${target}'s delegate cited figures on ${topic}. Would the delegation confirm the source and peer-review methodology behind those figures — since ${st.split(',')[0]} arrives at a significantly different conclusion?`,c:st},
+        {q:`The data the delegation relies upon appears to conflict with independent findings. Specifically, ${stClean}. Would the delegate either corroborate or challenge that figure, and provide the authoritative source?`,c:st},
+        {q:`Independent bodies have documented that ${stClean}. Would the delegate of ${target} either challenge the methodology of that finding — citing a specific alternative source — or account for the gap between that data and the claim made in the speech?`,c:st},
+        {q:`If ${target}'s position on ${topic} is correct, the data should reflect it. Would the delegate explain why ${st} — sourced from an independent authority — points in the opposite direction to the claim just advanced?`,c:st}
       ];
       return qs[i%qs.length];
     }
     /* contradiction / default */
     const qs=[
-      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this position with ${inc}, which raised direct questions about ${target}'s own conduct on this issue?`,c:`Documentation of ${inc}`},
+      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this position with ${inc}, which raised direct questions about ${target}'s own conduct on precisely this issue?`,c:`Documentation of ${inc}`},
       {q:`Would the distinguished delegate clarify how ${target}'s position today aligns with its conduct under ${tr}, given that ${inc} represents a substantive departure from that instrument's obligations?`,c:tr},
       {q:`${target}'s statement endorses the principles of ${res}. Would the delegation explain how its domestic policy record is consistent with those principles, given the evidence available from ${inc}?`,c:res},
-      {q:`There is a documented gap between the position ${target} is advancing today and the conduct available in the public record. The most relevant example is ${inc}. Would the delegate address that gap directly?`,c:`Documentation of ${inc}`},
+      {q:`There is a documented gap between the position ${target} is advancing today and the conduct available in the public record. The most relevant example is ${inc}. Would the delegate address that gap directly — not in general terms, but specifically?`,c:`Documentation of ${inc}`},
       {q:`Would the delegate of ${target} explain how the position articulated today is consistent with ${target}'s known policy record under ${tr} — particularly in light of ${inc}, which this committee has the means to verify?`,c:tr},
-      {q:`${inc} is a matter of documented public record. ${target}'s position today appears to rely on a narrative that does not fully account for that incident. Would the delegate address the discrepancy?`,c:`Documentation of ${inc}`}
+      {q:`${inc} is a matter of documented public record. ${target}'s position today appears to rely on a narrative that does not fully account for that incident. Would the delegate address the discrepancy on the record?`,c:`Documentation of ${inc}`},
+      ...(tcdPos?[{q:`${target} has consistently positioned itself as ${tcdPos.toLowerCase()}. ${inc} directly challenges that self-characterization. Would the delegate explain how those two realities — the stated position and the documented incident — are reconciled?`,c:`${target} policy record vs. ${inc}`}]:[]),
+      {q:`The delegation has presented a coherent narrative on ${topic}. That narrative, however, does not address ${inc}. Would the delegate explain why — and whether that omission is intentional?`,c:`Documentation of ${inc}`},
+      {q:`${res} and ${tr} together establish both a normative and a legal framework for action on ${topic}. ${target}'s conduct, as documented in ${inc}, appears to fall outside both. Would the delegate explain which framework governs ${target}'s actual behaviour, if not these?`,c:`${res} and ${tr}`},
+      {q:`Would the delegation of ${target} agree that credibility in this chamber requires consistency between stated positions and documented conduct — and if so, address directly why ${inc} does not undermine the credibility of the speech just delivered?`,c:`Documentation of ${inc}`}
     ];
     return qs[i%qs.length];
   };
@@ -2544,13 +2585,16 @@ WHY_IT_WORKS: ${exp.why}
       const q   = makeQ(i);
       const tr  = pickedTr[i % pickedTr.length];
       const inc = pickedInc[i % pickedInc.length];
+      const why = whyPool[i % whyPool.length];
+      const chain = chainPool[i % chainPool.length];
+      const docLogicGap = tcdGaps ? `known gap: ${tcdGaps.substring(0,90)}` : 'incomplete implementation record on the instrument';
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${mergedTags[i%mergedTags.length]}
 QUESTION: ${q.q}
-DOCUMENT_LOGIC: ${tr} → binding obligation to ${topic.substring(0,40)} → gap: ${tcd?tcd.treaty_gaps:'incomplete implementation record on the instrument'}
+DOCUMENT_LOGIC: ${tr} → binding obligation on ${topic.substring(0,40)} → ${docLogicGap}
 NEWS_PROOF: ${inc} — documented by Reuters, UN News, and relevant UN monitoring bodies
-ARGUMENT_CHAIN: The instrument creates a binding obligation; the documented incident proves the obligation is not being met; the gap is therefore confirmed by independent evidence, not merely alleged.
+ARGUMENT_CHAIN: ${chain}
 COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementation is in progress — but the timeline and independent documentation undermine any claim of good-faith compliance within a reasonable timeframe.
 [POI_END]`);
       } else {
@@ -2558,7 +2602,7 @@ COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementa
 STRATEGY_TAG: ${strategyTagMap[stratHint]}
 QUESTION: ${q.q}
 CITATION: ${q.c}
-WHY_IT_WORKS: Exposes the gap between ${target}'s stated position and its documented treaty obligations and established policy record on ${topic}.
+WHY_IT_WORKS: ${why}
 [POI_END]`);
       }
     }
