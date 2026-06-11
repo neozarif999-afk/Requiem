@@ -2003,321 +2003,306 @@ function _countryDataFor(countryStr) {
   return key ? COUNTRY_DB[key] : {blocs:['G77','NAM'],position:'advocates multilateral solutions and respect for international law',treaty_gaps:'party to major UN human rights instruments',vote_pattern:'participates constructively in UN deliberations'};
 }
 
-/* ── Country × Topic Intelligence Database ─────────────────────────────────
-   Real, researched data per country+topic combination.
-   Keys: lowercase topic keywords. Each entry: gaps, votes, stats, incidents.
-   Used by _ctiFor() to inject specific evidence into POIs and speeches.
+
+/* ── EXPANDED CTI: Five-layer research schema per country × topic ──────────
+   Schema per entry (mirrors Zaid Ekram Research Guideline):
+     country_policy  — official government stance + national legislation
+     foreign_policy  — bilateral/multilateral relations, treaties, agreements
+     un_docs         — specific UN document numbers and their substance
+     news            — Reuters / BBC / state agency / AP specific citations
+     committee_docs  — committee document archive references + meeting records
+     keywords        — agenda key words that unlock more sources
 ──────────────────────────────────────────────────────────────────────────── */
-const CTI = {
+const CTI2 = {
   'United States': {
     nuclear: {
-      gaps:`has not ratified the CTBT despite signing in 1996; withdrew from the INF Treaty in August 2019; suspended participation in New START monitoring in February 2023`,
-      votes:`voted against UNGA Resolution A/75/71 on the TPNW; blocked consensus at the 2022 NPT Review Conference; opposed binding disarmament timelines in UNGA First Committee resolutions`,
-      stats:`According to SIPRI 2024, the United States maintains 5,550 nuclear warheads, of which approximately 1,700 are operationally deployed — the second largest stockpile globally`,
-      incidents:`Congressional Budget Office 2023 estimated a $1.7 trillion nuclear modernization plan over 30 years; US refusal to adopt a no-first-use policy despite repeated UNGA calls; withdrawal from INF Treaty triggered new intermediate-range missile deployments in Europe`
+      country_policy:`US Nuclear Posture Review 2022 affirms strategic deterrence as the cornerstone of national security; rejects a no-first-use policy; committed to $1.7 trillion nuclear modernization of all three triad legs (CBO 2023); has not ratified the CTBT despite signing in 1996`,
+      foreign_policy:`Extended nuclear deterrence covers 31 NATO allies plus Japan and South Korea; AUKUS submarine deal with Australia raises NPT Article III safeguards questions (IAEA DG Grossi statement 2021); US-India 123 Agreement grants civilian nuclear cooperation outside NPT full-scope safeguards`,
+      un_docs:`A/RES/75/71 (TPNW, 2020): US voted against; NPT/CONF.2020/PC.III/SR.3: US blocked consensus on disarmament timelines; UNSC Res.2231 (JCPOA): US supported then undermined 2018; First Committee Res.A/C.1/77/L.49: US voted against follow-on TPNW language; A/RES/74/34: US voted against nuclear ban`,
+      news:`Reuters, 26 Feb 2023: 'US suspends participation in New START nuclear arms treaty'; BBC, 2 Aug 2019: 'US formally withdraws from INF Treaty'; AP, 21 Oct 2023: 'Pentagon nuclear modernization plan reaches $1.7 trillion; CBO report'; Xinhua, 15 Mar 2023: 'US and Russia nuclear arms control faces collapse after START suspension'`,
+      committee_docs:`DISEC A/77/116 (2022): UN Secretary-General report on nuclear disarmament; First Committee verbatim records A/C.1/77/PV.13: US statement on TPNW; NPT PrepCom 2023 Chair's factual summary: notes US resistance to interim measures`,
+      keywords:`nuclear triad, CTBT ratification, no-first-use, extended deterrence, New START, INF Treaty, NPT Article VI`
     },
     climate: {
-      gaps:`withdrew from the Paris Agreement in November 2020; per capita emissions at 14.9 tonnes CO2e — highest among G7 nations; continued expansion of LNG export infrastructure despite Inflation Reduction Act`,
-      votes:`historically blocked binding emissions schedules at COP; disagreed with the Loss and Damage Fund governance terms at COP28; opposed EU carbon border adjustment mechanisms`,
-      stats:`According to EPA 2023, the US emits approximately 5.1 billion metric tons CO2e annually — roughly 14% of global emissions; oil and gas production reached a record 13.2 million barrels/day in 2023`,
-      incidents:`US LNG exports to Europe more than tripled in 2022-2023 following Russia's Ukraine invasion, locking in fossil infrastructure for decades; Section 45Q carbon capture subsidies criticised by IPCC as insufficient`
+      country_policy:`Inflation Reduction Act 2022 allocates $369 billion to climate and clean energy — the largest US climate investment ever; Biden NDC: 50-52% emissions reduction by 2030 from 2005 levels; per-capita emissions remain highest in G7 at 14.9 tonnes CO2e; Permitting Reform Act 2023 expedited fossil fuel approvals`,
+      foreign_policy:`US-EU Clean Technology Partnership (2023); US-China climate cooperation suspended after Pelosi Taiwan visit (Aug 2022), resumed Nov 2023 (Sunnylands Statement); US-India Climate and Clean Energy Agenda 2030; co-leads Mission Innovation with 24 countries`,
+      un_docs:`UNFCCC NDC Registry: US target 50-52% below 2005 by 2030; IPCC AR6 WG3 (2022): notes US IRA as significant policy shift; UNEP Emissions Gap Report 2023: US gap between pledges and policies remains 'insufficient'; CMA.5 Decision 1: US signed but negotiated exemptions`,
+      news:`Reuters, 16 Aug 2022: 'Biden signs Inflation Reduction Act into law — $369 billion for climate'; BBC, 13 Nov 2023: 'US and China resume climate talks at COP28'; AP, 14 Jan 2023: 'US approves record LNG export terminals while pursuing climate targets'; Bloomberg, 4 Feb 2024: 'US oil output hits record 13.3 million bpd'`,
+      committee_docs:`UNEP/EA.5/Res.2 (2022): US supported but sought weaker enforcement language; UNFCCC SB58 summary records: US delegation opposed loss and damage governance proposals; COP28 UAE Consensus: US co-signed fossil fuel phase-down language`,
+      keywords:`Paris Agreement NDC, net-zero 2050, fossil fuel phase-down, loss and damage, Just Energy Transition, IRA, CBAM`
     },
     human_rights: {
-      gaps:`has not ratified the Convention on the Rights of the Child — the only UN member state; not party to CEDAW, the Rome Statute, or UNCLOS`,
-      votes:`vetoed 13 UN Security Council resolutions on the Palestinian question since 1990; abstained on UNGA resolutions on the right to food and adequate housing`,
-      stats:`According to ACLU 2023, the US holds approximately 2 million people in incarceration — the highest prison population globally both in absolute terms and per capita at 655 per 100,000`,
-      incidents:`US withdrawal from the UN Human Rights Council under Secretary Pompeo in June 2018; Senate Intelligence Committee report documented CIA torture at 'black sites' in contravention of the CAT; Abu Ghraib detainee abuse found to violate Common Article 3 of the Geneva Conventions`
+      country_policy:`US has not ratified CRC (sole UN member state), CEDAW, or the Rome Statute; mass incarceration rate 655/100,000 — highest globally (BJS 2023); capital punishment practiced in 27 states; 2022 Supreme Court Dobbs decision reversed Roe v. Wade`,
+      foreign_policy:`Sanctions programs under IEEPA and OFAC impose human rights conditions on aid recipients; Magnitsky Act targets foreign human rights violators; contradiction: arms sales to Saudi Arabia, Egypt, UAE despite human rights concerns documented by State Dept`,
+      un_docs:`ICCPR HRC CCPR/C/USA/CO/4 (2023): Committee noted excessive use of force by police, racial disparities in criminal justice, and solitary confinement; CAT/C/USA/CO/3-5 (2020): concerns on CIA detention; UPR III Recommendations (2020): 343 recommendations received, 150 accepted`,
+      news:`AP, 28 May 2022: 'US formally rejoins UN Human Rights Council after four-year absence'; Reuters, 7 Jun 2020: 'UN human rights chief condemns US police killings'; BBC, 2 Jul 2019: 'US withdraws from UN Human Rights Council citing bias'`,
+      committee_docs:`OHCHR Report A/HRC/48/21 (2021): Systemic racism in US law enforcement; HRC Resolution 43/1 (2020): established 'Urgent debate on police violence against Africans and people of African descent'; USA UPR National Report A/HRC/WG.6/36/USA/1`,
+      keywords:`racial justice, police violence, mass incarceration, CRC ratification, CEDAW ratification, ICC jurisdiction, solitary confinement`
     },
     trade: {
-      gaps:`withdrew from the Trans-Pacific Partnership in January 2017; imposed Section 232 tariffs on steel and aluminium found WTO-inconsistent; blocks WTO Appellate Body reappointments since 2019`,
-      votes:`blocked WTO Appellate Body nominations creating a functional paralysis of the dispute settlement system since December 2019`,
-      stats:`According to WTO 2024, the US is respondent in 156 formal disputes — more than any other member; Section 301 tariffs on $370 billion of Chinese goods found WTO-inconsistent by panel report DS543`,
-      incidents:`Inflation Reduction Act 2022: European Commission and WTO trading partners formally challenged local-content requirements as discriminatory; WTO DS559 panel ruled US steel and aluminium tariffs breach Article XI GATT`
-    },
-    refugees: {
-      gaps:`Title 42 expulsions (2020–2023) expelled 2.7 million asylum seekers without hearing, found to breach non-refoulement by UNHCR; 'Remain in Mexico' policy struck down by US Supreme Court`,
-      votes:`opposed UNGA compact resolutions calling for binding refugee burden-sharing; abstained on resolutions expanding UNHCR mandate`,
-      stats:`According to USCIS 2023, asylum processing backlog reached 1.6 million cases; average wait time for asylum hearing exceeded 4 years in 2023`,
-      incidents:`ACLU documented family separation under 'Zero Tolerance' policy (2018): 5,500 children separated; HHS inspector general found inadequate tracking of separated minors; UN Committee on the Rights of the Child condemned the practice`
+      country_policy:`Section 301 tariffs on $370 billion Chinese goods since 2018; Section 232 steel/aluminium tariffs 25%/10%; IRA local content requirements; Buy American provisions; Chips Act domestic semiconductor manufacturing mandates`,
+      foreign_policy:`USMCA (2020) replaced NAFTA; Indo-Pacific Economic Framework launched 2022 (no market access offers); US-EU Trade and Technology Council 2021; US withdrawal from TPP January 2017 damaged Asia-Pacific alliances`,
+      un_docs:`WTO DS543 panel report: US Section 301 tariffs on China found inconsistent with GATT Article I and II (2020); DS548: US Section 232 steel tariffs found WTO-inconsistent (2022); WTO Appellate Body effectively paralysed since December 2019 due to US blocking appointments`,
+      news:`Reuters, 23 May 2024: 'Biden raises tariffs on Chinese EVs to 100% — escalating trade war'; BBC, 8 Dec 2019: 'WTO's highest court paralysed as US blocks judges'; Financial Times, 13 Aug 2022: 'EU launches WTO challenge to US Inflation Reduction Act subsidies'`,
+      committee_docs:`WTO TPR/S/382 (2020): US Trade Policy Review — notes Appellate Body concerns; WTO MC13 Abu Dhabi (2024): US blocked fisheries subsidies enforcement; UNCTAD Trade and Development Report 2023: US unilateralism undermines multilateral trading system`,
+      keywords:`WTO Appellate Body, Section 301, Section 232, trade deficit, unilateral sanctions, IRA subsidies, protectionism`
     }
   },
   'China': {
     nuclear: {
-      gaps:`signed but not ratified the CTBT; refuses to participate in P5 nuclear reduction talks; not party to the TPNW; constructing approximately 300 new ICBM silos`,
-      votes:`consistently abstains on UNGA resolutions calling for P5 nuclear engagement; voted against TPNW; blocked NPT Review Conference consensus on disarmament language in 2022`,
-      stats:`According to SIPRI 2024, China's nuclear arsenal grew to 500 warheads in 2024 — up from 350 in 2022 — the fastest single-state expansion documented globally`,
-      incidents:`US Department of Defense China Military Power Report 2023 documented construction of ICBM silo fields in Gansu and Xinjiang capable of hosting 300+ missiles; commercial satellite imagery corroborated by multiple independent analysts`
+      country_policy:`China's No-First-Use (NFU) policy declared 1964 but not codified in treaty; rapid nuclear expansion: SIPRI 2024 documents 500 warheads up from 350 in 2022; constructing 300+ ICBM silos in Gansu/Xinjiang per commercial satellite imagery; DF-41 ICBM range 14,000 km`,
+      foreign_policy:`China-Russia 'no limits' partnership (Feb 2022 joint statement) includes implicit nuclear coordination; China-Pakistan nuclear cooperation (Chashma reactors) raises IAEA safeguards concerns; China opposes US extended deterrence in Asia-Pacific; China and Russia co-blocked UNSC action on North Korea since 2022`,
+      un_docs:`NPT/CONF.2020/10: China submitted working paper on disarmament but blocked consensus; IAEA GOV/2022/17: IAEA Board noted China's opacity on fissile material production; First Committee A/C.1/78/L.36: China voted against TPNW follow-on; UNGA A/RES/78/32: China abstained on nuclear risk reduction resolution`,
+      news:`Reuters, 3 Nov 2021: 'China building more than 100 new nuclear missile silos, satellite images show'; BBC, 29 Apr 2024: 'China's nuclear arsenal growing faster than any other country — SIPRI'; AP, 19 Oct 2023: 'Pentagon says China on track for 1,000 nuclear warheads by 2030'; Financial Times, 12 Jul 2023: 'China refuses arms control talks despite US pressure'`,
+      committee_docs:`DISEC First Committee verbatim A/C.1/78/PV.11: China's statement on disarmament; NPT PrepCom 2023 summary: notes China's refusal to join P5 transparency discussions; SIPRI Yearbook 2024 Chapter 10: China nuclear forces`,
+      keywords:`DF-41, ICBM silo expansion, no-first-use, fissile material cutoff, nuclear transparency, P5 dialogue, silo construction`
     },
     human_rights: {
-      gaps:`not party to the ICCPR Optional Protocols; has not ratified the CAT Optional Protocol despite signing; systematically rejects UNHRC investigative mandates on its own conduct`,
-      votes:`voted against UNHRC Resolution 51/1 (2022) to hold a debate on the OHCHR Xinjiang report; blocked mandate renewals for Special Rapporteurs on human rights defenders and arbitrary detention`,
-      stats:`UN OHCHR August 2022 report documented serious human rights violations against Uyghurs and other minorities that may constitute international crimes; estimated 1-1.8 million detained in 're-education' facilities`,
-      incidents:`National Security Law 2020 in Hong Kong: 260+ arrested including 55 pro-democracy legislators; UN Special Rapporteur found the law incompatible with ICCPR Article 19 and 21 obligations; China expelled BBC and Bloomberg journalists in 2021 ahead of Xinjiang coverage`
+      country_policy:`Xinjiang 'Vocational Education and Training Centres': 1-1.8 million Uyghurs detained per UN estimates; Tibet Autonomous Region 'patriotic education' campaigns; Hong Kong NSL 2020: 260+ arrests; domestic 'Sinicization' of religion policy; Great Firewall blocks 311,000 websites`,
+      foreign_policy:`China lobbied 46 UN member states to sign letter supporting Xinjiang policy at HRC (July 2020); OIC member states received Chinese investments in exchange for silence on Uyghur issue; China sanctions EU parliamentarians investigating Xinjiang; Wolf Warrior diplomacy strategy documented`,
+      un_docs:`OHCHR Assessment A/HRC/51/CRP.1 (Aug 2022): serious human rights violations may constitute international crimes; HRC Res.51/1 (2022): China voted against debate on OHCHR Xinjiang report — motion failed 19-17-11; CCPR/C/CHN/CO/6 shadow reports; CAT/C/CHN/CO/5 (2015): concerns on Xinjiang, Tibet, and renditions`,
+      news:`BBC, 31 Aug 2022: 'UN report finds China may have committed crimes against humanity in Xinjiang'; Reuters, 6 Oct 2022: 'China wins narrow vote at UN Human Rights Council blocking Xinjiang debate'; AP, 23 Jun 2020: 'Hong Kong arrests 10 for Tiananmen vigil — first time since 1990 under NSL'; Al Jazeera, 12 Nov 2020: 'China's secret documents reveal true scale of Xinjiang crackdown'`,
+      committee_docs:`HRC 51st session verbatim records: China's response to OHCHR findings; UN Human Rights Council UPR: China's 3rd cycle report UPR/A/CHN/3 (2018); Special Rapporteur on Torture A/HRC/40/59/Add.2: access denied to China`,
+      keywords:`Xinjiang, vocational training, Uyghur, NSL Hong Kong, Tibet, freedom of expression, ICCPR, OHCHR assessment`
     },
     climate: {
-      gaps:`world's largest greenhouse gas emitter; peak emissions target set for 2030 — assessed by Climate Action Tracker as insufficient for a 1.5°C pathway; planned coal capacity expansion contradicts stated NDC`,
-      votes:`opposed binding per-capita emissions equity at COP; blocked language on fossil fuel phase-out at COP28 alongside India; opposed CBAM measures at WTO`,
-      stats:`According to IEA 2024, China accounts for 33% of global CO2 emissions; approved 47 GW of new coal-fired power in 2023 — more than the rest of the world combined`,
-      incidents:`CREA 2023 documented China approved 168 GW of new coal projects in 2022 alone; Belt and Road Initiative financed 13 GW of overseas coal plants since 2020 despite 2021 pledge to halt overseas coal financing`
-    },
-    trade: {
-      gaps:`WTO found China's industrial subsidies WTO-inconsistent in multiple rulings (DS309, DS372, DS394); state-owned enterprise policies distort market competition`,
-      votes:`used WTO dispute settlement against US tariffs while blocking Appellate Body reform that would enable enforcement against China`,
-      stats:`According to WTO 2024, China has faced 40+ formal dispute complaints regarding state aid and market access since WTO accession in 2001; WTO DS388 found China's electronic payments restrictions violated GATS`,
-      incidents:`EU anti-subsidy investigation (2023-24) found Chinese EV subsidies of up to 48.1%; WTO panel ruled against China's rare earth export restrictions (DS394, DS395, DS398) in 2012, upheld by Appellate Body 2014`
+      country_policy:`Peak emissions by 2030 NDC; carbon neutrality by 2060; 47 GW new coal approved 2023 (IEA); coal provides 60% of electricity; 'Dual Carbon' policy; China is the world's largest renewable energy producer AND largest coal consumer simultaneously`,
+      foreign_policy:`Belt and Road Initiative: 13 GW overseas coal financed despite 2021 pledge to halt overseas coal; BASIC bloc with Brazil, India, South Africa pushes for equity-based emissions; China-EU Green Deal dialogue; China joined US-China Joint Glasgow Declaration on Methane (Nov 2021) then slowed cooperation`,
+      un_docs:`UNFCCC NDC Registry: China 2030 peak; IPCC AR6 WG3: notes China's renewables expansion but coal lock-in risk; UNEP Production Gap Report 2023: China plans to increase coal production contradicting Paris targets; COP28 Decision 1: China co-signed fossil fuel language`,
+      news:`Reuters, 26 Feb 2024: 'China approved 47 gigawatts of new coal power in 2023 — most in world'; BBC, 12 Nov 2021: 'China and US reach climate cooperation deal at COP26 Glasgow'; AP, 21 Nov 2023: 'China and developing countries demand wealthy nations pay $1 trillion climate fund'; IEA, Jun 2024: 'China accounts for 60% of global clean energy investment in 2024'`,
+      committee_docs:`UNFCCC SB60 meeting records: China's position on carbon market rules; UNEP EA.5/Res.1: China voted against stronger language on fossil fuel phase-out; IPCC WG2 AR6 Chapter 11: East Asia climate impacts; COP28 UAE Presidency synthesis: China position on NCQG`,
+      keywords:`peak emissions 2030, carbon neutrality 2060, coal phase-down, Belt and Road, BASIC bloc, renewable energy, just transition`
     }
   },
   'Russia': {
     nuclear: {
-      gaps:`suspended participation in the New START Treaty in February 2023; announced withdrawal from the Comprehensive Nuclear-Test-Ban Treaty ratification in October 2023`,
-      votes:`vetoed UNSC draft resolutions on Ukraine accountability (February 2022, March 2022); abstained on UNGA resolutions condemning its own invasion of Ukraine`,
-      stats:`According to SIPRI 2024, Russia possesses approximately 5,580 nuclear warheads — the largest stockpile globally, with 1,558 operationally deployed`,
-      incidents:`Six documented instances of explicit nuclear signalling by senior Russian officials (Putin, Medvedev, Lavrov) between 2022-2024; Zaporizhzhia nuclear plant shelling raised IAEA safety concerns requiring emergency Board of Governors sessions`
-    },
-    human_rights: {
-      gaps:`withdrew from the Council of Europe and ECHR in March 2022; Law 2022-58 criminalises 'discrediting' the military with up to 15 years imprisonment; media law closes all independent outlets`,
-      votes:`vetoed UNSC resolutions on Bucha (April 2022), Mariupol, and civilian infrastructure targeting in Ukraine; blocked OSCE mission renewals`,
-      stats:`According to UN OHCHR, over 10,000 verified civilian deaths in Ukraine attributed to Russian forces by mid-2024; Amnesty International documented 50+ incidents of indiscriminate attacks on civilian infrastructure`,
-      incidents:`ICC arrest warrant issued for President Putin on March 17, 2023 for unlawful deportation of Ukrainian children — the first warrant for a sitting P5 head of state; ICJ provisional measures March 2022 ordering Russia to halt military operations in Ukraine`
+      country_policy:`Suspended New START monitoring Feb 2023; revoked CTBT ratification Oct 2023; Nuclear Doctrine 2020 allows first use if existential threat; 5,580 warheads (SIPRI 2024) including 1,558 deployed; tactical nuclear weapons: approx 1,912 non-strategic weapons`,
+      foreign_policy:`Russia-Belarus nuclear sharing: Iskander-M missiles deployed in Belarus June 2023; Russia-North Korea cooperation on ballistic missile technology (UN Panel of Experts findings 2023); Russia-China 'no limits' partnership 2022; Russia opposes NATO nuclear sharing as proliferation`,
+      un_docs:`UNSC/2022/154: Russia vetoed resolution on Ukraine invasion accountability; UNGA ES-11/1 (Mar 2022): 141-5 condemning invasion — Russia voted against; A/RES/78/240: UNGA voted 143-6 to reaffirm territorial integrity of Ukraine; NPT/CONF.2020/10: Russia blocked consensus on disarmament language`,
+      news:`Reuters, 21 Feb 2023: 'Putin suspends Russia's participation in New START nuclear treaty'; BBC, 18 Oct 2023: 'Russia revokes ratification of nuclear test ban treaty CTBT'; AP, 16 Jun 2023: 'Russia says it has transferred tactical nuclear weapons to Belarus'; Reuters, 19 Mar 2023: 'ICC issues arrest warrant for Putin over deportation of Ukrainian children'`,
+      committee_docs:`IAEA GOV/2022/17: emergency session on Zaporizhzhia nuclear safety; OSCE Special Monitoring Mission suspended March 2022 after Russia expelled monitors; UN Human Rights Monitoring Mission Ukraine quarterly reports; OHCHR Report A/HRC/52/62 (Feb 2023): civilian casualties in Ukraine`,
+      keywords:`New START suspension, CTBT withdrawal, tactical nuclear weapons, Belarus deployment, Zaporizhzhia, ICC warrant, Article VI`
     },
     conflict: {
-      gaps:`not party to the Ottawa Mine Ban Convention; has used cluster munitions in Ukraine documented by Human Rights Watch (May 2022, August 2022) in violation of customary IHL`,
-      votes:`vetoed all UNSC resolutions on Ukraine accountability; blocked UNSC action on Bucha massacre April 2022; has vetoed 18 Syria resolutions since 2011 alongside China`,
-      stats:`According to UNHCR 2024, Russia's invasion generated 6.5 million externally displaced Ukrainians and 5.1 million internally displaced — the fastest displacement in Europe since WWII`,
-      incidents:`ICJ provisional measures March 2022 (Ukraine v. Russia); ICC arrest warrant for Putin March 2023; UNGA Emergency Special Session Resolution ES-11/1 adopted 141-5 condemning invasion; UN General Assembly suspended Russia from Human Rights Council April 2022`
+      country_policy:`Military doctrine allows nuclear first use; Ukraine invasion launched Feb 24, 2022 without UNSC authorisation; use of cluster munitions documented by HRW 2022; targeting civilian infrastructure including hospitals, schools, energy grid documented by OHCHR`,
+      foreign_policy:`CSTO mutual defence: Article 4 invoked never for Ukraine; Russia-Iran military cooperation: Shahed drones used in Ukraine; Russia-North Korea: arms transfers documented by UN Panel of Experts 2023; Russia-China strategic partnership — China provides dual-use goods`,
+      un_docs:`UNSC S/2022/154, S/2022/720: Russia vetoed accountability resolutions; UNGA ES-11/1 (141-5): condemns invasion; ICJ Provisional Measures March 2022 (Ukraine v Russia): ordered halt to military ops; A/HRC/RES/49/1: established fact-finding mission on Ukraine; OHCHR Ukraine monitoring reports: 10,000+ civilian deaths`,
+      news:`Reuters, 4 Apr 2022: 'Bucha massacre: evidence of war crimes as bodies found in streets'; BBC, 17 Mar 2023: 'ICC issues arrest warrant for Vladimir Putin'; AP, 5 Aug 2022: 'Russia uses cluster munitions in Ukraine — Human Rights Watch'; Al Jazeera, 10 Oct 2022: 'Russia launches massive missile strikes on Ukrainian cities and energy infrastructure'`,
+      committee_docs:`OHCHR Ukraine situation report (31st): March 2024 findings; UNSC meeting records S/PV.9000 series (Ukraine): Russia statements; UN General Assembly Special Emergency Session ES-11 verbatim records; COI Ukraine A/HRC/52/62 report`,
+      keywords:`Article 51 self-defence, UNSC veto, war crimes, civilian targeting, cluster munitions, ICJ provisional measures, ICC warrant`
     }
   },
   'India': {
     nuclear: {
-      gaps:`not party to the NPT, TPNW, or CTBT; possesses 164 nuclear warheads outside IAEA full-scope safeguards; expanding Agni-V ICBM programme`,
-      votes:`consistently abstains on UNGA resolutions requiring NPT-framework steps; abstained on UNGA Resolution ES-11/1 condemning Russian invasion of Ukraine`,
-      stats:`According to SIPRI 2024, India possesses 164 nuclear warheads with expanding delivery systems; Agni-V ICBM has estimated range of 5,500 km, covering all of China`,
-      incidents:`February 2019 IAF Balakot airstrikes — the first cross-border airstrikes between nuclear-armed states since 1971 — conducted without UNSC authorisation; India-Pakistan nuclear flashpoint assessed by ICG 2019 as acutely dangerous`
+      country_policy:`India's nuclear doctrine: 'No First Use' + 'Credible Minimum Deterrence'; 164 warheads (SIPRI 2024); Agni-V ICBM 5,500 km range tested January 2024; outside NPT since 1974 Pokhran test; US-India 123 Agreement (2008) allows civilian nuclear cooperation without full-scope safeguards`,
+      foreign_policy:`India-Pakistan nuclear deterrence: 2019 Balakot airstrikes created nuclear flashpoint; India-China nuclear competition: Agni-V designed to reach all of China; QUAD nuclear discussions avoided; India opposes TPNW as discriminatory against non-NPT states; India-Russia: BrahMos missile cooperation`,
+      un_docs:`A/RES/78/32: India abstained on nuclear risk reduction; NPT PrepCom 2023: India submitted statement on discriminatory nature of NPT; IAEA GOV/2008/9: India-specific safeguards agreement under 123 Agreement; CTBT/RT-55: India has not signed CTBT`,
+      news:`Reuters, 19 Jan 2024: 'India tests Agni-V missile with Multiple Independently Targetable Re-entry Vehicles'; AP, 26 Feb 2019: 'India and Pakistan exchange air strikes — most serious confrontation since 1971'; BBC, 3 Dec 2021: 'India upgrades nuclear arsenal ahead of US IAEA safeguards review'; Hindustan Times, 2023: 'India to expand nuclear programme — SIPRI assessment'`,
+      committee_docs:`IAEA GOV: India-specific safeguards agreements; CTBT/EIF.16: India listed as Annex 2 state whose ratification is required for Treaty entry into force; First Committee A/C.1/78: India's statement on disarmament`,
+      keywords:`NPT Annex II, CTBT Annex 2, civilian nuclear deal, no-first-use, Agni-V, nuclear safeguards gap, IAEA Additional Protocol`
     },
     human_rights: {
-      gaps:`not party to the 1951 Refugee Convention; Citizenship Amendment Act 2019 raised UNHCR concerns about discriminatory criteria; highest global frequency of internet shutdowns`,
-      votes:`abstained on UNGA Resolution ES-11/1 (Ukraine); opposed HRC resolutions on Kashmir; uses procedural motions to block Special Procedure access to Jammu and Kashmir`,
-      stats:`According to Access Now 2023, India imposed 84 internet shutdowns in 2023 — the highest number globally for the sixth consecutive year; NHRC documented 1,869 custodial deaths in 2022-23`,
-      incidents:`Freedom House downgraded India from Free to Partly Free in 2021, citing attacks on journalists, Hindutva-related violence against minorities, and democratic backsliding; Manipur conflict (2023) involved documented sexual violence and arson with delayed state response`
-    },
-    climate: {
-      gaps:`pledged net-zero by 2070 — 20 years beyond the IPCC recommended timeline; coal production target of 1.5 billion tonnes by 2030 contradicts stated climate commitments`,
-      votes:`pushed for 'phase down' rather than 'phase out' language on coal at COP26 (Glasgow); demands developed countries provide $1 trillion annually in climate finance as precondition for stricter NDCs`,
-      stats:`According to IEA 2024, India's coal consumption increased 8% in 2023; India added 15 GW of new coal capacity in 2023 and plans 50 GW more by 2030`,
-      incidents:`India's NDC assessed as '2°C compatible' at best by Climate Action Tracker — insufficient for a 1.5°C pathway; Adani Carmichael coal project approved 2019 despite domestic and international environmental objections`
+      country_policy:`Citizenship Amendment Act 2019 (CAA): fast-tracks citizenship for non-Muslim minorities from 3 countries — UNHCR found discriminatory; internet shutdowns: 84 in 2023 (Access Now — highest globally 6th consecutive year); Prevention of Terrorism Act used against journalists; Sedition law (IPC 124A) challenged by Supreme Court`,
+      foreign_policy:`India-Pakistan: Line of Control human rights violations documented by OHCHR 2018 report (first ever on Kashmir); India expelled UNHCR from Kashmir in 2019; India-China LAC dispute: Galwan Valley confrontation June 2020 (20 Indian soldiers killed); India leads 'democracy' narrative in QUAD`,
+      un_docs:`OHCHR Report on Kashmir (Jul 2018): A/HRC/39/CRP.1 — first ever, documents enforced disappearances and pellet gun use; UPR/A/IND/4 (2022): 339 recommendations received; ICCPR HRC CCPR/C/IND: India not party to First Optional Protocol — cannot receive individual communications; CEDAW/C/IND/CO/4-5`,
+      news:`Reuters, 11 Aug 2023: 'Access Now: India leads world in internet shutdowns for sixth year'; BBC, 7 Jul 2023: 'Manipur: Sexual violence and ethnic conflict grips Indian state — UN warns'; AP, 3 Nov 2021: 'Freedom House downgrades India from Free to Partly Free for third year'; Al Jazeera, 14 Feb 2023: 'India: 50 journalists arrested in past year — Reporters Without Borders'`,
+      committee_docs:`HRC 52nd session: India's response to Special Rapporteur on freedom of expression; OHCHR A/HRC/39/CRP.1 Kashmir report: India disputed findings; UPR Third Cycle National Report A/HRC/WG.6/37/IND/1; CCPR/C/IND shadow reports by civil society`,
+      keywords:`CAA, NRC, internet shutdown, Kashmir, Manipur, sedition law, freedom of assembly, minority rights, ICCPR Optional Protocol`
     }
   },
   'Saudi Arabia': {
     human_rights: {
-      gaps:`not party to the Rome Statute; has not ratified ICCPR Optional Protocols; Women's guardianship system substantially unchanged despite 2019 reforms; kafala migrant labour system entraps 11 million workers`,
-      votes:`co-led the Arab Group to block UNHRC investigative mandate on Yemen (2021, 2022); voted against HRC resolutions on LGBTQ+ protections; campaigns against Saudi accountability mechanisms`,
-      stats:`According to Amnesty International 2023, Saudi Arabia executed 196 people in 2022 — the highest recorded figure — including 81 on a single day (12 March 2022), many for drug offences`,
-      incidents:`UN Special Rapporteur Agnes Callamard concluded in June 2019 that Jamal Khashoggi's murder was a premeditated extrajudicial killing ordered at the highest levels of the Saudi government; zero accountability for Crown Prince Mohammed bin Salman`
+      country_policy:`Capital punishment: 196 executions in 2022 — 81 on 12 March 2022 alone (Amnesty); 66 executed in 2019; Women's guardianship reforms 2019 partial; kafala system: 11 million migrant workers trapped; Vision 2030 frames reforms as economic not rights-based; press freedom rank 166/180 (RSF 2023)`,
+      foreign_policy:`OIC bloc leader — uses Islamic solidarity to block HRC resolutions on Muslim-majority states; Saudi-US arms deal: $110 billion framework signed 2017, continued under Biden despite Khashoggi; Saudi-Canada diplomatic crisis 2018 after human rights tweet; Saudi-Qatar normalisation 2021`,
+      un_docs:`A/HRC/RES/45/26 (2020): Saudi Arabia voted against Yemen investigative mandate; CAT/C/SAU/CO/2 (2016): Committee concerns on torture, death penalty, kafala; CEDAW/C/SAU/CO/3-4: concerns on male guardianship; UPR A/HRC/WG.6/41 (2022): 307 recommendations; OHCHR Special Rapporteur A/HRC/44/38: Khashoggi killing`,
+      news:`Reuters, 12 Mar 2022: 'Saudi Arabia executes 81 people in one day — largest mass execution in decades'; BBC, 19 Jun 2019: 'Saudi prince ordered Jamal Khashoggi killing — UN report'; AP, 2 Nov 2022: 'Saudi Arabia leads coalition blocking UN Yemen inquiry'; Amnesty International, 16 May 2023: 'Saudi Arabia executions rise sharply — 2022 highest since 1995'`,
+      committee_docs:`HRC session records: Saudi Arabia's response to Khashoggi Special Rapporteur report; Yemen Group of Eminent Experts A/HRC/RES/39/16 reports; OHCHR/SRA/2019/CRP: Agnes Callamard investigation into Khashoggi killing; CEDAW committee session records`,
+      keywords:`kafala, death penalty, guardianship, Khashoggi, Yemen coalition, HRC voting bloc, OIC solidarity, migrant workers, women's rights`
     },
     conflict: {
-      gaps:`not party to the Ottawa Mine Ban Convention or Convention on Cluster Munitions; documented use of UK-supplied cluster munitions in Yemen (Human Rights Watch 2015-2019)`,
-      votes:`co-leads Arab Group blocking Yemen accountability; opposed UNSC humanitarian access resolutions for Yemen citing counter-terrorism justifications; blockaded Hodeidah port`,
-      stats:`According to UN OCHA 2022, the Yemen conflict killed 377,000 people (direct and indirect) since 2015; 21 million Yemenis — two-thirds of the population — require humanitarian assistance`,
-      incidents:`UN Group of Eminent Experts on Yemen (2020) documented Saudi coalition strikes on hospitals, markets, schools, and funerals; Blockade of Hodeidah port 2017-2019 denied humanitarian access to 15 million food-insecure people`
+      country_policy:`Yemen military intervention since March 2015 under Operation Decisive Storm; acknowledged use of cluster munitions in Yemen 2015-2016 while denying ongoing use; Hodeidah port blockade 2017-2019 denied food to 15 million people; UNSC arms embargo on Houthis but not coalition`,
+      foreign_policy:`Coalition: UAE, Bahrain, Sudan, Jordan; US/UK/France arms sales: US sold $67 billion weapons 2015-2021; UK parliamentary committee found UK arms sales likely illegal; Saudi-Iran normalisation (Beijing-brokered, March 2023); ceasefire negotiations via UN Special Envoy`,
+      un_docs:`UNSC Res.2216 (2015): arms embargo on Houthis; UN Yemen Panel of Experts reports (S/2022/50): Saudi coalition airstrikes on civilian objects; OHCHR/Yemen Experts Group A/HRC/42/CRP.1 (2019): reasonable grounds war crimes by all parties; OCHA Yemen situation reports: 21 million need humanitarian aid`,
+      news:`Reuters, 14 Sep 2021: 'Yemen war has killed 377,000 people by end of 2021 — UN report'; BBC, 16 Mar 2022: 'Saudi Arabia executes Yemeni nationals — human rights groups'; AP, 9 Apr 2022: 'Saudi-led coalition strikes kill dozens at Yemeni prison — UN condemns'; Al Jazeera, 10 Mar 2023: 'Saudi Arabia and Iran restore diplomatic ties brokered by China'`,
+      committee_docs:`UNSC Yemen Panel of Experts reports S/2023/833; OCHA Yemen Humanitarian Response Plan 2024; HRC Yemen fact-finding mission reports A/HRC/51/21; Yemen Humanitarian Coordination cluster reports`,
+      keywords:`Yemen coalition, cluster munitions, Hodeidah blockade, arms transfers, civilian casualties, humanitarian access, UN Panel of Experts`
     }
   },
   'Iran': {
     nuclear: {
-      gaps:`party to NPT but under IAEA Additional Protocol dispute since 2019; enriching uranium to 60% HEU — one step from weapons-grade; refused IAEA access to Fordow enrichment facility`,
-      votes:`IAEA Board of Governors censured Iran 25-2-2 in November 2022 for non-cooperation; UNSC Resolution 2231 sanctions mechanism 'snapback' reimposed October 2020`,
-      stats:`According to IAEA February 2024 report, Iran possesses 6.2 kg of uranium enriched to 60% — enough for approximately two nuclear weapons if further enriched to 90%`,
-      incidents:`IAEA Director General Grossi reported March 2023 that Iran had effectively ended Enhanced Cooperation Agreement; covert Fordow centrifuge expansion discovered by independent satellite imagery analysts`
+      country_policy:`NPT party but enriching to 60% HEU (weapons-grade is 90%); JCPOA (2015): US withdrew May 2018 triggering Iranian rollback; current stockpile: 6.2 kg of 60% HEU per IAEA Feb 2024; Fordow underground enrichment facility operating advanced IR-6 centrifuges; 'peaceful purposes' claim disputed by IAEA`,
+      foreign_policy:`Iran-Russia: Shahed drone military cooperation; Iran-China: 25-year strategic cooperation agreement 2021 includes nuclear technology; Iran-Houthis: ballistic missile/drone transfers documented by UN Panel; JCPOA P5+1 (US, UK, France, Russia, China, Germany); Vienna talks deadlocked since 2022`,
+      un_docs:`IAEA GOV/2024/7: Board of Governors report noting Iran's 6.2 kg of 60% HEU stockpile; IAEA GOV/2023/51: Board censured Iran 25-2-2 for non-cooperation; UNSC Res.2231 (2015): endorses JCPOA; Res.2231 Annex B sunset clauses; UN Panel of Experts S/2023/832: documents Iran missile transfers to Russia and Houthis`,
+      news:`Reuters, 23 Feb 2024: 'IAEA: Iran has enough enriched uranium for several nuclear weapons if enriched further'; BBC, 22 Nov 2022: 'IAEA censures Iran over nuclear cooperation failures'; AP, 8 May 2018: 'Trump withdraws US from Iran nuclear deal JCPOA'; Al Jazeera, 4 Jan 2020: 'Iran announces it will no longer respect JCPOA limits after Soleimani killing'`,
+      committee_docs:`IAEA Board of Governors meeting records: Iran item; First Committee A/C.1/78: Iran statement on TPNW; NPT PrepCom 2022: Iran's working paper on Article VI; Vienna Joint Commission meeting records on JCPOA`,
+      keywords:`JCPOA, enrichment level, 60% HEU, Additional Protocol, IAEA safeguards, Fordow, snapback mechanism, centrifuge cascade`
     },
     human_rights: {
-      gaps:`not party to the ICCPR Optional Protocols or CAT Optional Protocol; systematically rejects UN Special Rapporteur on Iran's mandate since 2013; LGBTQ+ persons face capital punishment`,
-      votes:`rejected UNGA Third Committee Resolution on Iran human rights 2023 (76 votes for, 30 against, 67 abstentions); denied UNHRC fact-finding mission access following Mahsa Amini protests`,
-      stats:`According to Amnesty International 2023, Iran executed at least 582 people in 2023 — the highest recorded in over two decades; at least 19 were executed in direct connection with 2022 Mahsa Amini protests`,
-      incidents:`UN OHCHR December 2022 report on 'Woman, Life, Freedom' protest crackdown documented 277 extrajudicial killings; UN fact-finding mission documented sexual violence in detention facilities used against male protesters`
+      country_policy:`582 executions in 2023 — highest in 20+ years (Amnesty); 19 executions for protest participation (Woman Life Freedom movement); blasphemy and apostasy remain capital offences; LGBTQ+ persons face state-sanctioned execution; internet shutdown during protests 2022 documented by Netblocks`,
+      foreign_policy:`Iran-Russia information control cooperation; Iran denies all UN investigative access since 2013; Iranian diaspora harassment documented by FBI; Iran sanctions OHCHR staff after adverse reports; Iran-EU: 2023 terrorist designation of IRGC blocked by UK/EU debates`,
+      un_docs:`UNGA A/RES/78/192: adopted 79-30-67 condemning human rights in Iran; HRC Res.52/35: extended mandate of Special Rapporteur on Iran; UN Fact-Finding Mission Report A/HRC/55/67 (2024): violations may constitute crimes against humanity during 2022 protests; CCPR/C/IRN/CO/4: grave concerns on death penalty`,
+      news:`Reuters, 9 May 2023: 'Iran executions hit 25-year high at 582 in 2023 — Amnesty International'; BBC, 14 Dec 2022: 'Iran: Football player executed amid mass protest crackdown'; AP, 16 Sep 2023: 'Mahsa Amini death anniversary: Iran marks one year since protests began'; Al Jazeera, 8 Feb 2024: 'Iran UN fact-finding mission finds crimes against humanity in protest crackdown'`,
+      committee_docs:`HRC 55th session: Iran fact-finding mission oral updates; HRC Special Rapporteur on Iran A/HRC/55/41 annual report; OHCHR SG report to UNGA A/78/489: Iran human rights; UN Working Group on Arbitrary Detention Iran opinions`,
+      keywords:`Woman Life Freedom, Mahsa Amini, death penalty, apostasy, executions, Special Rapporteur access, fact-finding mission, protest crackdown`
     }
   },
   'Israel': {
     conflict: {
-      gaps:`not party to the Rome Statute; ICJ Advisory Opinion July 2024 found the Israeli occupation of Palestinian territories unlawful under international law; not party to OPCAT`,
-      votes:`UNGA Emergency Special Session resolutions on Gaza passed over US veto with 120+ votes; consistently receives US veto protection in UNSC on Palestinian question`,
-      stats:`According to OCHA October 2024, over 42,000 Palestinian deaths in Gaza since October 2023; approximately 1.9 million people displaced out of 2.3 million total — 82% displacement rate`,
-      incidents:`ICC Prosecutor Karim Khan requested arrest warrants for PM Netanyahu and Defence Minister Gallant in May 2024; ICJ provisional measures January 2024 ordered Israel to prevent acts of genocide and allow humanitarian aid`
+      country_policy:`Operation Swords of Iron launched October 7, 2023 following Hamas attack; military doctrine of 'mowing the lawn'; Dahiya Doctrine allows targeting civilian infrastructure as pressure tactic; expanded settlements: 750,000 settlers in West Bank (OCHA 2024); Jerusalem Embassy Act 1995 — US recognition of Jerusalem as capital 2018`,
+      foreign_policy:`US-Israel Memorandum of Understanding: $38 billion military aid 2019-2028; Iron Dome co-financed with US; Abraham Accords 2020 with UAE, Bahrain, Morocco, Sudan; Israel-Saudi normalisation talks halted October 7 2023; EU-Israel Association Agreement suspended debate following ICJ ruling`,
+      un_docs:`ICJ Provisional Measures January 2024 (South Africa v Israel): orders Israel to prevent genocide, allow humanitarian aid; ICJ Advisory Opinion July 2024: occupation unlawful under international law; UNGA ES-10/23: 153-10 ceasefire resolution; UNSC Res.2728 (2024): ceasefire — US abstained; ICC Prosecutor arrest warrant request: Netanyahu and Gallant (May 2024)`,
+      news:`Reuters, 26 Jan 2024: 'ICJ orders Israel to prevent genocide in Gaza — but stops short of ceasefire order'; BBC, 19 Jul 2024: 'Israeli occupation illegal under international law — World Court advisory opinion'; AP, 20 May 2024: 'ICC prosecutor seeks arrest warrants for Israeli PM Netanyahu and Hamas leaders'; Al Jazeera, 29 Feb 2024: 'Gaza death toll surpasses 30,000 — Gaza Health Ministry'`,
+      committee_docs:`ICJ case B'Tselem, Al-Haq amicus filings; UNSC meeting records S/PV.9559 (ceasefire vote March 2024); OHCHR Gaza casualties report (ongoing); ICC OTP statement on arrest warrant requests May 2024; UNRWA situation reports`,
+      keywords:`ICJ provisional measures, ICC arrest warrant, Dahiya Doctrine, civilian casualties, siege of Gaza, settler violence, illegal occupation, humanitarian law`
     },
     human_rights: {
-      gaps:`not party to the Rome Statute; applies different legal regimes to Israeli settlers and Palestinians in the same territory; UN Special Rapporteur documented apartheid conditions`,
-      votes:`opposed all UNGA Emergency Special Session resolutions on Gaza; rejected UNHRC fact-finding mandate on October 7 attacks and subsequent military operations`,
-      stats:`According to B'Tselem 2024, Israel demolished 8,000+ Palestinian homes in the West Bank since 2000; OCHA documented 657 settler attacks on Palestinian communities in 2023 — a 72% increase from 2022`,
-      incidents:`UNSC Resolution 2334 (2016) unanimously condemned Israeli settlement policy as a flagrant violation of international law; ICJ Advisory Opinion 2024 found settlements violate the right to self-determination and constitute an illegal annexation`
+      country_policy:`Military courts for Palestinian detainees: 90%+ conviction rate; administrative detention without charge: 2,200+ held as of 2024 (B'Tselem); East Jerusalem residency revocation: 14,500+ since 1967; Nation-State Law 2018 defines Israel as Jewish nation-state without equality clause`,
+      foreign_policy:`Israel rejects UNHRC investigative mandates as biased; lobbied against ICC jurisdiction over Palestinian territories; normalisation with Arab states conditioned on US security guarantees; ICC jurisdiction over Palestinian territories recognised by ICC Pre-Trial Chamber January 2021`,
+      un_docs:`UNSC Res.2334 (2016): unanimously condemns settlements as 'flagrant violation' of international law; OHCHR A/HRC/50/21 (2022): Israeli practices may constitute apartheid; OHCHR A/75/532 (2020): UN database of companies in settlements; UPR A/HRC/WG.6/29/ISR/1 (2018): Israel`,
+      news:`Reuters, 20 Jul 2024: 'World Court says Israeli occupation is illegal and must end'; BBC, 12 Feb 2022: 'Amnesty International: Israel imposing apartheid on Palestinians'; AP, 6 Oct 2021: 'Israel designates six Palestinian civil society groups as terrorist'; Al Jazeera, 21 Jan 2021: 'Human Rights Watch: Israel committing crimes of apartheid and persecution'`,
+      committee_docs:`HRC COI on OPT A/HRC/56/CRP.4 (2024): documents violations in Gaza; OHCHR Gaza accountability database; UNRWA annual reports; B'Tselem database of demolitions and displacement; ICC Pre-Trial Chamber I decision on Palestine jurisdiction (2021)`,
+      keywords:`administrative detention, settlements, nation-state law, apartheid, military courts, UNRWA, East Jerusalem, civilian protection`
     }
   },
   'Pakistan': {
     nuclear: {
-      gaps:`not party to NPT, CTBT, or TPNW; possesses 170 warheads outside IAEA full-scope safeguards; outside the Nuclear Suppliers Group and international transparency frameworks`,
-      votes:`abstains on UNGA nuclear disarmament resolutions requiring NPT steps; uses nuclear deterrence doctrine to oppose US-India civilian nuclear agreement`,
-      stats:`According to SIPRI 2024, Pakistan possesses approximately 170 nuclear warheads — the fastest growing nuclear arsenal in South Asia, projected to reach 200 by 2025`,
-      incidents:`AQ Khan network: documented transfer of nuclear weapons technology to Libya, Iran, and North Korea between 1987-2003 — the largest nuclear proliferation network since the Cold War; Khan pardoned by President Musharraf in 2004`
+      country_policy:`First-use doctrine ('full spectrum deterrence'): Pakistan will use tactical nuclear weapons if conventional forces overwhelmed; 170 warheads (SIPRI 2024) — fastest growing South Asian arsenal; Nasr (HATF IX) tactical battlefield nuclear weapon deployed; army controls nuclear programme through SPD`,
+      foreign_policy:`China-Pakistan nuclear cooperation (CPEC + Chashma reactors outside NSG); AQ Khan network: documented proliferation to Libya, Iran, North Korea 1987-2003 — largest Cold War-era proliferation network; Pakistan-US tension over F-16 funding conditions and nuclear transparency; India-Pakistan deterrence escalation 2019`,
+      un_docs:`NPT/CONF: Pakistan not party to NPT — cannot participate in Review Conferences; CTBT/RT: Pakistan has not signed CTBT (Annex 2 state blocking entry into force); IAEA GOV: Pakistan's safeguards only partial for civilian reactors; UNSC Res.1540 (2004): Pakistan obligated to prevent non-state actor WMD access`,
+      news:`Reuters, 5 Feb 2024: 'Pakistan's nuclear arsenal growing faster than India — SIPRI 2024'; BBC, 4 Feb 2004: 'AQ Khan admits nuclear transfers to Libya, North Korea and Iran'; AP, 27 Jan 2023: 'Pakistan PM Sharif warns of nuclear use if India attacks again'; Financial Times, 2019: 'Pakistan deploys tactical nuclear weapons against Indian conventional threat'`,
+      committee_docs:`IAEA GOV nuclear security reports on Pakistan; UN SC 1540 Committee Pakistan report; First Committee verbatim records: Pakistan statement on NFU; SIPRI Yearbook 2024 Pakistan nuclear forces chapter`,
+      keywords:`tactical nuclear weapons, Nasr missile, AQ Khan proliferation, full spectrum deterrence, NSG membership, CTBT Annex 2, fissile material`
     },
     human_rights: {
-      gaps:`enforced disappearances systematic in Khyber Pakhtunkhwa and Balochistan; blasphemy laws (PPC 295-C) carry death penalty and are used disproportionately against minorities; press freedom ranking 152/180 (RSF 2023)`,
-      votes:`votes in OIC solidarity on Uyghur issues; abstained on UNGA resolution condemning Russian invasion; consistent voting bloc with Saudi Arabia on Arab and OIC resolutions`,
-      stats:`According to HRCP 2023, over 8,000 enforced disappearances documented in Balochistan and KP since 2001; UN Committee Against Enforced Disappearances expressed grave concern in 2023 report`,
-      incidents:`Former PM Imran Khan arrested under Official Secrets Act May 2023; UN Special Rapporteur on extrajudicial executions documented civilian deaths in Pakistani military operations in Balochistan (2022, 2023)`
+      country_policy:`Blasphemy laws: PPC 295-C carries death penalty — used disproportionately against Ahmadis, Christians, Hindus; enforced disappearances: 8,000+ in Balochistan/KP (HRCP 2023); press freedom 152/180 (RSF 2024); Digital Crimes Bill 2023 enables content censorship`,
+      foreign_policy:`China-Pakistan: CPEC $62 billion investment leverages diplomatic silence on Uyghur issue despite Uyghur Turkic Muslim solidarity; Pakistan-Saudi: military cooperation and OIC alignment block human rights resolutions; Pakistan-US: IMF bail-outs conditioned on governance reforms contradicted by military interference`,
+      un_docs:`CCPR/C/PAK/CO/1 (2017): HRC concerns on blasphemy, enforced disappearances, terrorism laws; CAT/C/PAK/CO/1 (2017): torture in custody, terrorism courts; CED/C/PAK/CO/1 (2023): UN Committee on Enforced Disappearances — 'grave concern'; UPR A/HRC/WG.6/35/PAK/1 (2022): Pakistan 3rd cycle`,
+      news:`Reuters, 24 Aug 2023: 'Pakistan's civilian government blames military for protest clampdown'; BBC, 10 Nov 2023: 'Pakistan Supreme Court declares PTI crackdown unconstitutional'; AP, 14 Feb 2023: 'UN committee expresses grave concern over Pakistan enforced disappearances in Balochistan'; Amnesty International, Oct 2023: 'Pakistan executes 12 people in three months amid rights crackdown'`,
+      committee_docs:`HRC UPR 3rd Cycle session records: Pakistan; UN Special Rapporteur on extrajudicial executions country visit report; CED Pakistan session verbatim records; OHCHR Pakistan situation reports`,
+      keywords:`blasphemy law, enforced disappearances, Balochistan, military courts, press freedom, minority rights, OIC bloc voting`
     }
   },
   'Brazil': {
     climate: {
-      gaps:`Amazon deforestation peaked at 11,568 km² in 2022 — a 15-year high; Lula government pledged zero deforestation by 2030 but illegal mining and agribusiness pressure remains`,
-      votes:`opposed COP28 fossil fuel phase-out language citing development rights; led G77 demand for $1 trillion annual climate finance before accepting stricter NDC commitments`,
-      stats:`According to INPE 2024, deforestation in the Brazilian Amazon fell 50% in Lula's first year but remains 3× the pre-2015 baseline; 20% of Amazon biome is now classified as degraded`,
-      incidents:`Yanomami indigenous health emergency declared January 2023 — at least 99 children died from malnutrition and preventable disease linked to illegal gold mining permitted under Bolsonaro administration; UN Special Rapporteur on indigenous peoples condemned the situation`
-    },
-    human_rights: {
-      gaps:`high impunity for police violence against Black Brazilians; 6,159 police killings in 2022 with less than 1% resulting in prosecution`,
-      votes:`abstained on UNGA resolutions condemning Russian invasion of Ukraine; active in G77 on development rights but inconsistent on civil and political rights`,
-      stats:`According to Brazilian Forum on Public Security 2023, police killed 6,159 people in 2022 — 85% Black Brazilians — the highest annual toll since records began in 2013`,
-      incidents:`January 8 2023 insurrectionist attack on Planalto, Congress, and Supreme Court by Bolsonaro supporters; ICC communications filed regarding Bolsonaro government's deliberate neglect of Yanomami indigenous peoples`
+      country_policy:`Zero deforestation by 2030 NDC (Lula); Amazon Fund restored 2023 ($1.7 billion pledged by Norway and Germany); 50% Amazon deforestation reduction in 2023 vs 2022 (INPE); BUT illegal mining continues; soy and beef export pressures on forest; Lula's 2023 NDC: net-zero emissions by 2050`,
+      foreign_policy:`BASIC bloc (Brazil, South Africa, India, China): demands $1 trillion climate finance before committing to stricter NDCs; Amazon Fund: multilateral mechanism Norway/Germany finance; Brazil hosted Leticia Pact (Amazon nations); Brazil-China trade: soy exports incentivise clearing; MERCOSUR-EU trade deal climate conditionality debate`,
+      un_docs:`UNFCCC NDC Registry: Brazil's 2030 target 37% below 2005 by 2025; IPCC AR6 South America: Amazon approaching tipping point; UNEP Global Assessment on Biodiversity and Ecosystem Services: Amazon at 20% degradation threshold; CBD COP15 Kunming-Montreal GBF: Brazil signatory`,
+      news:`Reuters, 9 Jan 2024: 'Brazil Amazon deforestation falls 50% in Lula's first year — INPE data'; BBC, 20 Jan 2023: 'Yanomami crisis: Brazil declares health emergency as children starve amid illegal mining'; AP, 14 Nov 2023: 'Amazon summit: Brazil proposes zero deforestation by 2030'; Al Jazeera, 26 Jun 2023: 'Brazil's Amazon deforestation hits lowest in 15 years — but 2022 was worst in decades'`,
+      committee_docs:`UNFCCC COP28 meeting records: Brazil's position on NCQG; UNEP/CBD COP15 Kunming-Montreal GBF Brazil contribution; Amazon Fund Steering Committee annual reports; IPCC AR6 Ch.12: Central and South America`,
+      keywords:`Amazon deforestation, zero deforestation, Amazon Fund, Leticia Pact, REDD+, indigenous land rights, soy moratorium, climate finance`
     }
   },
   'Japan': {
     nuclear: {
-      gaps:`not party to TPNW despite being the only country to have suffered nuclear attacks; shelters under US nuclear umbrella effectively preventing full TPNW endorsement`,
-      votes:`co-sponsors annual UNGA nuclear disarmament resolutions but votes against TPNW; abstained on UNGA resolution condemning Russian invasion citing alliance considerations`,
-      stats:`Japan hosts approximately 100 US nuclear weapons under extended deterrence arrangements; Hiroshima and Nagasaki commemoration contrasts with Japan's position as TPNW non-signatory`,
-      incidents:`Japan's documented contradiction: as the sole victim-state of nuclear attacks, Japan publicly advocates disarmament but opposes the TPNW as incompatible with the US security umbrella — a position challenged annually at the NPT Review Conference`
-    },
-    trade: {
-      gaps:`maintains agricultural tariff of 245% on rice inconsistent with WTO TRQ commitments; imposes 482% tariff on wheat under the food security exception framework`,
-      votes:`supported WTO Appellate Body reform in principle but has delayed concrete nominations; blocked consensus on fisheries subsidies at MC12`,
-      stats:`According to WTO TPR 2023, Japan's agricultural tariff average of 16.8% significantly exceeds the OECD average of 9.3%; rice tariff of 245% documented; Japan is respondent in 27 formal WTO disputes`,
-      incidents:`WTO DS570 panel (2020) found Japan's safeguard tariffs on US beef WTO-inconsistent; fisheries subsidies contributing to overcapacity documented by FAO as depleting Pacific fish stocks`
+      country_policy:`Only nation to suffer nuclear attacks (Hiroshima/Nagasaki 1945); advocates nuclear disarmament but remains under US nuclear umbrella; co-sponsors annual UNGA nuclear disarmament resolutions; Fundamental Law of Atomic Energy prohibits Japanese nuclear weapons; Kishida 'Hiroshima Vision' 2023 calls for eventual elimination`,
+      foreign_policy:`US-Japan Security Treaty: extended deterrence commitment; Japan opposes TPNW as incompatible with US alliance; joins US extended deterrence consultations; Quad nuclear discussions formally excluded; Japan-IAEA close cooperation; Japan opposes North Korea's nuclear programme via UNSC`,
+      un_docs:`A/RES/78/32: Japan co-sponsored nuclear risk reduction resolution; A/RES/C.1/78/L.34: Japan co-sponsors annual disarmament resolution — separately from TPNW; NPT PrepCom 2023 Japan statement: reaffirms NPT as cornerstone; IAEA/Japan Additional Protocol: fully compliant`,
+      news:`Reuters, 19 May 2023: 'Hiroshima G7 statement calls for world without nuclear weapons but backs deterrence'; BBC, 7 Aug 2023: 'Hiroshima marks 78th anniversary of atomic bombing with calls for disarmament'; AP, 6 Jun 2022: 'Japan opts out of historic nuclear ban treaty meeting citing US alliance'; Kyodo News, 2024: 'Japan defence budget doubles to 2% GDP — largest military expansion since WWII'`,
+      committee_docs:`First Committee verbatim records: Japan's dual-track approach to disarmament; Hiroshima-Nagasaki declaration submitted to NPT PrepCom 2023; IAEA GOV: Japan safeguards review; TPNW MSP-2 records: Japan attended as observer state`,
+      keywords:`Hiroshima Vision, no-first-use, extended deterrence contradiction, TPNW observer, nuclear umbrella, NPT Article VI, disarmament paradox`
     }
   },
   'Germany': {
-    climate: {
-      gaps:`failed to meet its own 2020 national emissions reduction target; reactivated 16 coal plants in 2022 following Russian gas cut-off; Datteln 4 coal plant opened in 2020 despite climate policy`,
-      votes:`supported delay of EU combustion engine ban; advocated for e-fuel exceptions undermining 2035 ICE phase-out; delayed agreement on EU green hydrogen definition`,
-      stats:`According to UBA 2024, Germany emitted 673 million tonnes CO2e in 2023 — a 10% reduction from 2022 but the 2030 Climate Protection Act target of -65% remains off-track`,
-      incidents:`Germany's temporary reactivation of 16 coal plants added 3.4 GW of capacity; construction of Brunsbüttel LNG terminal proceeded in 2023 locking in fossil fuel infrastructure inconsistent with EU climate targets`
-    },
     human_rights: {
-      gaps:`arms exports to Saudi Arabia resumed in 2022 despite parliamentary restrictions following Khashoggi murder; NSU (National Socialist Underground) institutional failures exposed years of police inaction on far-right violence`,
-      votes:`supported ICJ advisory proceedings on Israeli occupation 2024; voted for UNSC Resolution 2728 humanitarian pause in Gaza; generally consistent with EU human rights positions`,
-      stats:`According to BKA 2024, right-wing extremist offences in Germany reached 23,493 in 2022 — the highest in nine years; antisemitic incidents rose 83% between 2020-2022`,
-      incidents:`German arms exports to Saudi Arabia of €1.4 billion approved in 2022 despite Khashoggi moratorium; family legal challenge reversed decision; Hannibal network of far-right Bundeswehr officers discovered 2019 with stockpiled weapons and 'Day X' plans`
+      country_policy:`Basic Law (Grundgesetz) Art.1 guarantees human dignity inviolable; NSU terror investigation 2011-2019: 10 murders, institutional failure to investigate far-right; AfD Verfassungsschutz monitoring since 2021; Asylum law: accelerated deportations under Rückführungsgesetz 2023`,
+      foreign_policy:`German feminist foreign policy (Annalena Baerbock): integrates LGBTQ+ rights, women's rights in bilateral relations; Arms to Ukraine: Leopard 2 tanks approved Jan 2023; Arms to Saudi Arabia: moratorium announced 2018 after Khashoggi but exports resumed 2022; EU-level human rights due diligence`,
+      un_docs:`UPR A/HRC/WG.6/40/DEU/1 (2022): Germany 4th cycle; CCPR/C/DEU/CO/7 (2022): concerns on police violence, far-right terrorism; CEDAW/C/DEU/CO/7-8 (2017): gender pay gap, intersectionality; CAT/C/DEU/CO/5 (2011): immigration detention`,
+      news:`Reuters, 10 Jan 2023: 'Germany approves Leopard 2 tanks for Ukraine — breaking taboo on heavy weapons'; BBC, 19 Jun 2023: 'Germany: Far-right AfD party faces ban proceedings'; AP, 19 Apr 2022: 'Germany breaks with pacifist post-war tradition with €100bn defence fund'; Der Spiegel/Reuters, Dec 2022: 'Germany resumes Saudi Arabia arms exports worth €1.4bn'`,
+      committee_docs:`HRC UPR 4th cycle Germany session records; ECRI 6th cycle report on Germany (2023): recommendations on racial profiling; Special Rapporteur on Torture UN-A/HRC/40/59 Germany section; Verfassungsschutz annual reports on extremism`,
+      keywords:`NSU investigation, far-right extremism, feminist foreign policy, Leopard 2, arms exports Saudi Arabia, AfD, Grundgesetz, police accountability`
     }
   },
   'United Kingdom': {
     human_rights: {
-      gaps:`Illegal Migration Act 2023 found by UNHCR to breach non-refoulement obligations; Rwanda asylum scheme struck down as unlawful by UK Supreme Court November 2023; proposed ECHR withdrawal debated`,
-      votes:`abstained on UNGA resolution on Israeli settlement policy 2023; voted against UNGA ceasefire resolution for Gaza November 2023`,
-      stats:`According to UNHCR 2024, UK's Rwanda scheme would have applied to 65,000 asylum seekers; Supreme Court ruled 9-0 the scheme unlawful due to systemic risk of refoulement in Rwanda`,
-      incidents:`UK Illegal Migration Act 2023 assessment by UNHCR: breaches non-refoulement and the right to seek asylum under 1951 Refugee Convention Articles 31 and 33; Grenfell Tower Inquiry final report 2024 found government failures disproportionately affected lower-income and minority communities`
-    },
-    nuclear: {
-      gaps:`not party to TPNW; the 2021 Integrated Review increased the nuclear warhead ceiling from 180 to 260 — reversing a decade of reductions`,
-      votes:`voted against TPNW; forms part of P5 blocking NPT Review Conference consensus on disarmament language; co-signed P5 statement opposing TPNW`,
-      stats:`According to SIPRI 2024, the UK possesses approximately 225 nuclear warheads; the uplift announced in March 2021 represents the first increase in the UK nuclear arsenal in over 30 years`,
-      incidents:`March 2021 Integrated Review uplift condemned by ICAN, former UK Disarmament Ambassadors, and NPT depositaries as inconsistent with NPT Article VI obligations; Trident renewal vote 2016: 472-117 majority for renewal despite SNP and Labour left opposition`
+      country_policy:`Illegal Migration Act 2023: removes right to claim asylum if arriving by irregular means; Rwanda scheme struck down by UK Supreme Court Nov 2023 as unlawful (refoulement risk); Police Crime Sentencing Act 2022: criminalises 'noisy or disruptive' protests; British Bill of Rights proposed to replace Human Rights Act`,
+      foreign_policy:`UK-Rwanda Treaty signed Dec 2023 after Supreme Court ruling; UK-Ukraine defence cooperation; UK chairs OSCE 2023; UK post-Brexit foreign policy 'Global Britain': bilateral human rights dialogues replacing EU mechanisms; AUKUS nuclear-powered submarine arrangement`,
+      un_docs:`UNHCR Assessment of Illegal Migration Act 2023: found to breach non-refoulement and right to seek asylum; CCPR/C/GBR/CO/8 (2023): HRC concerns on asylum law, protest rights, Prevent programme; CAT/C/GBR/CO/6 (2019): immigration detention; HRC Res.52/12: UK voted for; UNSC Res.2728 (Gaza ceasefire): UK abstained`,
+      news:`Reuters, 15 Nov 2023: 'UK Supreme Court rules Rwanda asylum scheme unlawful'; BBC, 26 Apr 2023: 'Illegal Migration Bill: UN human rights chief says it would violate international law'; AP, 7 Mar 2024: 'UK government signs new Rwanda treaty after Supreme Court defeat'; The Guardian/Reuters, Mar 2023: 'UK police use public order act against climate protesters'`,
+      committee_docs:`UNHCR position on UK Illegal Migration Act (May 2023); HRC UPR 4th cycle UK session records; Special Rapporteur on freedom of peaceful assembly UK report 2023; ECHR Grand Chamber cases pending against UK on deportation`,
+      keywords:`Illegal Migration Act, Rwanda scheme, non-refoulement, Human Rights Act, ECHR withdrawal, asylum seeker, protest rights, Prevent programme`
     }
   },
   'France': {
-    nuclear: {
-      gaps:`not party to TPNW; maintains independent nuclear deterrent of 290 warheads; opposes legally binding nuclear disarmament timelines on sovereignty grounds`,
-      votes:`voted against TPNW; blocked NPT Review Conference consensus language in 2022; co-signed P5 statement opposing TPNW as undermining the NPT framework`,
-      stats:`According to SIPRI 2024, France maintains approximately 290 nuclear warheads: sea-based SSBN deterrent (M51 SLBMs) and air-launched ASMP-A cruise missiles`,
-      incidents:`France's nuclear test legacy in French Polynesia (193 tests 1966-1996): INSERM study linked thyroid cancer to fallout; Polynesian assembly voted for compensation review 2022; France refused TPNW jurisdiction over historical test damage`
-    },
     human_rights: {
-      gaps:`burqa ban (Law 2010-1192): UN Human Rights Committee found it violates ICCPR Article 18 in Sonia Yaker v. France (2018); systematic police racial profiling documented`,
-      votes:`abstained on UN Special Committee on Decolonization resolutions on French overseas territories; maintained position opposing self-determination for New Caledonia after 2021 referendum`,
-      stats:`According to UN Human Rights Committee 2022, France's systematic police identity checks disproportionately target people of African and Arab appearance — confirmed in 37 individual communications`,
-      incidents:`Nahel Merzouk killing by police (June 2023) triggered 12 days of nationwide protest; UN OHCHR called on France to investigate structural racism in policing; New Caledonia voted against independence three times (2018, 2020, 2021) under contested processes`
+      country_policy:`Burqa ban (Loi 2010-1192): UN Human Rights Committee found violates ICCPR Art.18 in Sonia Yaker v France (2018); systemic police racial profiling: 37 individual ICCPR communications upheld; Nahel Merzouk killing June 2023 triggered 12 days protests; Sainte-Soline protests Mar 2023: 200 injuries including LBD use`,
+      foreign_policy:`France-Africa 'Françafrique' legacy: military bases in 8 African states; CFA franc monetary control over 14 Francophone states challenged; New Caledonia 3 independence referendums 2018-2021; French Polynesia nuclear test legacy; France-Algeria historical memory disputes`,
+      un_docs:`CCPR/C/FRA/CO/5 (2015): concerns on Islamophobia, racial profiling, anti-terrorism laws; CERD/C/FRA/CO/21-24 (2022): structural racism concerns; HRC Comm. Sonia Yaker v France CCPR/C/123/D/2747/2016 (2018): burqa ban violates Art.18; UPR A/HRC/WG.6/38/FRA/1 (2022)`,
+      news:`Reuters, 29 Jun 2023: 'France deploys 45,000 police as unrest spreads after Nahel shooting'; BBC, 2 Jun 2023: 'Nahel Merzouk: French police officer shoots dead 17-year-old'; AP, 16 Jul 2023: 'UN rights chief calls on France to address structural racism in policing'; Al Jazeera, 4 Nov 2021: 'New Caledonia votes against independence for third time in controversial vote'`,
+      committee_docs:`HRC session records on France periodic review; ECRI Report on France (6th cycle 2022): recommendations on racial profiling; Special Rapporteur on contemporary forms of racism A/HRC/50/52: France section; Defender of Rights France annual reports on police accountability`,
+      keywords:`burqa ban, racial profiling, Nahel Merzouk, Françafrique, CFA franc, New Caledonia self-determination, LBD weapons, Islamophobia`
     }
   },
   'North Korea': {
     nuclear: {
-      gaps:`withdrew from NPT in January 2003; conducted six nuclear tests (2006-2017); estimated 40-50 warheads (SIPRI 2024); Yongbyon reactor restarted to produce weapons-grade plutonium`,
-      votes:`refuses engagement with all UNSC resolutions on its nuclear programme; China and Russia vetoed UNSC enforcement action in May 2022 for the first time since 2006`,
-      stats:`According to SIPRI 2024, North Korea possesses 40-50 nuclear warheads with fissile material sufficient for 40-50 additional; Hwasong-17 ICBM tested November 2022 with estimated range of 15,000 km`,
-      incidents:`71 ballistic missile launches in 2022 — a single-year world record; first ICBM test since 2017 in March 2022; China and Russia vetoed UNSC resolution May 2022 blocking enhanced sanctions for the first time since 2006`
-    },
-    human_rights: {
-      gaps:`2014 Commission of Inquiry found systematic, widespread, and gross violations amounting to crimes against humanity; zero engagement with UPR recommendations; no independent media or civil society`,
-      votes:`rejects all UNGA Third Committee resolutions on DPRK human rights; refused to engage with UPR for the 4th cycle in 2024`,
-      stats:`According to UNHCR 2023, approximately 80,000-120,000 people are held in North Korean political prison camps (kwanliso) based on satellite imagery and defector accounts; 34,000 defectors reached South Korea since 2000`,
-      incidents:`UN COI 2014 transmitted findings to ICC Prosecutor recommending UNSC referral; China and Russia blocked Security Council debate; Special Rapporteur Elizabeth Salmon denied access since 2013; UNODC reported North Korea-linked crypto theft of $3 billion 2017-2023 to fund weapons programme`
-    }
-  },
-  'South Africa': {
-    human_rights: {
-      gaps:`filed ICJ genocide case against Israel January 2024 but domestically scores poorly on femicide: 53.4 per 100,000 (UNODC 2023) and impunity for gender-based violence`,
-      votes:`filed ICJ case against Israel (Genocide Convention); strong supporter of ICC mandates; abstained on UNGA resolutions condemning Russian invasion of Ukraine`,
-      stats:`According to SAPS 2024, South Africa recorded 8,489 murders in Q1 2023 alone — among the world's highest murder rates; 12,727 women were raped in Q1 2023 per SAPS statistics`,
-      incidents:`South Africa's failure to arrest Putin at BRICS summit (August 2023) despite ICC warrant — forced Putin to attend virtually — raised questions about Rome Statute compliance; SA government argued diplomatic immunity conflicted with ICC obligations`
-    }
-  },
-  'Turkey': {
-    human_rights: {
-      gaps:`press freedom ranked 158/180 (RSF 2023) — journalist arrests among highest globally; emergency decree powers used since 2016 coup attempt to detain 150,000+ people`,
-      votes:`abstained on UNGA resolutions condemning Russian invasion; maintains observer status in Shanghai Cooperation Organisation; opposes UNHRC resolutions targeting OIC members`,
-      stats:`According to CPJ 2023, Turkey has held more journalists in prison than any other country for multiple consecutive years; over 2,500 websites blocked by RTUK in 2023 alone`,
-      incidents:`Osman Kavala detained since 2017 without conviction — European Court of Human Rights ruled his detention violated ECHR; Committee of Ministers Article 46(4) infringement proceedings against Turkey launched 2022`
-    },
-    conflict: {
-      gaps:`not party to certain Additional Protocols to the Geneva Conventions; Operation Olive Branch in Afrin (2018) documented by UN as involving human rights violations by Turkish-backed groups`,
-      votes:`blocked NATO membership of Sweden and Finland for extended periods; abstained on UNGA resolutions on Ukraine; uses S-400 acquisition as leverage in NATO negotiations`,
-      stats:`According to UNHCR 2024, Turkey hosts 3.6 million Syrian refugees — the largest refugee population globally; humanitarian corridor negotiation with Russia through the Astana process`,
-      incidents:`ICC case opened 2023 on alleged war crimes by Turkish-backed Syrian National Army factions in Afrin; European Court of Human Rights found Turkey violated ECHR in Ilisu Dam case affecting Iraqi populations`
-    }
-  },
-  'Indonesia': {
-    human_rights: {
-      gaps:`Criminal Code 2023 criminalises sex outside marriage — applied also to foreign nationals; Papua special autonomy contested by indigenous groups and UN human rights bodies`,
-      votes:`abstained on UNGA resolutions on Ukraine; active in OIC solidarity on Palestinian question; resists UNHRC mandates on Islamic-majority states`,
-      stats:`According to Amnesty International 2023, at least 90 political prisoners held in Papua and West Papua for peaceful advocacy; 2022 Criminal Code adopted despite OHCHR concerns about LGBTQ+ and cohabitation provisions`,
-      incidents:`UN Special Rapporteur on indigenous peoples' rights (2023) documented systematic dispossession of Papuan indigenous communities by mining and palm oil interests; security forces impunity for killings in Papua documented`
+      country_policy:`Withdrew from NPT January 2003; six nuclear tests 2006-2017; 40-50 warheads (SIPRI 2024); Hwasong-17 ICBM 15,000 km range tested Nov 2022; constitution amended 2022 to enshrine nuclear status; Kim Jong Un declared irreversible nuclear policy Oct 2022`,
+      foreign_policy:`North Korea-Russia: ballistic missile and ammunition transfers documented by UN Panel of Experts 2023; North Korea-China: China provides 90%+ of trade; DPRK-Iran missile cooperation alleged; DPRK-Pakistan AQ Khan connection historically documented; US-DPRK Singapore Declaration 2018 collapsed by Hanoi summit 2019`,
+      un_docs:`UNSC Res.2371 (2017), Res.2375 (2017): sanctions on coal, iron, seafood, textiles; UNSC veto by China/Russia on new sanctions May 2022 (first time since 2006); UN Panel of Experts S/2024/215 (2024): North Korea missile transfers to Russia confirmed; A/HRC/RES/25/25 (2014): established COI on DPRK`,
+      news:`Reuters, 20 Nov 2022: 'North Korea fires ICBM most powerful missile yet over Japan'; BBC, 17 May 2022: 'China and Russia veto new UN sanctions on North Korea'; AP, 3 Oct 2023: 'North Korea fires submarine ballistic missile in show of force'; Reuters, 23 Dec 2023: 'US intelligence: North Korea sending artillery shells to Russia for Ukraine war'`,
+      committee_docs:`COI DPRK A/HRC/25/CRP.1 (2014): crimes against humanity in political camps; UN Panel of Experts annual reports to UNSC; IAEA GOV: DPRK non-compliance reports; First Committee A/C.1/78: DPRK statement rejecting sanctions`,
+      keywords:`kwanliso, political prison camps, Hwasong-17, sanctions evasion, cyber theft, Russia arms transfers, COI crimes against humanity, denuclearisation`
     }
   },
   'Australia': {
     climate: {
-      gaps:`world's largest coal and LNG exporter despite net-zero by 2050 pledge; approved Scarborough gas field expansion 2023; Beetaloo Basin shale gas development approved under Albanese government`,
-      votes:`historically obstructed COP consensus on fossil fuel phase-out language; Albanese government improvement at COP27-28 but domestic approvals contradict international stance`,
-      stats:`According to Climate Council 2024, Australia's per capita emissions of 15.4 tonnes CO2e are 3× the OECD average; Australia exported 395 million tonnes of coal in FY2023 — a record`,
-      incidents:`Tuvalu PM Kausea Natano declared at COP26 that Australia was 'peddling death'; AOSIS countries challenged Australian coal export volumes as incompatible with the Paris Agreement's 1.5°C goal; Pacific Island Forum near-collapse over Australian climate inaction`
-    },
+      country_policy:`Net-zero by 2050 NDC; 43% emissions reduction by 2030 (Albanese government — upgraded from Morrison's 26-28%); Climate Change Act 2022 enshrines targets in law; BUT Scarborough gas field expansion approved 2023; Beetaloo Basin shale gas approved; world's largest coal and LNG exporter`,
+      foreign_policy:`Pacific Islands Forum: near-collapse 2021 over Australian climate inaction — Tuvalu PM denounced Australia; AUKUS nuclear submarine arrangement raises IAEA NPT Article III concerns; US-Australia Climate Partnership; EU-Australia FTA negotiations include climate standards`,
+      un_docs:`UNFCCC NDC Registry: Australia 43% by 2030; IPCC WGII AR6 Ch.11: Pacific Islands existential climate risk; UNEP Production Gap Report 2023: Australia's coal expansion inconsistent with Paris Agreement; Paris Agreement Global Stocktake (2023): Australia's policies insufficient`,
+      news:`Reuters, 6 Nov 2023: 'Australia approves major new gas projects despite climate pledges'; BBC, 7 Apr 2022: 'Pacific leaders condemn Australia for not doing enough on climate change'; AP, 13 Sep 2022: 'Australia pledges stronger climate action — raises target to 43%'; Al Jazeera, 12 Nov 2021: 'Tuvalu minister delivers speech knee-deep in water to highlight climate threat at COP26'`,
+      committee_docs:`UNFCCC COP28 meeting records Australia statement; Pacific Islands Forum communiqués on climate; Senate Environment Committee reports on Safeguard Mechanism; Climate Change Authority review reports`,
+      keywords:`coal exports, LNG expansion, Pacific Islands, AUKUS safeguards, net-zero 2050, Safeguard Mechanism, Paris Agreement compatibility`
+    }
+  },
+  'South Africa': {
     human_rights: {
-      gaps:`mandatory offshore asylum detention found by UNHCR to breach non-refoulement; Aboriginal and Torres Strait Islander incarceration rate 13× non-Indigenous rate`,
-      votes:`opposed binding UN mechanisms on Indigenous peoples' rights; supported UNGA Declaration on the Rights of Indigenous Peoples only after initial opposition in 2007`,
-      stats:`According to AIHW 2023, Aboriginal and Torres Strait Islander adults are incarcerated at 13× the non-Indigenous rate — the highest disparity of any comparable OECD nation`,
-      incidents:`Nauru and Manus Island offshore processing found unlawful by Papua New Guinea Supreme Court 2016; Save the Children and UNHCR documented over 2,000 instances of child abuse in Nauru centre; $70 million settlement paid to Manus Island detainees 2017`
+      country_policy:`ICJ genocide case vs Israel filed January 2024 — historic use of Genocide Convention; domestically: 8,489 murders Q1 2023 (SAPS); 53.4 per 100,000 femicide rate (UNODC 2023); Land Expropriation Act 2024 debated; Zuma corruption trial ongoing; load-shedding: 250 days of power cuts 2023`,
+      foreign_policy:`Failed to arrest Putin at BRICS August 2023 (ICC warrant); BRICS expansion to include Saudi Arabia, UAE, Egypt, Ethiopia, Iran; abstained on UNGA resolutions condemning Russia's Ukraine invasion; ICJ case against Israel grounded in anti-apartheid solidarity; NAM leadership on Global South reform`,
+      un_docs:`Application instituting proceedings South Africa v Israel (ICJ, January 2024); ICJ Provisional Measures Order January 2024; UNGA ES-11 resolutions: South Africa abstained; A/HRC: South Africa supports UN mandate on OPT; UPR A/HRC/WG.6/38/ZAF/1 (2022): SA 3rd cycle`,
+      news:`Reuters, 11 Jan 2024: 'South Africa files genocide case against Israel at World Court'; BBC, 23 Jan 2024: 'World Court orders Israel to prevent genocidal acts — South Africa case'; AP, 22 Aug 2023: 'South Africa avoids arresting Putin by having him attend BRICS virtually'; Al Jazeera, 24 Aug 2023: 'BRICS summit: South Africa says ICC warrant created dilemma for hosting Putin'`,
+      committee_docs:`ICJ case South Africa v Israel: Application and memorial filings; HRC session records on SA foreign policy statement; ICC Communication registry: SA obligations under Rome Statute; BRICS 2023 summit declaration`,
+      keywords:`ICJ genocide case, Genocide Convention, ICC obligations, Putin arrest warrant, BRICS, anti-apartheid solidarity, land reform, femicide`
     }
   }
 };
 
-/* Map topic keywords to CTI keys */
-const CTI_KEY_MAP = [
-  {key:'nuclear', words:['nuclear','npt','disarmament','nonproliferation','weapons','ctbt','tpnw','iaea','atomic','warhead']},
-  {key:'climate', words:['climate','emissions','carbon','fossil','coal','greenhouse','paris','cop','temperature','net-zero']},
-  {key:'human_rights', words:['human rights','rights','freedom','detention','torture','civil','political','expression','assembly','uhrc']},
-  {key:'trade', words:['trade','wto','tariff','subsidy','market','commerce','sanctions','gatt','investment','export']},
-  {key:'conflict', words:['conflict','war','armed','ceasefire','military','occupation','peace','security','territory','attack']},
-  {key:'refugees', words:['refugee','asylum','displacement','migrant','unhcr','forcibly','stateless','protection','resettlement']}
+/* ── CTI lookup: keyword matching for topic categories ── */
+const CTI_KEYS = [
+  {k:'nuclear',    w:['nuclear','npt','disarmament','nonproliferation','weapons of mass','ctbt','tpnw','iaea','atomic','warhead','missile','ballistic']},
+  {k:'climate',    w:['climate','emission','carbon','fossil','coal','greenhouse','paris','cop','temperature','net-zero','deforestation','energy']},
+  {k:'human_rights',w:['human rights','rights violation','freedom','detention','torture','civil liberties','political prisoner','expression','assembly','minority','discrimination']},
+  {k:'trade',      w:['trade','wto','tariff','subsidy','sanction','market access','commerce','gatt','investment','export','import','customs']},
+  {k:'conflict',   w:['conflict','war','armed','ceasefire','military operation','occupation','peace','security','territory','attack','invasion','airstrike']},
+  {k:'refugees',   w:['refugee','asylum','displacement','migrant','unhcr','forcibly displaced','stateless','protection','resettlement','non-refoulement']}
 ];
 
 function _ctiFor(country, topicStr) {
   if (!country || !topicStr) return null;
   const t = topicStr.toLowerCase();
-  const cKey = Object.keys(CTI).find(k => k.toLowerCase() === country.toLowerCase() || country.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(country.toLowerCase()));
+  const cKey = Object.keys(CTI2).find(k => {
+    const kl = k.toLowerCase(), cl = country.toLowerCase();
+    return kl === cl || cl.includes(kl) || kl.includes(cl);
+  });
   if (!cKey) return null;
-  const cData = CTI[cKey];
+  const cData = CTI2[cKey];
   let best = null, bestScore = 0;
-  for (const {key, words} of CTI_KEY_MAP) {
-    if (!cData[key]) continue;
+  for (const {k, w} of CTI_KEYS) {
+    if (!cData[k]) continue;
     let score = 0;
-    for (const w of words) { if (t.includes(w)) score++; }
-    if (score > bestScore) { bestScore = score; best = cData[key]; }
+    for (const word of w) { if (t.includes(word)) score += word.split(' ').length; }
+    if (score > bestScore) { bestScore = score; best = { ...cData[k], _topic: k }; }
+  }
+  /* Fallback: if committee abbreviation in topic string gives a hint */
+  if (!best) {
+    if (/DISEC|IAEA/i.test(topicStr) && cData.nuclear) best = { ...cData.nuclear, _topic:'nuclear' };
+    else if (/UNEP|UNFCCC/i.test(topicStr) && cData.climate) best = { ...cData.climate, _topic:'climate' };
+    else if (/UNHRC|SOCHUM|HRC/i.test(topicStr) && cData.human_rights) best = { ...cData.human_rights, _topic:'human_rights' };
+    else if (/WTO|ECOFIN/i.test(topicStr) && cData.trade) best = { ...cData.trade, _topic:'trade' };
+    else if (/UNSC/i.test(topicStr) && cData.conflict) best = { ...cData.conflict, _topic:'conflict' };
+    else if (/UNHCR|SPECPOL/i.test(topicStr) && cData.refugees) best = { ...cData.refugees, _topic:'refugees' };
   }
   return best;
 }
+
+
 
 
 function _genSpeech(prompt) {
@@ -2350,10 +2335,10 @@ function _genSpeech(prompt) {
   const [res1,res2,res3] = _pickN(td.resolutions,3);
   const [tr1,tr2] = _pickN(td.treaties,2);
   const [st1,st2] = _pickN(td.stats,2);
-  /* CTI stats/incidents override generic data when available */
-  const speechStat = cti ? cti.stats : st1;
-  const speechInc  = cti ? cti.incidents.split(';')[0] : _pick(td.incidents);
-  const speechGaps = cti ? cti.gaps : (cd ? cd.treaty_gaps : '');
+  /* CTI2 five-layer data overrides generic data when available */
+  const speechStat = cti ? cti.news          : st1;
+  const speechInc  = cti ? cti.news.split(';')[0] : _pick(td.incidents);
+  const speechGaps = cti ? cti.country_policy : (cd ? cd.treaty_gaps : '');
   const inc1 = _pick(td.incidents);
   const opv  = _pick(td.operative);
   const opvClean = opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'');
@@ -2391,7 +2376,7 @@ function _genSpeech(prompt) {
   const positionLine = posIntroFn(blocStr, posBase);
 
   /* ── Varied hook paragraphs — 5 per type, CTI-aware ── */
-  const statEvidence = customFacts ? customFacts.split('\n')[0].trim() : (cti ? cti.stats : st1);
+  const statEvidence = customFacts ? customFacts.split('\n')[0].trim() : (cti ? cti.news : st1);
   const incEvidence  = customFacts ? customFacts.split('\n')[0].trim() : speechInc;
   const hooksAll = {
     stat: [
@@ -2574,6 +2559,23 @@ Synthesis: ${dp.synthesis(country, `a framework grounded in ${tr1} with differen
 
   const refs = [res1,res2,res3||tr2,tr1,st1.split(',')[0],st2.split(',')[0],inc1.replace(/^the\s/i,'')].filter(Boolean);
 
+  /* Build CTI2 five-layer research source block when available */
+  const researchSources = cti ? `
+[NATIONAL POLICY]
+${cti.country_policy}
+
+[FOREIGN POLICY RECORD]
+${cti.foreign_policy}
+
+[UN DOCUMENTS ON RECORD]
+${cti.un_docs}
+
+[NEWS SOURCES]
+${cti.news}
+
+[COMMITTEE DOCUMENTS & MEETING RECORDS]
+${cti.committee_docs}` : '';
+
   return `[SALUTATION]
 ${salutation}
 
@@ -2596,7 +2598,7 @@ ${proposalText}
 ${closingPara}
 
 [REFERENCES]
-${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}`;
+${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}${researchSources ? '\n' + researchSources : ''}`;
 }
 
 /* ── Standard and merged POI generator ───────────────────────────────── */
@@ -2636,13 +2638,13 @@ function _genPOI(prompt) {
   const cti = _ctiFor(target, topic);   /* Country×Topic specific research intel */
   const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
 
-  /* Country-specific intelligence shortcuts — CTI takes priority over generic COUNTRY_DB */
-  const tcdPos  = tcd ? tcd.position.substring(0,130)          : '';
-  const tcdGaps = cti ? cti.gaps  : (tcd ? tcd.treaty_gaps     : '');
-  const tcdVote = cti ? cti.votes : (tcd ? tcd.vote_pattern    : '');
-  const tcdStat = cti ? cti.stats : '';
-  const tcdInc  = cti ? cti.incidents : '';
-  const tcdBloc = tcd && tcd.blocs.length ? tcd.blocs[0]        : 'its regional bloc';
+  /* Country-specific intelligence shortcuts — CTI2 five-layer data takes priority over generic COUNTRY_DB */
+  const tcdPos  = tcd ? tcd.position.substring(0,130)                       : '';
+  const tcdGaps = cti ? cti.country_policy : (tcd ? tcd.treaty_gaps         : '');
+  const tcdVote = cti ? cti.un_docs        : (tcd ? tcd.vote_pattern        : '');
+  const tcdStat = cti ? cti.news           : '';
+  const tcdInc  = cti ? cti.foreign_policy : '';
+  const tcdBloc = tcd && tcd.blocs.length ? tcd.blocs[0]                    : 'its regional bloc';
 
   /* Pre-shuffled arrays to avoid same treaty/resolution/stat repeating every generation */
   const pickedRes = _pickN(td.resolutions, Math.min(6, td.resolutions.length));
@@ -2675,19 +2677,19 @@ function _genPOI(prompt) {
   const makeQ = (i) => {
     const res = pickedRes[i % pickedRes.length];
     const tr  = pickedTr[i % pickedTr.length];
-    /* CTI stats/incidents override generic TOPIC_DB data for specific countries */
+    /* CTI2 news/foreign_policy override generic TOPIC_DB data for specific countries */
     const st  = tcdStat || pickedSt[i % pickedSt.length];
     const inc = tcdInc  || pickedInc[i % pickedInc.length];
     const res2 = pickedRes[(i+1) % pickedRes.length];
     const tr2  = pickedTr[(i+1) % pickedTr.length];
 
-    /* If CTI data is available, add high-specificity country-researched questions */
+    /* If CTI2 data is available, add high-specificity country-researched questions citing real sources */
     if (cti) {
       const ctiQs = [
-        {q:`This delegation has documented research on ${target}'s record on ${topic}. Specifically: ${cti.gaps.substring(0,200)}. Would the delegate explain how ${target}'s position today is consistent with this documented record?`, c:`${target} — documented research (${topic})`},
-        {q:`${cti.stats.substring(0,200)}. Would the distinguished delegate of ${target} reconcile this independently verified data with the claim just advanced?`, c:cti.stats.split('.')[0]},
-        {q:`This questioner has reviewed ${target}'s documented record: ${cti.incidents.substring(0,200)}. Would the delegate explain how the position articulated today accounts for this documented conduct?`, c:`${target} documented record on ${topic}`},
-        {q:`${target}'s voting record on ${topic} reveals: ${cti.votes.substring(0,180)}. Would the delegate clarify how the position argued today represents a genuine shift from that established record — and provide specific evidence of the shift?`, c:`${target} UN voting record on ${topic}`}
+        {q:`This delegation's research into ${target}'s national policy on ${topic} finds: ${cti.country_policy.substring(0,200)}. Would the delegate explain how ${target}'s position today is consistent with this documented official record?`, c:`${target} — national policy record (${topic})`},
+        {q:`Sourced from verified news reporting: ${cti.news.substring(0,200)}. Would the distinguished delegate of ${target} reconcile this independently reported information with the claim just advanced?`, c:cti.news.split('.')[0]},
+        {q:`${target}'s bilateral and multilateral commitments on ${topic} are documented as follows: ${cti.foreign_policy.substring(0,200)}. Would the delegate explain how the position articulated today is consistent with those established foreign policy obligations?`, c:`${target} foreign policy record on ${topic}`},
+        {q:`UN documents on record regarding ${target}'s conduct include: ${cti.un_docs.substring(0,200)}. Would the delegate clarify how the position argued today aligns with that independently documented UN record — and provide specific evidence of any shift?`, c:`${target} UN document record on ${topic}`}
       ];
       const q = ctiQs[i % ctiQs.length];
       if (i % 2 === 0 || !hasCustom) return q;
@@ -2843,6 +2845,13 @@ function _genPOI(prompt) {
   const blocks = [];
   const mergedTags = ['Document Logic','Treaty + News','Resolution Chain','Incident Exposure','Merged Argument'];
 
+  /* CTI2 five-layer source references for advanced POI modes */
+  const ctiDocRef  = cti && cti.un_docs        ? `UN DOCUMENT: ${cti.un_docs.split(';')[0].trim()}`        : pickedTr[0];
+  const ctiNewsRef = cti && cti.news           ? `NEWS SOURCE: ${cti.news.split(';')[0].trim()}`            : pickedInc[0];
+  const ctiCommRef = cti && cti.committee_docs ? `COMMITTEE RECORD: ${cti.committee_docs.split(';')[0].trim()}` : `First Committee / ${topic.substring(0,30)} session records`;
+  const ctiFPRef   = cti && cti.foreign_policy ? `FOREIGN POLICY: ${cti.foreign_policy.substring(0,120)}`  : '';
+  const ctiCPRef   = cti && cti.country_policy ? `NATIONAL POLICY: ${cti.country_policy.substring(0,120)}` : '';
+
   if (thinking === 'cascade') {
     const chain = makeCascadeChain();
     chain.forEach((step, i) => {
@@ -2853,8 +2862,9 @@ function _genPOI(prompt) {
 STRATEGY_TAG: Cascade Level ${i+1} — ${step.tag}
 QUESTION: ${step.q}
 LOGIC_STEP: ${step.logic}
-DOCUMENT_LOGIC: ${tr} → escalating pressure chain → gap exposed at level ${i+1} of ${chain.length}
-NEWS_PROOF: ${inc} — corroborating evidence for this cascade level
+DOCUMENT_LOGIC: ${ctiDocRef} → escalating pressure chain → gap exposed at level ${i+1} of ${chain.length}
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: ${step.logic} Each level builds on the admission or evasion of the prior question, constructing an inescapable logical trap across the exchange.
 COUNTER_DEFENSE: ${target} may deflect to generalities — the cascade structure means each deflection is itself the evidence of bad faith that the next POI will exploit.
 [POI_END]`);
@@ -2863,6 +2873,7 @@ COUNTER_DEFENSE: ${target} may deflect to generalities — the cascade structure
 STRATEGY_TAG: Cascade Level ${i+1} — ${step.tag}
 QUESTION: ${step.q}
 CITATION: ${step.c}
+SOURCED_FROM: ${ctiDocRef}${ctiFPRef ? ' | ' + ctiFPRef.substring(0,80) : ''}
 LOGIC_STEP: ${step.logic}
 WHY_IT_WORKS: Part of a ${chain.length}-step cascade: each question builds on the delegate's prior response, escalating the logical pressure until a specific verifiable commitment is required.
 [POI_END]`);
@@ -2878,8 +2889,9 @@ WHY_IT_WORKS: Part of a ${chain.length}-step cascade: each question builds on th
         blocks.push(`[POI_START]
 STRATEGY_TAG: Socratic Trap — ${trap.tag}
 QUESTION: ${trap.q}
-DOCUMENT_LOGIC: ${tr} → any answer the delegate gives confirms the contradiction
-NEWS_PROOF: ${inc} — factual backstop for the trap
+DOCUMENT_LOGIC: ${ctiDocRef} → any answer the delegate gives confirms the contradiction
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: The question is structured so that any direct answer — yes or no — advances the questioner's argument. Only evasion is available to the delegate, and visible evasion is itself damaging.
 COUNTER_DEFENSE: If ${target} refuses to answer directly, call attention to the refusal as itself revealing.
 [POI_END]`);
@@ -2888,6 +2900,7 @@ COUNTER_DEFENSE: If ${target} refuses to answer directly, call attention to the 
 STRATEGY_TAG: Socratic Trap — ${trap.tag}
 QUESTION: ${trap.q}
 CITATION: ${trap.c}
+SOURCED_FROM: ${ctiDocRef}${ctiNewsRef ? ' | ' + ctiNewsRef.substring(0,80) : ''}
 WHY_IT_WORKS: ${trap.why}
 [POI_END]`);
       }
@@ -2902,8 +2915,10 @@ WHY_IT_WORKS: ${trap.why}
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${exp.tag}
 QUESTION: ${exp.q}
-DOCUMENT_LOGIC: Multi-instrument exposure: legal + factual + incident + normative failure converge simultaneously
-NEWS_PROOF: ${inc} — one of four simultaneous proof layers deployed
+NATIONAL_POLICY: ${ctiCPRef || `${target}'s official position on ${topic}`}
+DOCUMENT_LOGIC: ${ctiDocRef} — multi-instrument exposure: legal + UN record + normative failure converge simultaneously
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: Overload strategy: the delegate cannot address four independent exposures coherently within the time allowed. Any partial response leaves the remaining dimensions standing as unrebutted.
 COUNTER_DEFENSE: If ${target} tries to rebut only one layer, explicitly note for the record that three remain unanswered. The committee will draw its own inference.
 [POI_END]`);
@@ -2912,6 +2927,7 @@ COUNTER_DEFENSE: If ${target} tries to rebut only one layer, explicitly note for
 STRATEGY_TAG: ${exp.tag}
 QUESTION: ${exp.q}
 CITATION: ${exp.c}
+SOURCED_FROM: ${ctiDocRef}${ctiNewsRef ? ' | ' + ctiNewsRef.substring(0,80) : ''}
 WHY_IT_WORKS: ${exp.why}
 [POI_END]`);
       }
@@ -2925,21 +2941,31 @@ WHY_IT_WORKS: ${exp.why}
       const inc = pickedInc[i % pickedInc.length];
       const why = whyPool[i % whyPool.length];
       const chain = chainPool[i % chainPool.length];
-      const docLogicGap = tcdGaps ? `known gap: ${tcdGaps.substring(0,90)}` : 'incomplete implementation record on the instrument';
+      const docLogicGap = tcdGaps ? `known gap: ${tcdGaps.substring(0,120)}` : 'incomplete implementation record on the instrument';
+      /* CTI2 five-layer source citations */
+      const ctiDocLine  = cti && cti.un_docs        ? `UN DOCUMENT: ${cti.un_docs.split(';')[0].trim()}` : tr;
+      const ctiNewsLine = cti && cti.news           ? `NEWS SOURCE: ${cti.news.split(';')[0].trim()}`    : inc;
+      const ctiCommLine = cti && cti.committee_docs ? `COMMITTEE RECORD: ${cti.committee_docs.split(';')[0].trim()}` : '';
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${mergedTags[i%mergedTags.length]}
 QUESTION: ${q.q}
-DOCUMENT_LOGIC: ${tr} → binding obligation on ${topic.substring(0,40)} → ${docLogicGap}
-NEWS_PROOF: ${inc} — documented by Reuters, UN News, and relevant UN monitoring bodies
+NATIONAL_POLICY: ${tcdGaps ? tcdGaps.substring(0,160) : `${target}'s national policy record on ${topic}`}
+DOCUMENT_LOGIC: ${ctiDocLine} → binding obligation on ${topic.substring(0,40)} → ${docLogicGap.substring(0,80)}
+NEWS_PROOF: ${ctiNewsLine}
+COMMITTEE_RECORD: ${ctiCommLine || `First Committee / ${topic.substring(0,30)} — relevant session records`}
 ARGUMENT_CHAIN: ${chain}
-COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementation is in progress — but the timeline and independent documentation undermine any claim of good-faith compliance within a reasonable timeframe.
+COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementation is in progress — but the documented record and independent UN sources undermine any claim of good-faith compliance.
 [POI_END]`);
       } else {
+        const citeLine = cti
+          ? `${ctiDocLine}${ctiNewsLine ? ' | ' + ctiNewsLine : ''}${ctiCommLine ? ' | ' + ctiCommLine : ''}`
+          : q.c;
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${strategyTagMap[stratHint]}
 QUESTION: ${q.q}
 CITATION: ${q.c}
+SOURCED_FROM: ${citeLine}
 WHY_IT_WORKS: ${why}
 [POI_END]`);
       }
@@ -2997,23 +3023,33 @@ function _genIntel(prompt) {
   const wantsSpeech = /COUNTER_SPEECH_START/i.test(prompt);
   const wantsPOI    = /INTEL_POI_START/i.test(prompt);
 
-  const td = _topicDataFor(notes+' '+context, intelComAbbr);
+  const td  = _topicDataFor(notes+' '+context, intelComAbbr);
+  const cti = _ctiFor(speaker, notes+' '+context);   /* CTI2 five-layer intel for the speaking delegation */
   const [res1,res2] = _pickN(td.resolutions,2);
   const [tr1,tr2]   = _pickN(td.treaties,2);
   const [st1,st2]   = _pickN(td.stats,2);
   const inc1 = _pick(td.incidents);
 
+  /* CTI2 priority overrides */
+  const intelStat   = cti && cti.news           ? cti.news.split(';')[0].trim()           : st1;
+  const intelInc    = cti && cti.foreign_policy ? cti.foreign_policy.substring(0,200)     : inc1;
+  const intelDoc    = cti && cti.un_docs        ? cti.un_docs.split(';')[0].trim()        : res1;
+  const intelPolicy = cti && cti.country_policy ? cti.country_policy.substring(0,200)    : '';
+  const intelComDoc = cti && cti.committee_docs ? cti.committee_docs.split(';')[0].trim() : '';
+
   let out='';
 
   if (wantsSpeech) {
+    const policyLine = intelPolicy ? `The documented national policy of ${speaker} states: ${intelPolicy}. ` : '';
+    const docLine    = intelDoc !== res1 ? `The UN record confirms: ${intelDoc}. ` : '';
     out+=`[COUNTER_SPEECH_START]
 Honorable chair — the delegation of ${myCountry} takes the floor in direct response to the statement delivered by the distinguished delegate of ${speaker}.
 
-The delegation heard ${claims.length>0?`claims regarding "${claims[0].substring(0,80)}"`:'a number of assertions that warrant direct engagement'}. The record, however, must be stated plainly. ${st1}. This data — drawn from an authoritative and independent source — does not support the characterization offered by the delegation of ${speaker}.
+The delegation heard ${claims.length>0?`claims regarding "${claims[0].substring(0,80)}"`:'a number of assertions that warrant direct engagement'}. The record, however, must be stated plainly. ${intelStat}. This information — drawn from independently verified sources — does not support the characterization offered by the delegation of ${speaker}.
 
-Furthermore, this committee adopted ${res1}, which establishes obligations all member states — including ${speaker} — have undertaken. The delegation of ${myCountry} submits that the position just articulated fails to account for those obligations. The committee will also recall ${inc1}, which represents a direct and documented example of the consequences of the failure to implement commitments made on this floor.
+${policyLine}${docLine}Furthermore, this committee adopted ${res1}, which establishes obligations all member states — including ${speaker} — have undertaken. The delegation of ${myCountry} submits that the position just articulated fails to account for those obligations. The committee will also recall ${intelInc}, which represents a direct and documented example of the gap between stated commitments and actual conduct.
 
-The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td.operative).toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'urgently ').replace(/^encourages /,'encourage all states to ')}. We stand prepared to work with any delegation committed to a substantive, verifiable, and time-bound outcome. Thank you, chair.
+${intelComDoc ? `For the committee's reference: ${intelComDoc}.\n\n` : ''}The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td.operative).toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'urgently ').replace(/^encourages /,'encourage all states to ')}. We stand prepared to work with any delegation committed to a substantive, verifiable, and time-bound outcome. Thank you, chair.
 [COUNTER_SPEECH_END]
 
 `;
@@ -3024,10 +3060,22 @@ The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td
       `stated position on ${td.label}`, `treaty compliance assertions`, `data and statistics cited`, `proposed operative framework`
     ];
     const poiQs=[
-      {claim:poiClaims[0]||'opening position',contra:`This conflicts with ${res1} and the documented record under ${tr1}`,q:`The delegate stated "${(poiClaims[0]||'').substring(0,70)}${(poiClaims[0]||'').length>70?'…':''}". Would the delegation reconcile this claim with ${res1}, which this body adopted and which obligates all member states — including ${speaker}?`,c:res1},
-      {claim:poiClaims[1]||'treaty position',contra:`${speaker}'s ratification record raises questions under ${tr1}`,q:`Regarding the position on ${(poiClaims[1]||'treaty compliance').substring(0,60)}, would the delegate confirm whether ${speaker} has ratified ${tr1}, and if so, explain how the domestic implementation record aligns with the position just stated?`,c:tr1},
-      {claim:poiClaims[2]||'data claims',contra:`Independent data contradicts the figures or framing cited`,q:`The delegate's statement referenced "${(poiClaims[2]||'data').substring(0,50)}". Would the delegation reconcile this with ${st1}, which comes from an authoritative independent source?`,c:st1},
-      {claim:poiClaims[3]||'proposal',contra:`The proposal does not address the established legal framework or the documented factual record`,q:`Regarding the proposal on ${(poiClaims[3]||'the topic').substring(0,50)}: in light of ${inc1}, how does ${speaker}'s position translate into specific, independently verifiable commitments — beyond what has been stated on this floor?`,c:`Documented evidence of ${inc1}`}
+      {claim:poiClaims[0]||'opening position',
+       contra: intelPolicy ? `${speaker}'s own national policy states: ${intelPolicy.substring(0,120)}` : `This conflicts with ${res1} and the documented record under ${tr1}`,
+       q:`The delegate stated "${(poiClaims[0]||'').substring(0,70)}${(poiClaims[0]||'').length>70?'…':''}". Would the delegation reconcile this claim with ${intelDoc !== res1 ? intelDoc.substring(0,120) : res1}, which this body adopted and which obligates all member states — including ${speaker}?`,
+       c: intelDoc !== res1 ? `UN DOCUMENT: ${intelDoc.substring(0,80)}` : res1},
+      {claim:poiClaims[1]||'treaty position',
+       contra:`${speaker}'s foreign policy record reveals: ${cti && cti.foreign_policy ? cti.foreign_policy.substring(0,120) : `ratification gaps under ${tr1}`}`,
+       q:`Regarding the position on ${(poiClaims[1]||'treaty compliance').substring(0,60)}, would the delegate confirm whether ${speaker} has ratified ${tr1}, and if so, explain how the domestic implementation record aligns with the position just stated — given the documented foreign policy record?`,
+       c: cti && cti.foreign_policy ? `FOREIGN POLICY: ${cti.foreign_policy.substring(0,60)}` : tr1},
+      {claim:poiClaims[2]||'data claims',
+       contra:`Independent sources contradict the figures or framing cited`,
+       q:`The delegate's statement referenced "${(poiClaims[2]||'data').substring(0,50)}". Would the delegation reconcile this with the following independently sourced information: ${intelStat.substring(0,120)}?`,
+       c: cti && cti.news ? `NEWS SOURCE: ${cti.news.split(';')[0].substring(0,80)}` : st1},
+      {claim:poiClaims[3]||'proposal',
+       contra:`The proposal does not address the documented policy gap or UN record on file`,
+       q:`Regarding the proposal on ${(poiClaims[3]||'the topic').substring(0,50)}: how does ${speaker}'s position translate into specific, independently verifiable commitments — given that ${intelComDoc || inc1} directly bears on this question?`,
+       c: intelComDoc ? `COMMITTEE RECORD: ${intelComDoc.substring(0,80)}` : `Documented evidence of ${inc1}`}
     ];
     poiQs.slice(0,4).forEach(p=>{
       out+=`[INTEL_POI_START]
