@@ -2003,7 +2003,307 @@ function _countryDataFor(countryStr) {
   return key ? COUNTRY_DB[key] : {blocs:['G77','NAM'],position:'advocates multilateral solutions and respect for international law',treaty_gaps:'party to major UN human rights instruments',vote_pattern:'participates constructively in UN deliberations'};
 }
 
-/* ── Speech generator (Advanced Thinking Engine) ─────────────────────────────────────────── */
+
+/* ── EXPANDED CTI: Five-layer research schema per country × topic ──────────
+   Schema per entry (mirrors Zaid Ekram Research Guideline):
+     country_policy  — official government stance + national legislation
+     foreign_policy  — bilateral/multilateral relations, treaties, agreements
+     un_docs         — specific UN document numbers and their substance
+     news            — Reuters / BBC / state agency / AP specific citations
+     committee_docs  — committee document archive references + meeting records
+     keywords        — agenda key words that unlock more sources
+──────────────────────────────────────────────────────────────────────────── */
+const CTI2 = {
+  'United States': {
+    nuclear: {
+      country_policy:`US Nuclear Posture Review 2022 affirms strategic deterrence as the cornerstone of national security; rejects a no-first-use policy; committed to $1.7 trillion nuclear modernization of all three triad legs (CBO 2023); has not ratified the CTBT despite signing in 1996`,
+      foreign_policy:`Extended nuclear deterrence covers 31 NATO allies plus Japan and South Korea; AUKUS submarine deal with Australia raises NPT Article III safeguards questions (IAEA DG Grossi statement 2021); US-India 123 Agreement grants civilian nuclear cooperation outside NPT full-scope safeguards`,
+      un_docs:`A/RES/75/71 (TPNW, 2020): US voted against; NPT/CONF.2020/PC.III/SR.3: US blocked consensus on disarmament timelines; UNSC Res.2231 (JCPOA): US supported then undermined 2018; First Committee Res.A/C.1/77/L.49: US voted against follow-on TPNW language; A/RES/74/34: US voted against nuclear ban`,
+      news:`Reuters, 26 Feb 2023: 'US suspends participation in New START nuclear arms treaty'; BBC, 2 Aug 2019: 'US formally withdraws from INF Treaty'; AP, 21 Oct 2023: 'Pentagon nuclear modernization plan reaches $1.7 trillion; CBO report'; Xinhua, 15 Mar 2023: 'US and Russia nuclear arms control faces collapse after START suspension'`,
+      committee_docs:`DISEC A/77/116 (2022): UN Secretary-General report on nuclear disarmament; First Committee verbatim records A/C.1/77/PV.13: US statement on TPNW; NPT PrepCom 2023 Chair's factual summary: notes US resistance to interim measures`,
+      keywords:`nuclear triad, CTBT ratification, no-first-use, extended deterrence, New START, INF Treaty, NPT Article VI`
+    },
+    climate: {
+      country_policy:`Inflation Reduction Act 2022 allocates $369 billion to climate and clean energy — the largest US climate investment ever; Biden NDC: 50-52% emissions reduction by 2030 from 2005 levels; per-capita emissions remain highest in G7 at 14.9 tonnes CO2e; Permitting Reform Act 2023 expedited fossil fuel approvals`,
+      foreign_policy:`US-EU Clean Technology Partnership (2023); US-China climate cooperation suspended after Pelosi Taiwan visit (Aug 2022), resumed Nov 2023 (Sunnylands Statement); US-India Climate and Clean Energy Agenda 2030; co-leads Mission Innovation with 24 countries`,
+      un_docs:`UNFCCC NDC Registry: US target 50-52% below 2005 by 2030; IPCC AR6 WG3 (2022): notes US IRA as significant policy shift; UNEP Emissions Gap Report 2023: US gap between pledges and policies remains 'insufficient'; CMA.5 Decision 1: US signed but negotiated exemptions`,
+      news:`Reuters, 16 Aug 2022: 'Biden signs Inflation Reduction Act into law — $369 billion for climate'; BBC, 13 Nov 2023: 'US and China resume climate talks at COP28'; AP, 14 Jan 2023: 'US approves record LNG export terminals while pursuing climate targets'; Bloomberg, 4 Feb 2024: 'US oil output hits record 13.3 million bpd'`,
+      committee_docs:`UNEP/EA.5/Res.2 (2022): US supported but sought weaker enforcement language; UNFCCC SB58 summary records: US delegation opposed loss and damage governance proposals; COP28 UAE Consensus: US co-signed fossil fuel phase-down language`,
+      keywords:`Paris Agreement NDC, net-zero 2050, fossil fuel phase-down, loss and damage, Just Energy Transition, IRA, CBAM`
+    },
+    human_rights: {
+      country_policy:`US has not ratified CRC (sole UN member state), CEDAW, or the Rome Statute; mass incarceration rate 655/100,000 — highest globally (BJS 2023); capital punishment practiced in 27 states; 2022 Supreme Court Dobbs decision reversed Roe v. Wade`,
+      foreign_policy:`Sanctions programs under IEEPA and OFAC impose human rights conditions on aid recipients; Magnitsky Act targets foreign human rights violators; contradiction: arms sales to Saudi Arabia, Egypt, UAE despite human rights concerns documented by State Dept`,
+      un_docs:`ICCPR HRC CCPR/C/USA/CO/4 (2023): Committee noted excessive use of force by police, racial disparities in criminal justice, and solitary confinement; CAT/C/USA/CO/3-5 (2020): concerns on CIA detention; UPR III Recommendations (2020): 343 recommendations received, 150 accepted`,
+      news:`AP, 28 May 2022: 'US formally rejoins UN Human Rights Council after four-year absence'; Reuters, 7 Jun 2020: 'UN human rights chief condemns US police killings'; BBC, 2 Jul 2019: 'US withdraws from UN Human Rights Council citing bias'`,
+      committee_docs:`OHCHR Report A/HRC/48/21 (2021): Systemic racism in US law enforcement; HRC Resolution 43/1 (2020): established 'Urgent debate on police violence against Africans and people of African descent'; USA UPR National Report A/HRC/WG.6/36/USA/1`,
+      keywords:`racial justice, police violence, mass incarceration, CRC ratification, CEDAW ratification, ICC jurisdiction, solitary confinement`
+    },
+    trade: {
+      country_policy:`Section 301 tariffs on $370 billion Chinese goods since 2018; Section 232 steel/aluminium tariffs 25%/10%; IRA local content requirements; Buy American provisions; Chips Act domestic semiconductor manufacturing mandates`,
+      foreign_policy:`USMCA (2020) replaced NAFTA; Indo-Pacific Economic Framework launched 2022 (no market access offers); US-EU Trade and Technology Council 2021; US withdrawal from TPP January 2017 damaged Asia-Pacific alliances`,
+      un_docs:`WTO DS543 panel report: US Section 301 tariffs on China found inconsistent with GATT Article I and II (2020); DS548: US Section 232 steel tariffs found WTO-inconsistent (2022); WTO Appellate Body effectively paralysed since December 2019 due to US blocking appointments`,
+      news:`Reuters, 23 May 2024: 'Biden raises tariffs on Chinese EVs to 100% — escalating trade war'; BBC, 8 Dec 2019: 'WTO's highest court paralysed as US blocks judges'; Financial Times, 13 Aug 2022: 'EU launches WTO challenge to US Inflation Reduction Act subsidies'`,
+      committee_docs:`WTO TPR/S/382 (2020): US Trade Policy Review — notes Appellate Body concerns; WTO MC13 Abu Dhabi (2024): US blocked fisheries subsidies enforcement; UNCTAD Trade and Development Report 2023: US unilateralism undermines multilateral trading system`,
+      keywords:`WTO Appellate Body, Section 301, Section 232, trade deficit, unilateral sanctions, IRA subsidies, protectionism`
+    }
+  },
+  'China': {
+    nuclear: {
+      country_policy:`China's No-First-Use (NFU) policy declared 1964 but not codified in treaty; rapid nuclear expansion: SIPRI 2024 documents 500 warheads up from 350 in 2022; constructing 300+ ICBM silos in Gansu/Xinjiang per commercial satellite imagery; DF-41 ICBM range 14,000 km`,
+      foreign_policy:`China-Russia 'no limits' partnership (Feb 2022 joint statement) includes implicit nuclear coordination; China-Pakistan nuclear cooperation (Chashma reactors) raises IAEA safeguards concerns; China opposes US extended deterrence in Asia-Pacific; China and Russia co-blocked UNSC action on North Korea since 2022`,
+      un_docs:`NPT/CONF.2020/10: China submitted working paper on disarmament but blocked consensus; IAEA GOV/2022/17: IAEA Board noted China's opacity on fissile material production; First Committee A/C.1/78/L.36: China voted against TPNW follow-on; UNGA A/RES/78/32: China abstained on nuclear risk reduction resolution`,
+      news:`Reuters, 3 Nov 2021: 'China building more than 100 new nuclear missile silos, satellite images show'; BBC, 29 Apr 2024: 'China's nuclear arsenal growing faster than any other country — SIPRI'; AP, 19 Oct 2023: 'Pentagon says China on track for 1,000 nuclear warheads by 2030'; Financial Times, 12 Jul 2023: 'China refuses arms control talks despite US pressure'`,
+      committee_docs:`DISEC First Committee verbatim A/C.1/78/PV.11: China's statement on disarmament; NPT PrepCom 2023 summary: notes China's refusal to join P5 transparency discussions; SIPRI Yearbook 2024 Chapter 10: China nuclear forces`,
+      keywords:`DF-41, ICBM silo expansion, no-first-use, fissile material cutoff, nuclear transparency, P5 dialogue, silo construction`
+    },
+    human_rights: {
+      country_policy:`Xinjiang 'Vocational Education and Training Centres': 1-1.8 million Uyghurs detained per UN estimates; Tibet Autonomous Region 'patriotic education' campaigns; Hong Kong NSL 2020: 260+ arrests; domestic 'Sinicization' of religion policy; Great Firewall blocks 311,000 websites`,
+      foreign_policy:`China lobbied 46 UN member states to sign letter supporting Xinjiang policy at HRC (July 2020); OIC member states received Chinese investments in exchange for silence on Uyghur issue; China sanctions EU parliamentarians investigating Xinjiang; Wolf Warrior diplomacy strategy documented`,
+      un_docs:`OHCHR Assessment A/HRC/51/CRP.1 (Aug 2022): serious human rights violations may constitute international crimes; HRC Res.51/1 (2022): China voted against debate on OHCHR Xinjiang report — motion failed 19-17-11; CCPR/C/CHN/CO/6 shadow reports; CAT/C/CHN/CO/5 (2015): concerns on Xinjiang, Tibet, and renditions`,
+      news:`BBC, 31 Aug 2022: 'UN report finds China may have committed crimes against humanity in Xinjiang'; Reuters, 6 Oct 2022: 'China wins narrow vote at UN Human Rights Council blocking Xinjiang debate'; AP, 23 Jun 2020: 'Hong Kong arrests 10 for Tiananmen vigil — first time since 1990 under NSL'; Al Jazeera, 12 Nov 2020: 'China's secret documents reveal true scale of Xinjiang crackdown'`,
+      committee_docs:`HRC 51st session verbatim records: China's response to OHCHR findings; UN Human Rights Council UPR: China's 3rd cycle report UPR/A/CHN/3 (2018); Special Rapporteur on Torture A/HRC/40/59/Add.2: access denied to China`,
+      keywords:`Xinjiang, vocational training, Uyghur, NSL Hong Kong, Tibet, freedom of expression, ICCPR, OHCHR assessment`
+    },
+    climate: {
+      country_policy:`Peak emissions by 2030 NDC; carbon neutrality by 2060; 47 GW new coal approved 2023 (IEA); coal provides 60% of electricity; 'Dual Carbon' policy; China is the world's largest renewable energy producer AND largest coal consumer simultaneously`,
+      foreign_policy:`Belt and Road Initiative: 13 GW overseas coal financed despite 2021 pledge to halt overseas coal; BASIC bloc with Brazil, India, South Africa pushes for equity-based emissions; China-EU Green Deal dialogue; China joined US-China Joint Glasgow Declaration on Methane (Nov 2021) then slowed cooperation`,
+      un_docs:`UNFCCC NDC Registry: China 2030 peak; IPCC AR6 WG3: notes China's renewables expansion but coal lock-in risk; UNEP Production Gap Report 2023: China plans to increase coal production contradicting Paris targets; COP28 Decision 1: China co-signed fossil fuel language`,
+      news:`Reuters, 26 Feb 2024: 'China approved 47 gigawatts of new coal power in 2023 — most in world'; BBC, 12 Nov 2021: 'China and US reach climate cooperation deal at COP26 Glasgow'; AP, 21 Nov 2023: 'China and developing countries demand wealthy nations pay $1 trillion climate fund'; IEA, Jun 2024: 'China accounts for 60% of global clean energy investment in 2024'`,
+      committee_docs:`UNFCCC SB60 meeting records: China's position on carbon market rules; UNEP EA.5/Res.1: China voted against stronger language on fossil fuel phase-out; IPCC WG2 AR6 Chapter 11: East Asia climate impacts; COP28 UAE Presidency synthesis: China position on NCQG`,
+      keywords:`peak emissions 2030, carbon neutrality 2060, coal phase-down, Belt and Road, BASIC bloc, renewable energy, just transition`
+    }
+  },
+  'Russia': {
+    nuclear: {
+      country_policy:`Suspended New START monitoring Feb 2023; revoked CTBT ratification Oct 2023; Nuclear Doctrine 2020 allows first use if existential threat; 5,580 warheads (SIPRI 2024) including 1,558 deployed; tactical nuclear weapons: approx 1,912 non-strategic weapons`,
+      foreign_policy:`Russia-Belarus nuclear sharing: Iskander-M missiles deployed in Belarus June 2023; Russia-North Korea cooperation on ballistic missile technology (UN Panel of Experts findings 2023); Russia-China 'no limits' partnership 2022; Russia opposes NATO nuclear sharing as proliferation`,
+      un_docs:`UNSC/2022/154: Russia vetoed resolution on Ukraine invasion accountability; UNGA ES-11/1 (Mar 2022): 141-5 condemning invasion — Russia voted against; A/RES/78/240: UNGA voted 143-6 to reaffirm territorial integrity of Ukraine; NPT/CONF.2020/10: Russia blocked consensus on disarmament language`,
+      news:`Reuters, 21 Feb 2023: 'Putin suspends Russia's participation in New START nuclear treaty'; BBC, 18 Oct 2023: 'Russia revokes ratification of nuclear test ban treaty CTBT'; AP, 16 Jun 2023: 'Russia says it has transferred tactical nuclear weapons to Belarus'; Reuters, 19 Mar 2023: 'ICC issues arrest warrant for Putin over deportation of Ukrainian children'`,
+      committee_docs:`IAEA GOV/2022/17: emergency session on Zaporizhzhia nuclear safety; OSCE Special Monitoring Mission suspended March 2022 after Russia expelled monitors; UN Human Rights Monitoring Mission Ukraine quarterly reports; OHCHR Report A/HRC/52/62 (Feb 2023): civilian casualties in Ukraine`,
+      keywords:`New START suspension, CTBT withdrawal, tactical nuclear weapons, Belarus deployment, Zaporizhzhia, ICC warrant, Article VI`
+    },
+    conflict: {
+      country_policy:`Military doctrine allows nuclear first use; Ukraine invasion launched Feb 24, 2022 without UNSC authorisation; use of cluster munitions documented by HRW 2022; targeting civilian infrastructure including hospitals, schools, energy grid documented by OHCHR`,
+      foreign_policy:`CSTO mutual defence: Article 4 invoked never for Ukraine; Russia-Iran military cooperation: Shahed drones used in Ukraine; Russia-North Korea: arms transfers documented by UN Panel of Experts 2023; Russia-China strategic partnership — China provides dual-use goods`,
+      un_docs:`UNSC S/2022/154, S/2022/720: Russia vetoed accountability resolutions; UNGA ES-11/1 (141-5): condemns invasion; ICJ Provisional Measures March 2022 (Ukraine v Russia): ordered halt to military ops; A/HRC/RES/49/1: established fact-finding mission on Ukraine; OHCHR Ukraine monitoring reports: 10,000+ civilian deaths`,
+      news:`Reuters, 4 Apr 2022: 'Bucha massacre: evidence of war crimes as bodies found in streets'; BBC, 17 Mar 2023: 'ICC issues arrest warrant for Vladimir Putin'; AP, 5 Aug 2022: 'Russia uses cluster munitions in Ukraine — Human Rights Watch'; Al Jazeera, 10 Oct 2022: 'Russia launches massive missile strikes on Ukrainian cities and energy infrastructure'`,
+      committee_docs:`OHCHR Ukraine situation report (31st): March 2024 findings; UNSC meeting records S/PV.9000 series (Ukraine): Russia statements; UN General Assembly Special Emergency Session ES-11 verbatim records; COI Ukraine A/HRC/52/62 report`,
+      keywords:`Article 51 self-defence, UNSC veto, war crimes, civilian targeting, cluster munitions, ICJ provisional measures, ICC warrant`
+    }
+  },
+  'India': {
+    nuclear: {
+      country_policy:`India's nuclear doctrine: 'No First Use' + 'Credible Minimum Deterrence'; 164 warheads (SIPRI 2024); Agni-V ICBM 5,500 km range tested January 2024; outside NPT since 1974 Pokhran test; US-India 123 Agreement (2008) allows civilian nuclear cooperation without full-scope safeguards`,
+      foreign_policy:`India-Pakistan nuclear deterrence: 2019 Balakot airstrikes created nuclear flashpoint; India-China nuclear competition: Agni-V designed to reach all of China; QUAD nuclear discussions avoided; India opposes TPNW as discriminatory against non-NPT states; India-Russia: BrahMos missile cooperation`,
+      un_docs:`A/RES/78/32: India abstained on nuclear risk reduction; NPT PrepCom 2023: India submitted statement on discriminatory nature of NPT; IAEA GOV/2008/9: India-specific safeguards agreement under 123 Agreement; CTBT/RT-55: India has not signed CTBT`,
+      news:`Reuters, 19 Jan 2024: 'India tests Agni-V missile with Multiple Independently Targetable Re-entry Vehicles'; AP, 26 Feb 2019: 'India and Pakistan exchange air strikes — most serious confrontation since 1971'; BBC, 3 Dec 2021: 'India upgrades nuclear arsenal ahead of US IAEA safeguards review'; Hindustan Times, 2023: 'India to expand nuclear programme — SIPRI assessment'`,
+      committee_docs:`IAEA GOV: India-specific safeguards agreements; CTBT/EIF.16: India listed as Annex 2 state whose ratification is required for Treaty entry into force; First Committee A/C.1/78: India's statement on disarmament`,
+      keywords:`NPT Annex II, CTBT Annex 2, civilian nuclear deal, no-first-use, Agni-V, nuclear safeguards gap, IAEA Additional Protocol`
+    },
+    human_rights: {
+      country_policy:`Citizenship Amendment Act 2019 (CAA): fast-tracks citizenship for non-Muslim minorities from 3 countries — UNHCR found discriminatory; internet shutdowns: 84 in 2023 (Access Now — highest globally 6th consecutive year); Prevention of Terrorism Act used against journalists; Sedition law (IPC 124A) challenged by Supreme Court`,
+      foreign_policy:`India-Pakistan: Line of Control human rights violations documented by OHCHR 2018 report (first ever on Kashmir); India expelled UNHCR from Kashmir in 2019; India-China LAC dispute: Galwan Valley confrontation June 2020 (20 Indian soldiers killed); India leads 'democracy' narrative in QUAD`,
+      un_docs:`OHCHR Report on Kashmir (Jul 2018): A/HRC/39/CRP.1 — first ever, documents enforced disappearances and pellet gun use; UPR/A/IND/4 (2022): 339 recommendations received; ICCPR HRC CCPR/C/IND: India not party to First Optional Protocol — cannot receive individual communications; CEDAW/C/IND/CO/4-5`,
+      news:`Reuters, 11 Aug 2023: 'Access Now: India leads world in internet shutdowns for sixth year'; BBC, 7 Jul 2023: 'Manipur: Sexual violence and ethnic conflict grips Indian state — UN warns'; AP, 3 Nov 2021: 'Freedom House downgrades India from Free to Partly Free for third year'; Al Jazeera, 14 Feb 2023: 'India: 50 journalists arrested in past year — Reporters Without Borders'`,
+      committee_docs:`HRC 52nd session: India's response to Special Rapporteur on freedom of expression; OHCHR A/HRC/39/CRP.1 Kashmir report: India disputed findings; UPR Third Cycle National Report A/HRC/WG.6/37/IND/1; CCPR/C/IND shadow reports by civil society`,
+      keywords:`CAA, NRC, internet shutdown, Kashmir, Manipur, sedition law, freedom of assembly, minority rights, ICCPR Optional Protocol`
+    }
+  },
+  'Saudi Arabia': {
+    human_rights: {
+      country_policy:`Capital punishment: 196 executions in 2022 — 81 on 12 March 2022 alone (Amnesty); 66 executed in 2019; Women's guardianship reforms 2019 partial; kafala system: 11 million migrant workers trapped; Vision 2030 frames reforms as economic not rights-based; press freedom rank 166/180 (RSF 2023)`,
+      foreign_policy:`OIC bloc leader — uses Islamic solidarity to block HRC resolutions on Muslim-majority states; Saudi-US arms deal: $110 billion framework signed 2017, continued under Biden despite Khashoggi; Saudi-Canada diplomatic crisis 2018 after human rights tweet; Saudi-Qatar normalisation 2021`,
+      un_docs:`A/HRC/RES/45/26 (2020): Saudi Arabia voted against Yemen investigative mandate; CAT/C/SAU/CO/2 (2016): Committee concerns on torture, death penalty, kafala; CEDAW/C/SAU/CO/3-4: concerns on male guardianship; UPR A/HRC/WG.6/41 (2022): 307 recommendations; OHCHR Special Rapporteur A/HRC/44/38: Khashoggi killing`,
+      news:`Reuters, 12 Mar 2022: 'Saudi Arabia executes 81 people in one day — largest mass execution in decades'; BBC, 19 Jun 2019: 'Saudi prince ordered Jamal Khashoggi killing — UN report'; AP, 2 Nov 2022: 'Saudi Arabia leads coalition blocking UN Yemen inquiry'; Amnesty International, 16 May 2023: 'Saudi Arabia executions rise sharply — 2022 highest since 1995'`,
+      committee_docs:`HRC session records: Saudi Arabia's response to Khashoggi Special Rapporteur report; Yemen Group of Eminent Experts A/HRC/RES/39/16 reports; OHCHR/SRA/2019/CRP: Agnes Callamard investigation into Khashoggi killing; CEDAW committee session records`,
+      keywords:`kafala, death penalty, guardianship, Khashoggi, Yemen coalition, HRC voting bloc, OIC solidarity, migrant workers, women's rights`
+    },
+    conflict: {
+      country_policy:`Yemen military intervention since March 2015 under Operation Decisive Storm; acknowledged use of cluster munitions in Yemen 2015-2016 while denying ongoing use; Hodeidah port blockade 2017-2019 denied food to 15 million people; UNSC arms embargo on Houthis but not coalition`,
+      foreign_policy:`Coalition: UAE, Bahrain, Sudan, Jordan; US/UK/France arms sales: US sold $67 billion weapons 2015-2021; UK parliamentary committee found UK arms sales likely illegal; Saudi-Iran normalisation (Beijing-brokered, March 2023); ceasefire negotiations via UN Special Envoy`,
+      un_docs:`UNSC Res.2216 (2015): arms embargo on Houthis; UN Yemen Panel of Experts reports (S/2022/50): Saudi coalition airstrikes on civilian objects; OHCHR/Yemen Experts Group A/HRC/42/CRP.1 (2019): reasonable grounds war crimes by all parties; OCHA Yemen situation reports: 21 million need humanitarian aid`,
+      news:`Reuters, 14 Sep 2021: 'Yemen war has killed 377,000 people by end of 2021 — UN report'; BBC, 16 Mar 2022: 'Saudi Arabia executes Yemeni nationals — human rights groups'; AP, 9 Apr 2022: 'Saudi-led coalition strikes kill dozens at Yemeni prison — UN condemns'; Al Jazeera, 10 Mar 2023: 'Saudi Arabia and Iran restore diplomatic ties brokered by China'`,
+      committee_docs:`UNSC Yemen Panel of Experts reports S/2023/833; OCHA Yemen Humanitarian Response Plan 2024; HRC Yemen fact-finding mission reports A/HRC/51/21; Yemen Humanitarian Coordination cluster reports`,
+      keywords:`Yemen coalition, cluster munitions, Hodeidah blockade, arms transfers, civilian casualties, humanitarian access, UN Panel of Experts`
+    }
+  },
+  'Iran': {
+    nuclear: {
+      country_policy:`NPT party but enriching to 60% HEU (weapons-grade is 90%); JCPOA (2015): US withdrew May 2018 triggering Iranian rollback; current stockpile: 6.2 kg of 60% HEU per IAEA Feb 2024; Fordow underground enrichment facility operating advanced IR-6 centrifuges; 'peaceful purposes' claim disputed by IAEA`,
+      foreign_policy:`Iran-Russia: Shahed drone military cooperation; Iran-China: 25-year strategic cooperation agreement 2021 includes nuclear technology; Iran-Houthis: ballistic missile/drone transfers documented by UN Panel; JCPOA P5+1 (US, UK, France, Russia, China, Germany); Vienna talks deadlocked since 2022`,
+      un_docs:`IAEA GOV/2024/7: Board of Governors report noting Iran's 6.2 kg of 60% HEU stockpile; IAEA GOV/2023/51: Board censured Iran 25-2-2 for non-cooperation; UNSC Res.2231 (2015): endorses JCPOA; Res.2231 Annex B sunset clauses; UN Panel of Experts S/2023/832: documents Iran missile transfers to Russia and Houthis`,
+      news:`Reuters, 23 Feb 2024: 'IAEA: Iran has enough enriched uranium for several nuclear weapons if enriched further'; BBC, 22 Nov 2022: 'IAEA censures Iran over nuclear cooperation failures'; AP, 8 May 2018: 'Trump withdraws US from Iran nuclear deal JCPOA'; Al Jazeera, 4 Jan 2020: 'Iran announces it will no longer respect JCPOA limits after Soleimani killing'`,
+      committee_docs:`IAEA Board of Governors meeting records: Iran item; First Committee A/C.1/78: Iran statement on TPNW; NPT PrepCom 2022: Iran's working paper on Article VI; Vienna Joint Commission meeting records on JCPOA`,
+      keywords:`JCPOA, enrichment level, 60% HEU, Additional Protocol, IAEA safeguards, Fordow, snapback mechanism, centrifuge cascade`
+    },
+    human_rights: {
+      country_policy:`582 executions in 2023 — highest in 20+ years (Amnesty); 19 executions for protest participation (Woman Life Freedom movement); blasphemy and apostasy remain capital offences; LGBTQ+ persons face state-sanctioned execution; internet shutdown during protests 2022 documented by Netblocks`,
+      foreign_policy:`Iran-Russia information control cooperation; Iran denies all UN investigative access since 2013; Iranian diaspora harassment documented by FBI; Iran sanctions OHCHR staff after adverse reports; Iran-EU: 2023 terrorist designation of IRGC blocked by UK/EU debates`,
+      un_docs:`UNGA A/RES/78/192: adopted 79-30-67 condemning human rights in Iran; HRC Res.52/35: extended mandate of Special Rapporteur on Iran; UN Fact-Finding Mission Report A/HRC/55/67 (2024): violations may constitute crimes against humanity during 2022 protests; CCPR/C/IRN/CO/4: grave concerns on death penalty`,
+      news:`Reuters, 9 May 2023: 'Iran executions hit 25-year high at 582 in 2023 — Amnesty International'; BBC, 14 Dec 2022: 'Iran: Football player executed amid mass protest crackdown'; AP, 16 Sep 2023: 'Mahsa Amini death anniversary: Iran marks one year since protests began'; Al Jazeera, 8 Feb 2024: 'Iran UN fact-finding mission finds crimes against humanity in protest crackdown'`,
+      committee_docs:`HRC 55th session: Iran fact-finding mission oral updates; HRC Special Rapporteur on Iran A/HRC/55/41 annual report; OHCHR SG report to UNGA A/78/489: Iran human rights; UN Working Group on Arbitrary Detention Iran opinions`,
+      keywords:`Woman Life Freedom, Mahsa Amini, death penalty, apostasy, executions, Special Rapporteur access, fact-finding mission, protest crackdown`
+    }
+  },
+  'Israel': {
+    conflict: {
+      country_policy:`Operation Swords of Iron launched October 7, 2023 following Hamas attack; military doctrine of 'mowing the lawn'; Dahiya Doctrine allows targeting civilian infrastructure as pressure tactic; expanded settlements: 750,000 settlers in West Bank (OCHA 2024); Jerusalem Embassy Act 1995 — US recognition of Jerusalem as capital 2018`,
+      foreign_policy:`US-Israel Memorandum of Understanding: $38 billion military aid 2019-2028; Iron Dome co-financed with US; Abraham Accords 2020 with UAE, Bahrain, Morocco, Sudan; Israel-Saudi normalisation talks halted October 7 2023; EU-Israel Association Agreement suspended debate following ICJ ruling`,
+      un_docs:`ICJ Provisional Measures January 2024 (South Africa v Israel): orders Israel to prevent genocide, allow humanitarian aid; ICJ Advisory Opinion July 2024: occupation unlawful under international law; UNGA ES-10/23: 153-10 ceasefire resolution; UNSC Res.2728 (2024): ceasefire — US abstained; ICC Prosecutor arrest warrant request: Netanyahu and Gallant (May 2024)`,
+      news:`Reuters, 26 Jan 2024: 'ICJ orders Israel to prevent genocide in Gaza — but stops short of ceasefire order'; BBC, 19 Jul 2024: 'Israeli occupation illegal under international law — World Court advisory opinion'; AP, 20 May 2024: 'ICC prosecutor seeks arrest warrants for Israeli PM Netanyahu and Hamas leaders'; Al Jazeera, 29 Feb 2024: 'Gaza death toll surpasses 30,000 — Gaza Health Ministry'`,
+      committee_docs:`ICJ case B'Tselem, Al-Haq amicus filings; UNSC meeting records S/PV.9559 (ceasefire vote March 2024); OHCHR Gaza casualties report (ongoing); ICC OTP statement on arrest warrant requests May 2024; UNRWA situation reports`,
+      keywords:`ICJ provisional measures, ICC arrest warrant, Dahiya Doctrine, civilian casualties, siege of Gaza, settler violence, illegal occupation, humanitarian law`
+    },
+    human_rights: {
+      country_policy:`Military courts for Palestinian detainees: 90%+ conviction rate; administrative detention without charge: 2,200+ held as of 2024 (B'Tselem); East Jerusalem residency revocation: 14,500+ since 1967; Nation-State Law 2018 defines Israel as Jewish nation-state without equality clause`,
+      foreign_policy:`Israel rejects UNHRC investigative mandates as biased; lobbied against ICC jurisdiction over Palestinian territories; normalisation with Arab states conditioned on US security guarantees; ICC jurisdiction over Palestinian territories recognised by ICC Pre-Trial Chamber January 2021`,
+      un_docs:`UNSC Res.2334 (2016): unanimously condemns settlements as 'flagrant violation' of international law; OHCHR A/HRC/50/21 (2022): Israeli practices may constitute apartheid; OHCHR A/75/532 (2020): UN database of companies in settlements; UPR A/HRC/WG.6/29/ISR/1 (2018): Israel`,
+      news:`Reuters, 20 Jul 2024: 'World Court says Israeli occupation is illegal and must end'; BBC, 12 Feb 2022: 'Amnesty International: Israel imposing apartheid on Palestinians'; AP, 6 Oct 2021: 'Israel designates six Palestinian civil society groups as terrorist'; Al Jazeera, 21 Jan 2021: 'Human Rights Watch: Israel committing crimes of apartheid and persecution'`,
+      committee_docs:`HRC COI on OPT A/HRC/56/CRP.4 (2024): documents violations in Gaza; OHCHR Gaza accountability database; UNRWA annual reports; B'Tselem database of demolitions and displacement; ICC Pre-Trial Chamber I decision on Palestine jurisdiction (2021)`,
+      keywords:`administrative detention, settlements, nation-state law, apartheid, military courts, UNRWA, East Jerusalem, civilian protection`
+    }
+  },
+  'Pakistan': {
+    nuclear: {
+      country_policy:`First-use doctrine ('full spectrum deterrence'): Pakistan will use tactical nuclear weapons if conventional forces overwhelmed; 170 warheads (SIPRI 2024) — fastest growing South Asian arsenal; Nasr (HATF IX) tactical battlefield nuclear weapon deployed; army controls nuclear programme through SPD`,
+      foreign_policy:`China-Pakistan nuclear cooperation (CPEC + Chashma reactors outside NSG); AQ Khan network: documented proliferation to Libya, Iran, North Korea 1987-2003 — largest Cold War-era proliferation network; Pakistan-US tension over F-16 funding conditions and nuclear transparency; India-Pakistan deterrence escalation 2019`,
+      un_docs:`NPT/CONF: Pakistan not party to NPT — cannot participate in Review Conferences; CTBT/RT: Pakistan has not signed CTBT (Annex 2 state blocking entry into force); IAEA GOV: Pakistan's safeguards only partial for civilian reactors; UNSC Res.1540 (2004): Pakistan obligated to prevent non-state actor WMD access`,
+      news:`Reuters, 5 Feb 2024: 'Pakistan's nuclear arsenal growing faster than India — SIPRI 2024'; BBC, 4 Feb 2004: 'AQ Khan admits nuclear transfers to Libya, North Korea and Iran'; AP, 27 Jan 2023: 'Pakistan PM Sharif warns of nuclear use if India attacks again'; Financial Times, 2019: 'Pakistan deploys tactical nuclear weapons against Indian conventional threat'`,
+      committee_docs:`IAEA GOV nuclear security reports on Pakistan; UN SC 1540 Committee Pakistan report; First Committee verbatim records: Pakistan statement on NFU; SIPRI Yearbook 2024 Pakistan nuclear forces chapter`,
+      keywords:`tactical nuclear weapons, Nasr missile, AQ Khan proliferation, full spectrum deterrence, NSG membership, CTBT Annex 2, fissile material`
+    },
+    human_rights: {
+      country_policy:`Blasphemy laws: PPC 295-C carries death penalty — used disproportionately against Ahmadis, Christians, Hindus; enforced disappearances: 8,000+ in Balochistan/KP (HRCP 2023); press freedom 152/180 (RSF 2024); Digital Crimes Bill 2023 enables content censorship`,
+      foreign_policy:`China-Pakistan: CPEC $62 billion investment leverages diplomatic silence on Uyghur issue despite Uyghur Turkic Muslim solidarity; Pakistan-Saudi: military cooperation and OIC alignment block human rights resolutions; Pakistan-US: IMF bail-outs conditioned on governance reforms contradicted by military interference`,
+      un_docs:`CCPR/C/PAK/CO/1 (2017): HRC concerns on blasphemy, enforced disappearances, terrorism laws; CAT/C/PAK/CO/1 (2017): torture in custody, terrorism courts; CED/C/PAK/CO/1 (2023): UN Committee on Enforced Disappearances — 'grave concern'; UPR A/HRC/WG.6/35/PAK/1 (2022): Pakistan 3rd cycle`,
+      news:`Reuters, 24 Aug 2023: 'Pakistan's civilian government blames military for protest clampdown'; BBC, 10 Nov 2023: 'Pakistan Supreme Court declares PTI crackdown unconstitutional'; AP, 14 Feb 2023: 'UN committee expresses grave concern over Pakistan enforced disappearances in Balochistan'; Amnesty International, Oct 2023: 'Pakistan executes 12 people in three months amid rights crackdown'`,
+      committee_docs:`HRC UPR 3rd Cycle session records: Pakistan; UN Special Rapporteur on extrajudicial executions country visit report; CED Pakistan session verbatim records; OHCHR Pakistan situation reports`,
+      keywords:`blasphemy law, enforced disappearances, Balochistan, military courts, press freedom, minority rights, OIC bloc voting`
+    }
+  },
+  'Brazil': {
+    climate: {
+      country_policy:`Zero deforestation by 2030 NDC (Lula); Amazon Fund restored 2023 ($1.7 billion pledged by Norway and Germany); 50% Amazon deforestation reduction in 2023 vs 2022 (INPE); BUT illegal mining continues; soy and beef export pressures on forest; Lula's 2023 NDC: net-zero emissions by 2050`,
+      foreign_policy:`BASIC bloc (Brazil, South Africa, India, China): demands $1 trillion climate finance before committing to stricter NDCs; Amazon Fund: multilateral mechanism Norway/Germany finance; Brazil hosted Leticia Pact (Amazon nations); Brazil-China trade: soy exports incentivise clearing; MERCOSUR-EU trade deal climate conditionality debate`,
+      un_docs:`UNFCCC NDC Registry: Brazil's 2030 target 37% below 2005 by 2025; IPCC AR6 South America: Amazon approaching tipping point; UNEP Global Assessment on Biodiversity and Ecosystem Services: Amazon at 20% degradation threshold; CBD COP15 Kunming-Montreal GBF: Brazil signatory`,
+      news:`Reuters, 9 Jan 2024: 'Brazil Amazon deforestation falls 50% in Lula's first year — INPE data'; BBC, 20 Jan 2023: 'Yanomami crisis: Brazil declares health emergency as children starve amid illegal mining'; AP, 14 Nov 2023: 'Amazon summit: Brazil proposes zero deforestation by 2030'; Al Jazeera, 26 Jun 2023: 'Brazil's Amazon deforestation hits lowest in 15 years — but 2022 was worst in decades'`,
+      committee_docs:`UNFCCC COP28 meeting records: Brazil's position on NCQG; UNEP/CBD COP15 Kunming-Montreal GBF Brazil contribution; Amazon Fund Steering Committee annual reports; IPCC AR6 Ch.12: Central and South America`,
+      keywords:`Amazon deforestation, zero deforestation, Amazon Fund, Leticia Pact, REDD+, indigenous land rights, soy moratorium, climate finance`
+    }
+  },
+  'Japan': {
+    nuclear: {
+      country_policy:`Only nation to suffer nuclear attacks (Hiroshima/Nagasaki 1945); advocates nuclear disarmament but remains under US nuclear umbrella; co-sponsors annual UNGA nuclear disarmament resolutions; Fundamental Law of Atomic Energy prohibits Japanese nuclear weapons; Kishida 'Hiroshima Vision' 2023 calls for eventual elimination`,
+      foreign_policy:`US-Japan Security Treaty: extended deterrence commitment; Japan opposes TPNW as incompatible with US alliance; joins US extended deterrence consultations; Quad nuclear discussions formally excluded; Japan-IAEA close cooperation; Japan opposes North Korea's nuclear programme via UNSC`,
+      un_docs:`A/RES/78/32: Japan co-sponsored nuclear risk reduction resolution; A/RES/C.1/78/L.34: Japan co-sponsors annual disarmament resolution — separately from TPNW; NPT PrepCom 2023 Japan statement: reaffirms NPT as cornerstone; IAEA/Japan Additional Protocol: fully compliant`,
+      news:`Reuters, 19 May 2023: 'Hiroshima G7 statement calls for world without nuclear weapons but backs deterrence'; BBC, 7 Aug 2023: 'Hiroshima marks 78th anniversary of atomic bombing with calls for disarmament'; AP, 6 Jun 2022: 'Japan opts out of historic nuclear ban treaty meeting citing US alliance'; Kyodo News, 2024: 'Japan defence budget doubles to 2% GDP — largest military expansion since WWII'`,
+      committee_docs:`First Committee verbatim records: Japan's dual-track approach to disarmament; Hiroshima-Nagasaki declaration submitted to NPT PrepCom 2023; IAEA GOV: Japan safeguards review; TPNW MSP-2 records: Japan attended as observer state`,
+      keywords:`Hiroshima Vision, no-first-use, extended deterrence contradiction, TPNW observer, nuclear umbrella, NPT Article VI, disarmament paradox`
+    }
+  },
+  'Germany': {
+    human_rights: {
+      country_policy:`Basic Law (Grundgesetz) Art.1 guarantees human dignity inviolable; NSU terror investigation 2011-2019: 10 murders, institutional failure to investigate far-right; AfD Verfassungsschutz monitoring since 2021; Asylum law: accelerated deportations under Rückführungsgesetz 2023`,
+      foreign_policy:`German feminist foreign policy (Annalena Baerbock): integrates LGBTQ+ rights, women's rights in bilateral relations; Arms to Ukraine: Leopard 2 tanks approved Jan 2023; Arms to Saudi Arabia: moratorium announced 2018 after Khashoggi but exports resumed 2022; EU-level human rights due diligence`,
+      un_docs:`UPR A/HRC/WG.6/40/DEU/1 (2022): Germany 4th cycle; CCPR/C/DEU/CO/7 (2022): concerns on police violence, far-right terrorism; CEDAW/C/DEU/CO/7-8 (2017): gender pay gap, intersectionality; CAT/C/DEU/CO/5 (2011): immigration detention`,
+      news:`Reuters, 10 Jan 2023: 'Germany approves Leopard 2 tanks for Ukraine — breaking taboo on heavy weapons'; BBC, 19 Jun 2023: 'Germany: Far-right AfD party faces ban proceedings'; AP, 19 Apr 2022: 'Germany breaks with pacifist post-war tradition with €100bn defence fund'; Der Spiegel/Reuters, Dec 2022: 'Germany resumes Saudi Arabia arms exports worth €1.4bn'`,
+      committee_docs:`HRC UPR 4th cycle Germany session records; ECRI 6th cycle report on Germany (2023): recommendations on racial profiling; Special Rapporteur on Torture UN-A/HRC/40/59 Germany section; Verfassungsschutz annual reports on extremism`,
+      keywords:`NSU investigation, far-right extremism, feminist foreign policy, Leopard 2, arms exports Saudi Arabia, AfD, Grundgesetz, police accountability`
+    }
+  },
+  'United Kingdom': {
+    human_rights: {
+      country_policy:`Illegal Migration Act 2023: removes right to claim asylum if arriving by irregular means; Rwanda scheme struck down by UK Supreme Court Nov 2023 as unlawful (refoulement risk); Police Crime Sentencing Act 2022: criminalises 'noisy or disruptive' protests; British Bill of Rights proposed to replace Human Rights Act`,
+      foreign_policy:`UK-Rwanda Treaty signed Dec 2023 after Supreme Court ruling; UK-Ukraine defence cooperation; UK chairs OSCE 2023; UK post-Brexit foreign policy 'Global Britain': bilateral human rights dialogues replacing EU mechanisms; AUKUS nuclear-powered submarine arrangement`,
+      un_docs:`UNHCR Assessment of Illegal Migration Act 2023: found to breach non-refoulement and right to seek asylum; CCPR/C/GBR/CO/8 (2023): HRC concerns on asylum law, protest rights, Prevent programme; CAT/C/GBR/CO/6 (2019): immigration detention; HRC Res.52/12: UK voted for; UNSC Res.2728 (Gaza ceasefire): UK abstained`,
+      news:`Reuters, 15 Nov 2023: 'UK Supreme Court rules Rwanda asylum scheme unlawful'; BBC, 26 Apr 2023: 'Illegal Migration Bill: UN human rights chief says it would violate international law'; AP, 7 Mar 2024: 'UK government signs new Rwanda treaty after Supreme Court defeat'; The Guardian/Reuters, Mar 2023: 'UK police use public order act against climate protesters'`,
+      committee_docs:`UNHCR position on UK Illegal Migration Act (May 2023); HRC UPR 4th cycle UK session records; Special Rapporteur on freedom of peaceful assembly UK report 2023; ECHR Grand Chamber cases pending against UK on deportation`,
+      keywords:`Illegal Migration Act, Rwanda scheme, non-refoulement, Human Rights Act, ECHR withdrawal, asylum seeker, protest rights, Prevent programme`
+    }
+  },
+  'France': {
+    human_rights: {
+      country_policy:`Burqa ban (Loi 2010-1192): UN Human Rights Committee found violates ICCPR Art.18 in Sonia Yaker v France (2018); systemic police racial profiling: 37 individual ICCPR communications upheld; Nahel Merzouk killing June 2023 triggered 12 days protests; Sainte-Soline protests Mar 2023: 200 injuries including LBD use`,
+      foreign_policy:`France-Africa 'Françafrique' legacy: military bases in 8 African states; CFA franc monetary control over 14 Francophone states challenged; New Caledonia 3 independence referendums 2018-2021; French Polynesia nuclear test legacy; France-Algeria historical memory disputes`,
+      un_docs:`CCPR/C/FRA/CO/5 (2015): concerns on Islamophobia, racial profiling, anti-terrorism laws; CERD/C/FRA/CO/21-24 (2022): structural racism concerns; HRC Comm. Sonia Yaker v France CCPR/C/123/D/2747/2016 (2018): burqa ban violates Art.18; UPR A/HRC/WG.6/38/FRA/1 (2022)`,
+      news:`Reuters, 29 Jun 2023: 'France deploys 45,000 police as unrest spreads after Nahel shooting'; BBC, 2 Jun 2023: 'Nahel Merzouk: French police officer shoots dead 17-year-old'; AP, 16 Jul 2023: 'UN rights chief calls on France to address structural racism in policing'; Al Jazeera, 4 Nov 2021: 'New Caledonia votes against independence for third time in controversial vote'`,
+      committee_docs:`HRC session records on France periodic review; ECRI Report on France (6th cycle 2022): recommendations on racial profiling; Special Rapporteur on contemporary forms of racism A/HRC/50/52: France section; Defender of Rights France annual reports on police accountability`,
+      keywords:`burqa ban, racial profiling, Nahel Merzouk, Françafrique, CFA franc, New Caledonia self-determination, LBD weapons, Islamophobia`
+    }
+  },
+  'North Korea': {
+    nuclear: {
+      country_policy:`Withdrew from NPT January 2003; six nuclear tests 2006-2017; 40-50 warheads (SIPRI 2024); Hwasong-17 ICBM 15,000 km range tested Nov 2022; constitution amended 2022 to enshrine nuclear status; Kim Jong Un declared irreversible nuclear policy Oct 2022`,
+      foreign_policy:`North Korea-Russia: ballistic missile and ammunition transfers documented by UN Panel of Experts 2023; North Korea-China: China provides 90%+ of trade; DPRK-Iran missile cooperation alleged; DPRK-Pakistan AQ Khan connection historically documented; US-DPRK Singapore Declaration 2018 collapsed by Hanoi summit 2019`,
+      un_docs:`UNSC Res.2371 (2017), Res.2375 (2017): sanctions on coal, iron, seafood, textiles; UNSC veto by China/Russia on new sanctions May 2022 (first time since 2006); UN Panel of Experts S/2024/215 (2024): North Korea missile transfers to Russia confirmed; A/HRC/RES/25/25 (2014): established COI on DPRK`,
+      news:`Reuters, 20 Nov 2022: 'North Korea fires ICBM most powerful missile yet over Japan'; BBC, 17 May 2022: 'China and Russia veto new UN sanctions on North Korea'; AP, 3 Oct 2023: 'North Korea fires submarine ballistic missile in show of force'; Reuters, 23 Dec 2023: 'US intelligence: North Korea sending artillery shells to Russia for Ukraine war'`,
+      committee_docs:`COI DPRK A/HRC/25/CRP.1 (2014): crimes against humanity in political camps; UN Panel of Experts annual reports to UNSC; IAEA GOV: DPRK non-compliance reports; First Committee A/C.1/78: DPRK statement rejecting sanctions`,
+      keywords:`kwanliso, political prison camps, Hwasong-17, sanctions evasion, cyber theft, Russia arms transfers, COI crimes against humanity, denuclearisation`
+    }
+  },
+  'Australia': {
+    climate: {
+      country_policy:`Net-zero by 2050 NDC; 43% emissions reduction by 2030 (Albanese government — upgraded from Morrison's 26-28%); Climate Change Act 2022 enshrines targets in law; BUT Scarborough gas field expansion approved 2023; Beetaloo Basin shale gas approved; world's largest coal and LNG exporter`,
+      foreign_policy:`Pacific Islands Forum: near-collapse 2021 over Australian climate inaction — Tuvalu PM denounced Australia; AUKUS nuclear submarine arrangement raises IAEA NPT Article III concerns; US-Australia Climate Partnership; EU-Australia FTA negotiations include climate standards`,
+      un_docs:`UNFCCC NDC Registry: Australia 43% by 2030; IPCC WGII AR6 Ch.11: Pacific Islands existential climate risk; UNEP Production Gap Report 2023: Australia's coal expansion inconsistent with Paris Agreement; Paris Agreement Global Stocktake (2023): Australia's policies insufficient`,
+      news:`Reuters, 6 Nov 2023: 'Australia approves major new gas projects despite climate pledges'; BBC, 7 Apr 2022: 'Pacific leaders condemn Australia for not doing enough on climate change'; AP, 13 Sep 2022: 'Australia pledges stronger climate action — raises target to 43%'; Al Jazeera, 12 Nov 2021: 'Tuvalu minister delivers speech knee-deep in water to highlight climate threat at COP26'`,
+      committee_docs:`UNFCCC COP28 meeting records Australia statement; Pacific Islands Forum communiqués on climate; Senate Environment Committee reports on Safeguard Mechanism; Climate Change Authority review reports`,
+      keywords:`coal exports, LNG expansion, Pacific Islands, AUKUS safeguards, net-zero 2050, Safeguard Mechanism, Paris Agreement compatibility`
+    }
+  },
+  'South Africa': {
+    human_rights: {
+      country_policy:`ICJ genocide case vs Israel filed January 2024 — historic use of Genocide Convention; domestically: 8,489 murders Q1 2023 (SAPS); 53.4 per 100,000 femicide rate (UNODC 2023); Land Expropriation Act 2024 debated; Zuma corruption trial ongoing; load-shedding: 250 days of power cuts 2023`,
+      foreign_policy:`Failed to arrest Putin at BRICS August 2023 (ICC warrant); BRICS expansion to include Saudi Arabia, UAE, Egypt, Ethiopia, Iran; abstained on UNGA resolutions condemning Russia's Ukraine invasion; ICJ case against Israel grounded in anti-apartheid solidarity; NAM leadership on Global South reform`,
+      un_docs:`Application instituting proceedings South Africa v Israel (ICJ, January 2024); ICJ Provisional Measures Order January 2024; UNGA ES-11 resolutions: South Africa abstained; A/HRC: South Africa supports UN mandate on OPT; UPR A/HRC/WG.6/38/ZAF/1 (2022): SA 3rd cycle`,
+      news:`Reuters, 11 Jan 2024: 'South Africa files genocide case against Israel at World Court'; BBC, 23 Jan 2024: 'World Court orders Israel to prevent genocidal acts — South Africa case'; AP, 22 Aug 2023: 'South Africa avoids arresting Putin by having him attend BRICS virtually'; Al Jazeera, 24 Aug 2023: 'BRICS summit: South Africa says ICC warrant created dilemma for hosting Putin'`,
+      committee_docs:`ICJ case South Africa v Israel: Application and memorial filings; HRC session records on SA foreign policy statement; ICC Communication registry: SA obligations under Rome Statute; BRICS 2023 summit declaration`,
+      keywords:`ICJ genocide case, Genocide Convention, ICC obligations, Putin arrest warrant, BRICS, anti-apartheid solidarity, land reform, femicide`
+    }
+  }
+};
+
+/* ── CTI lookup: keyword matching for topic categories ── */
+const CTI_KEYS = [
+  {k:'nuclear',    w:['nuclear','npt','disarmament','nonproliferation','weapons of mass','ctbt','tpnw','iaea','atomic','warhead','missile','ballistic']},
+  {k:'climate',    w:['climate','emission','carbon','fossil','coal','greenhouse','paris','cop','temperature','net-zero','deforestation','energy']},
+  {k:'human_rights',w:['human rights','rights violation','freedom','detention','torture','civil liberties','political prisoner','expression','assembly','minority','discrimination']},
+  {k:'trade',      w:['trade','wto','tariff','subsidy','sanction','market access','commerce','gatt','investment','export','import','customs']},
+  {k:'conflict',   w:['conflict','war','armed','ceasefire','military operation','occupation','peace','security','territory','attack','invasion','airstrike']},
+  {k:'refugees',   w:['refugee','asylum','displacement','migrant','unhcr','forcibly displaced','stateless','protection','resettlement','non-refoulement']}
+];
+
+function _ctiFor(country, topicStr) {
+  if (!country || !topicStr) return null;
+  const t = topicStr.toLowerCase();
+  const cKey = Object.keys(CTI2).find(k => {
+    const kl = k.toLowerCase(), cl = country.toLowerCase();
+    return kl === cl || cl.includes(kl) || kl.includes(cl);
+  });
+  if (!cKey) return null;
+  const cData = CTI2[cKey];
+  let best = null, bestScore = 0;
+  for (const {k, w} of CTI_KEYS) {
+    if (!cData[k]) continue;
+    let score = 0;
+    for (const word of w) { if (t.includes(word)) score += word.split(' ').length; }
+    if (score > bestScore) { bestScore = score; best = { ...cData[k], _topic: k }; }
+  }
+  /* Fallback: if committee abbreviation in topic string gives a hint */
+  if (!best) {
+    if (/DISEC|IAEA/i.test(topicStr) && cData.nuclear) best = { ...cData.nuclear, _topic:'nuclear' };
+    else if (/UNEP|UNFCCC/i.test(topicStr) && cData.climate) best = { ...cData.climate, _topic:'climate' };
+    else if (/UNHRC|SOCHUM|HRC/i.test(topicStr) && cData.human_rights) best = { ...cData.human_rights, _topic:'human_rights' };
+    else if (/WTO|ECOFIN/i.test(topicStr) && cData.trade) best = { ...cData.trade, _topic:'trade' };
+    else if (/UNSC/i.test(topicStr) && cData.conflict) best = { ...cData.conflict, _topic:'conflict' };
+    else if (/UNHCR|SPECPOL/i.test(topicStr) && cData.refugees) best = { ...cData.refugees, _topic:'refugees' };
+  }
+  return best;
+}
+
+
+
 
 function _genSpeech(prompt) {
   const country  = _extractParam(prompt,'DELEGATION') || 'a member state';
@@ -2029,11 +2329,16 @@ function _genSpeech(prompt) {
   const customProps = (prompt.match(/CUSTOM OPERATIVE PROPOSALS[^\n]*\n([\s\S]*?)(?=\nADDITIONAL CONTEXT|\n\nMANDATORY|$)/i)||[])[1]||'';
   const customCtx   = (prompt.match(/ADDITIONAL CONTEXT\/INTELLIGENCE[^\n]*\n([\s\S]*?)(?=\n\nMANDATORY|$)/i)||[])[1]||'';
 
-  const td = _topicDataFor(topic, comAbbr);
-  const cd = _countryDataFor(country);
+  const td  = _topicDataFor(topic, comAbbr);
+  const cd  = _countryDataFor(country);
+  const cti = _ctiFor(country, topic);   /* Country×Topic specific research intel for speech */
   const [res1,res2,res3] = _pickN(td.resolutions,3);
   const [tr1,tr2] = _pickN(td.treaties,2);
   const [st1,st2] = _pickN(td.stats,2);
+  /* CTI2 five-layer data overrides generic data when available */
+  const speechStat = cti ? cti.news          : st1;
+  const speechInc  = cti ? cti.news.split(';')[0] : _pick(td.incidents);
+  const speechGaps = cti ? cti.country_policy : (cd ? cd.treaty_gaps : '');
   const inc1 = _pick(td.incidents);
   const opv  = _pick(td.operative);
   const opvClean = opv.toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'').replace(/^encourages /,'');
@@ -2070,14 +2375,16 @@ function _genSpeech(prompt) {
   const posIntroFn = _pick(positionIntros);
   const positionLine = posIntroFn(blocStr, posBase);
 
-  /* ── Varied hook paragraphs — 5 per type ── */
+  /* ── Varied hook paragraphs — 5 per type, CTI-aware ── */
+  const statEvidence = customFacts ? customFacts.split('\n')[0].trim() : (cti ? cti.news : st1);
+  const incEvidence  = customFacts ? customFacts.split('\n')[0].trim() : speechInc;
   const hooksAll = {
     stat: [
-      `${customFacts ? customFacts.split('\n')[0].trim() : st1}. Chair, a figure of this magnitude is not an abstraction — it is a documented failure inscribed in the very instruments this body exists to uphold. That failure demands a response proportionate to its scale.`,
-      `Let the record begin with data. ${customFacts ? customFacts.split('\n')[0].trim() : st1}. When numbers of this order appear in authoritative independent sources, they are not a backdrop to our deliberations — they are an indictment of our inaction.`,
-      `The delegation of ${country} will not open with rhetoric when the facts themselves are eloquent. ${customFacts ? customFacts.split('\n')[0].trim() : st1}. The committee is invited to sit with that figure before proceeding to procedure.`,
-      `Chair — ${customFacts ? customFacts.split('\n')[0].trim() : st1}. That figure does not represent a projection or a model. It represents a measured, documented, independently verified state of affairs. This committee has been convened to address it. The delegation of ${country} intends to do so.`,
-      `${customFacts ? customFacts.split('\n')[0].trim() : st1}. This is not a statistic produced to advance a political argument. It is what the evidence shows. The delegation of ${country} submits that any operative text this committee produces must be benchmarked against figures of this kind — not aspirations, not averages, but documented reality.`
+      `${statEvidence}. Chair, a figure of this magnitude is not an abstraction — it is a documented failure inscribed in the very instruments this body exists to uphold. That failure demands a response proportionate to its scale.`,
+      `Let the record begin with data. ${statEvidence}. When numbers of this order appear in authoritative independent sources, they are not a backdrop to our deliberations — they are an indictment of our inaction.`,
+      `The delegation of ${country} will not open with rhetoric when the facts themselves are eloquent. ${statEvidence}. The committee is invited to sit with that figure before proceeding to procedure.`,
+      `Chair — ${statEvidence}. That figure does not represent a projection or a model. It represents a measured, documented, independently verified state of affairs. This committee has been convened to address it. The delegation of ${country} intends to do so.`,
+      `${statEvidence}. This is not a statistic produced to advance a political argument. It is what the evidence shows. The delegation of ${country} submits that any operative text this committee produces must be benchmarked against figures of this kind — not aspirations, not averages, but documented reality.`
     ],
     res: [
       `This committee adopted ${res1}. The record of implementation since that adoption is, to state it diplomatically, uneven. The delegation of ${country} rises today to address that gap with concrete proposals — not to relitigate what was agreed, but to ensure that agreement is honoured.`,
@@ -2087,11 +2394,11 @@ function _genSpeech(prompt) {
       `${res1} remains the governing framework for this committee's work on ${topic}. The delegation of ${country} rises not to propose its abandonment but its genuine application — with timelines, with verification, and with consequences for non-compliance that are more than rhetorical.`
     ],
     incident: [
-      `Chair, the committee need look no further than ${inc1} to understand the human cost of institutional hesitation. This is not history — it is a present and continuing indictment of the international community's capacity to translate commitments into protection.`,
-      `${inc1} is not a hypothetical constructed to make a political argument. It is a documented event, available in the public record, that illustrates with precision what happens when this body's mandates are not enforced. The delegation of ${country} considers it the appropriate starting point for this debate.`,
-      `Distinguished delegates — ${inc1} occurred not in a vacuum but against the backdrop of norms this committee has repeatedly affirmed. The question the delegation of ${country} places before this body is whether that will be allowed to happen again, or whether we will construct something durable enough to prevent it.`,
-      `Chair, ${inc1} is the kind of documented failure that should make every delegation in this room uncomfortable. Not because it involves one state or one region — but because the norms this committee was convened to uphold failed to prevent it. That is a collective failure, and it demands a collective response.`,
-      `The delegation of ${country} rises having reviewed the full factual record of ${inc1}. What is documented there is not exceptional. It is what is to be expected when the framework this body endorses in language is not matched by accountability in practice.`
+      `Chair, the committee need look no further than ${incEvidence} to understand the human cost of institutional hesitation. This is not history — it is a present and continuing indictment of the international community's capacity to translate commitments into protection.`,
+      `${incEvidence} is not a hypothetical constructed to make a political argument. It is a documented event, available in the public record, that illustrates with precision what happens when this body's mandates are not enforced. The delegation of ${country} considers it the appropriate starting point for this debate.`,
+      `Distinguished delegates — ${incEvidence} occurred not in a vacuum but against the backdrop of norms this committee has repeatedly affirmed. The question the delegation of ${country} places before this body is whether that will be allowed to happen again, or whether we will construct something durable enough to prevent it.`,
+      `Chair, ${incEvidence}. This is the kind of documented reality that should make every delegation in this room uncomfortable — not because it involves one state or one region but because the norms this committee was convened to uphold failed to prevent it.`,
+      `The delegation of ${country} rises having reviewed the full factual record. What is documented — specifically, ${incEvidence} — is not exceptional. It is what is to be expected when the framework this body endorses in language is not matched by accountability in practice.`
     ],
     treaty: [
       `${tr1} establishes the framework within which this committee operates. That framework creates obligations. The question before us today is whether those obligations will be honoured in substance — not merely affirmed in language — by every delegation present.`,
@@ -2252,6 +2559,23 @@ Synthesis: ${dp.synthesis(country, `a framework grounded in ${tr1} with differen
 
   const refs = [res1,res2,res3||tr2,tr1,st1.split(',')[0],st2.split(',')[0],inc1.replace(/^the\s/i,'')].filter(Boolean);
 
+  /* Build CTI2 five-layer research source block when available */
+  const researchSources = cti ? `
+[NATIONAL POLICY]
+${cti.country_policy}
+
+[FOREIGN POLICY RECORD]
+${cti.foreign_policy}
+
+[UN DOCUMENTS ON RECORD]
+${cti.un_docs}
+
+[NEWS SOURCES]
+${cti.news}
+
+[COMMITTEE DOCUMENTS & MEETING RECORDS]
+${cti.committee_docs}` : '';
+
   return `[SALUTATION]
 ${salutation}
 
@@ -2274,7 +2598,7 @@ ${proposalText}
 ${closingPara}
 
 [REFERENCES]
-${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}`;
+${refs.map((r,i)=>`${i+1}. ${r}`).join('\n')}${researchSources ? '\n' + researchSources : ''}`;
 }
 
 /* ── Standard and merged POI generator ───────────────────────────────── */
@@ -2289,7 +2613,7 @@ function _genPOI(prompt) {
   if (!comAbbr) comAbbr = (prompt.match(/\b(DISEC|ECOFIN|SOCHUM|SPECPOL|LEGAL|UNSC|UNHRC|WHO|UNEP|UNICEF|IAEA|UNHCR|WTO|AU|EU|NATO|JCC)\b/i)||[])[1]||'';
   const countM     = prompt.match(/Generate exactly (\d+) POIs/i);
   const count      = countM ? parseInt(countM[1]) : 3;
-  const stratHint  = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':'treaty';
+  const stratHint  = /treaty ratification/i.test(prompt)?'treaty':/voting record contradictions/i.test(prompt)?'voting':/statistical/i.test(prompt)?'data':/internal contradictions/i.test(prompt)?'contradiction':_pick(['treaty','voting','data','contradiction']);
 
   /* ── Detect thinking intensity ── */
   const thinkingHint = /THINKING INTENSITY:\s*(\w+)/i.exec(prompt);
@@ -2311,23 +2635,65 @@ function _genPOI(prompt) {
 
   const td  = _topicDataFor(topic, comAbbr);
   const tcd = _countryDataFor(target);
+  const cti = _ctiFor(target, topic);   /* Country×Topic specific research intel */
   const strategyTagMap = {treaty:'Treaty Gap',voting:'Voting Record',data:'Data Challenge',contradiction:'Position Contradiction'};
 
-  /* ── Pre-pick shuffled arrays to avoid repetition across multiple POIs ── */
+  /* Country-specific intelligence shortcuts — CTI2 five-layer data takes priority over generic COUNTRY_DB */
+  const tcdPos  = tcd ? tcd.position.substring(0,130)                       : '';
+  const tcdGaps = cti ? cti.country_policy : (tcd ? tcd.treaty_gaps         : '');
+  const tcdVote = cti ? cti.un_docs        : (tcd ? tcd.vote_pattern        : '');
+  const tcdStat = cti ? cti.news           : '';
+  const tcdInc  = cti ? cti.foreign_policy : '';
+  const tcdBloc = tcd && tcd.blocs.length ? tcd.blocs[0]                    : 'its regional bloc';
+
+  /* Pre-shuffled arrays to avoid same treaty/resolution/stat repeating every generation */
   const pickedRes = _pickN(td.resolutions, Math.min(6, td.resolutions.length));
-  const pickedTr  = _pickN(td.treaties, Math.min(6, td.treaties.length));
-  const pickedSt  = _pickN(td.stats, Math.min(6, td.stats.length));
-  const pickedInc = _pickN(td.incidents, Math.min(6, td.incidents.length));
-  const pickedOp  = _pickN(td.operative, Math.min(4, td.operative.length));
+  const pickedTr  = _pickN(td.treaties,    Math.min(6, td.treaties.length));
+  const pickedSt  = _pickN(td.stats,       Math.min(6, td.stats.length));
+  const pickedInc = _pickN(td.incidents,   Math.min(6, td.incidents.length));
+  const pickedOp  = _pickN(td.operative,   Math.min(4, td.operative.length));
+
+  /* WHY_IT_WORKS — varied by index so each POI gets a different framing */
+  const whyPool = [
+    `Exposes the gap between ${target}'s stated position and its documented treaty obligations on ${topic}.`,
+    `Forces ${target} to account for its own legal record rather than taking a principled position it has not itself honoured.`,
+    `Places ${target} in a position where it must either admit non-compliance or explain an inconsistency already in the public record.`,
+    `Shifts the burden: ${target} cannot advocate stronger obligations for others while its own implementation record on ${topic} remains unverified.`,
+    `Grounds the argument in independently verifiable evidence — the committee can check the record without relying on the delegate's characterization.`,
+    `The question is not adversarial — it is factual. If ${target}'s record is clean, a direct answer costs nothing. If it is not, the silence will be noted.`,
+    `Combines legal obligation with documented conduct, making a general response insufficient and requiring a specific, verifiable commitment.`
+  ];
+
+  /* ARGUMENT_CHAIN — varied templates for merged mode */
+  const chainPool = [
+    `The instrument creates a binding obligation; the documented incident proves the obligation is not being met; the gap is confirmed by independent evidence.`,
+    `Legal commitment + documented non-compliance + independent verification = a case that a denial cannot close without specific, time-bound counter-evidence.`,
+    `Step 1: obligation established. Step 2: implementation shortfall documented. Step 3: the delegate must either rebut the evidence or account for it directly.`,
+    `The resolution created the norm; the treaty created the obligation; the incident proved neither was implemented. A general reaffirmation is not a rebuttal.`,
+    `Obligation → gap → evidence: each element is independently verifiable. The burden is on ${target} to disprove any of the three — a general statement meets none of them.`
+  ];
 
   /* ── Base question factory (surgical / standard) — expanded for variety ── */
   const makeQ = (i) => {
     const res = pickedRes[i % pickedRes.length];
     const tr  = pickedTr[i % pickedTr.length];
-    const st  = pickedSt[i % pickedSt.length];
-    const inc = pickedInc[i % pickedInc.length];
+    /* CTI2 news/foreign_policy override generic TOPIC_DB data for specific countries */
+    const st  = tcdStat || pickedSt[i % pickedSt.length];
+    const inc = tcdInc  || pickedInc[i % pickedInc.length];
     const res2 = pickedRes[(i+1) % pickedRes.length];
     const tr2  = pickedTr[(i+1) % pickedTr.length];
+
+    /* If CTI2 data is available, add high-specificity country-researched questions citing real sources */
+    if (cti) {
+      const ctiQs = [
+        {q:`This delegation's research into ${target}'s national policy on ${topic} finds: ${cti.country_policy.substring(0,200)}. Would the delegate explain how ${target}'s position today is consistent with this documented official record?`, c:`${target} — national policy record (${topic})`},
+        {q:`Sourced from verified news reporting: ${cti.news.substring(0,200)}. Would the distinguished delegate of ${target} reconcile this independently reported information with the claim just advanced?`, c:cti.news.split('.')[0]},
+        {q:`${target}'s bilateral and multilateral commitments on ${topic} are documented as follows: ${cti.foreign_policy.substring(0,200)}. Would the delegate explain how the position articulated today is consistent with those established foreign policy obligations?`, c:`${target} foreign policy record on ${topic}`},
+        {q:`UN documents on record regarding ${target}'s conduct include: ${cti.un_docs.substring(0,200)}. Would the delegate clarify how the position argued today aligns with that independently documented UN record — and provide specific evidence of any shift?`, c:`${target} UN document record on ${topic}`}
+      ];
+      const q = ctiQs[i % ctiQs.length];
+      if (i % 2 === 0 || !hasCustom) return q;
+    }
 
     if (hasCustom && cpContrad) {
       const customQs = [
@@ -2343,10 +2709,15 @@ function _genPOI(prompt) {
         {q:`Would the distinguished delegate of ${target} clarify whether ${target} has ratified ${tr}, and if not, how the delegation justifies advocating obligations it has itself not yet accepted?`,c:tr},
         {q:`Regarding ${target}'s obligations under ${tr}, would the delegate explain what specific domestic implementation measures have been enacted since that instrument entered into force, given documented compliance gaps?`,c:tr},
         {q:`Would the delegation of ${target} confirm whether it has submitted its most recent periodic report to the relevant treaty body under ${tr}, as required — and if not, when it intends to do so?`,c:tr},
-        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations?`,c:tr},
+        {q:`The delegation advocates action consistent with ${tr}. Would the delegate clarify whether ${target} has entered any limiting reservations to that instrument that might constrain its obligations, and how those reservations are reconciled with the position just stated?`,c:tr},
         {q:`${target} is a party to ${tr}. Article obligations under that instrument require specific and measurable implementation. Would the delegate identify the last time ${target}'s domestic compliance was independently verified under that instrument's reporting mechanism?`,c:tr},
         {q:`Would the delegation of ${target} confirm whether it supports the strengthening of enforcement mechanisms under ${tr2} — given that its stated position on ${topic} appears to go further than its own ratification record would support?`,c:tr2},
-        {q:`The delegate has invoked the norms of ${tr}. Would ${target} agree that those norms apply universally — and if so, explain how they square with the implementation record this delegation has on file?`,c:tr}
+        {q:`The delegate has invoked the norms of ${tr}. Would ${target} agree that those norms apply universally — and if so, explain how they square with the implementation record this delegation has on file for that instrument?`,c:tr},
+        ...(tcdGaps?[{q:`This committee has on record that ${target}'s treaty gaps include: ${tcdGaps.substring(0,140)}. Given this documented record, would the delegate explain how the position advocated today is consistent with ${target}'s own legal obligations?`,c:`${target} treaty ratification record`}]:[]),
+        ...(tcdPos?[{q:`${target} is known to ${tcdPos.toLowerCase()}. Yet the delegation is now calling for stronger multilateral obligations under ${tr}. Would the delegate explain how ${target}'s established policy record supports the position just articulated?`,c:`${target} documented policy position`}]:[]),
+        {q:`The delegation has spoken of the importance of ${tr}. Would the delegate clarify: has ${target} accepted the jurisdiction of the treaty's monitoring body, and has it complied with the most recent periodic review cycle — yes or no?`,c:tr},
+        {q:`${tr2} was adopted precisely to address the gaps identified on the issue of ${topic}. Would the delegate explain ${target}'s current status under that instrument and identify any pending national action plan?`,c:tr2},
+        {q:`Would the delegation of ${target} acknowledge that mere ratification of ${tr} is not compliance — and then explain what operational, budgeted, and time-bound measures ${target} has taken since ratification to fulfil its substantive obligations?`,c:tr}
       ];
       return qs[i%qs.length];
     }
@@ -2356,30 +2727,40 @@ function _genPOI(prompt) {
         {q:`Would the delegate clarify ${target}'s vote on ${res}? That resolution called for precisely the action the delegation now advocates. Was the delegation's position at the time consistent with the one presented today?`,c:res},
         {q:`This committee adopted ${res}. ${target} was a member of this body at that time. Would the delegate confirm whether ${target} voted in favour, and if it did not, explain what change in policy accounts for the speech we have just heard?`,c:res},
         {q:`${target} supported the broad language of ${res2} but has on other occasions taken positions that appear to qualify it significantly. Would the delegate clarify how those positions are consistent with the full text of that resolution?`,c:res2},
-        {q:`The voting record on ${res} is available to this committee. Would the delegate explain the position ${target} took at the time, and whether that position is consistent with the one the delegation is advancing today?`,c:res},
-        {q:`${res} passed with broad support. Would the delegate confirm whether ${target} was among the states that endorsed it, and if so, what specific implementation steps ${target} has taken since that vote?`,c:res}
+        {q:`The voting record on ${res} is available to this committee. Would the delegate explain the position ${target} took at the time, and confirm whether that position is consistent with the one the delegation is advancing today?`,c:res},
+        {q:`${res} passed with broad support. Would the delegate confirm whether ${target} was among the states that endorsed it, and if so, identify what specific implementation steps ${target} has taken since that vote?`,c:res},
+        ...(tcdVote?[{q:`${target}'s documented voting pattern reveals: ${tcdVote.substring(0,150)}. In light of this record, would the delegate explain how the position argued today represents a genuine policy shift rather than selective advocacy?`,c:`${target} UN voting record`}]:[]),
+        {q:`The delegation argues that ${res} reflects binding state obligations. Would the delegate confirm whether ${target} voted for that resolution — and if it abstained or voted against, explain which specific operative clauses ${target} found objectionable?`,c:res},
+        {q:`Would the delegate of ${target} explain whether its position on ${topic} today is consistent with how ${target} voted on related resolutions in the past three General Assembly sessions — and provide specific resolution numbers if the answer is yes?`,c:res2},
+        {q:`${res} called for action that the delegation now supports in principle. Would the delegate clarify why ${target} required a multilateral mandate to reach that position, rather than acting unilaterally on the stated conviction?`,c:res}
       ];
       return qs[i%qs.length];
     }
     if (stratHint==='data') {
-      const stClean = st.replace(/^According to [^,]+, /,'').substring(0,80);
+      const stClean = st.replace(/^According to [^,]+, /,'').substring(0,90);
       const qs=[
-        {q:`${st}. Would the distinguished delegate of ${target} reconcile this independently verified data with the position just articulated?`,c:st.split(',')[0].replace(/^According to /,'')},
-        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${stClean} — suggests a different trajectory?`,c:st},
+        {q:`${st}. Would the distinguished delegate of ${target} reconcile this independently verified data point with the position just articulated?`,c:st.split(',')[0].replace(/^According to /,'')},
+        {q:`Would the delegate identify the primary source for the figure cited in the delegation's statement, given that independent analysis — including ${stClean} — suggests a materially different trajectory?`,c:st},
         {q:`The delegation has made quantitative claims regarding ${topic}. Would the delegate explain the discrepancy between the official position and the following independently verified data: ${st}?`,c:st},
-        {q:`${target}'s delegate cited figures on ${topic}. Would the delegation confirm the source and methodology — since data from ${st.split(',')[0]} points to a materially different conclusion?`,c:st},
-        {q:`The data the delegation relies upon appears to conflict with independent findings. Specifically, ${stClean}. Would the delegate either corroborate or challenge that figure, with a source?`,c:st}
+        {q:`${target}'s delegate cited figures on ${topic}. Would the delegation confirm the source and peer-review methodology behind those figures — since ${st.split(',')[0]} arrives at a significantly different conclusion?`,c:st},
+        {q:`The data the delegation relies upon appears to conflict with independent findings. Specifically, ${stClean}. Would the delegate either corroborate or challenge that figure, and provide the authoritative source?`,c:st},
+        {q:`Independent bodies have documented that ${stClean}. Would the delegate of ${target} either challenge the methodology of that finding — citing a specific alternative source — or account for the gap between that data and the claim made in the speech?`,c:st},
+        {q:`If ${target}'s position on ${topic} is correct, the data should reflect it. Would the delegate explain why ${st} — sourced from an independent authority — points in the opposite direction to the claim just advanced?`,c:st}
       ];
       return qs[i%qs.length];
     }
     /* contradiction / default */
     const qs=[
-      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this position with ${inc}, which raised direct questions about ${target}'s own conduct on this issue?`,c:`Documentation of ${inc}`},
+      {q:`The delegation of ${target} advocates strong action on ${topic}. Would the delegate reconcile this position with ${inc}, which raised direct questions about ${target}'s own conduct on precisely this issue?`,c:`Documentation of ${inc}`},
       {q:`Would the distinguished delegate clarify how ${target}'s position today aligns with its conduct under ${tr}, given that ${inc} represents a substantive departure from that instrument's obligations?`,c:tr},
       {q:`${target}'s statement endorses the principles of ${res}. Would the delegation explain how its domestic policy record is consistent with those principles, given the evidence available from ${inc}?`,c:res},
-      {q:`There is a documented gap between the position ${target} is advancing today and the conduct available in the public record. The most relevant example is ${inc}. Would the delegate address that gap directly?`,c:`Documentation of ${inc}`},
+      {q:`There is a documented gap between the position ${target} is advancing today and the conduct available in the public record. The most relevant example is ${inc}. Would the delegate address that gap directly — not in general terms, but specifically?`,c:`Documentation of ${inc}`},
       {q:`Would the delegate of ${target} explain how the position articulated today is consistent with ${target}'s known policy record under ${tr} — particularly in light of ${inc}, which this committee has the means to verify?`,c:tr},
-      {q:`${inc} is a matter of documented public record. ${target}'s position today appears to rely on a narrative that does not fully account for that incident. Would the delegate address the discrepancy?`,c:`Documentation of ${inc}`}
+      {q:`${inc} is a matter of documented public record. ${target}'s position today appears to rely on a narrative that does not fully account for that incident. Would the delegate address the discrepancy on the record?`,c:`Documentation of ${inc}`},
+      ...(tcdPos?[{q:`${target} has consistently positioned itself as ${tcdPos.toLowerCase()}. ${inc} directly challenges that self-characterization. Would the delegate explain how those two realities — the stated position and the documented incident — are reconciled?`,c:`${target} policy record vs. ${inc}`}]:[]),
+      {q:`The delegation has presented a coherent narrative on ${topic}. That narrative, however, does not address ${inc}. Would the delegate explain why — and whether that omission is intentional?`,c:`Documentation of ${inc}`},
+      {q:`${res} and ${tr} together establish both a normative and a legal framework for action on ${topic}. ${target}'s conduct, as documented in ${inc}, appears to fall outside both. Would the delegate explain which framework governs ${target}'s actual behaviour, if not these?`,c:`${res} and ${tr}`},
+      {q:`Would the delegation of ${target} agree that credibility in this chamber requires consistency between stated positions and documented conduct — and if so, address directly why ${inc} does not undermine the credibility of the speech just delivered?`,c:`Documentation of ${inc}`}
     ];
     return qs[i%qs.length];
   };
@@ -2464,6 +2845,13 @@ function _genPOI(prompt) {
   const blocks = [];
   const mergedTags = ['Document Logic','Treaty + News','Resolution Chain','Incident Exposure','Merged Argument'];
 
+  /* CTI2 five-layer source references for advanced POI modes */
+  const ctiDocRef  = cti && cti.un_docs        ? `UN DOCUMENT: ${cti.un_docs.split(';')[0].trim()}`        : pickedTr[0];
+  const ctiNewsRef = cti && cti.news           ? `NEWS SOURCE: ${cti.news.split(';')[0].trim()}`            : pickedInc[0];
+  const ctiCommRef = cti && cti.committee_docs ? `COMMITTEE RECORD: ${cti.committee_docs.split(';')[0].trim()}` : `First Committee / ${topic.substring(0,30)} session records`;
+  const ctiFPRef   = cti && cti.foreign_policy ? `FOREIGN POLICY: ${cti.foreign_policy.substring(0,120)}`  : '';
+  const ctiCPRef   = cti && cti.country_policy ? `NATIONAL POLICY: ${cti.country_policy.substring(0,120)}` : '';
+
   if (thinking === 'cascade') {
     const chain = makeCascadeChain();
     chain.forEach((step, i) => {
@@ -2474,8 +2862,9 @@ function _genPOI(prompt) {
 STRATEGY_TAG: Cascade Level ${i+1} — ${step.tag}
 QUESTION: ${step.q}
 LOGIC_STEP: ${step.logic}
-DOCUMENT_LOGIC: ${tr} → escalating pressure chain → gap exposed at level ${i+1} of ${chain.length}
-NEWS_PROOF: ${inc} — corroborating evidence for this cascade level
+DOCUMENT_LOGIC: ${ctiDocRef} → escalating pressure chain → gap exposed at level ${i+1} of ${chain.length}
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: ${step.logic} Each level builds on the admission or evasion of the prior question, constructing an inescapable logical trap across the exchange.
 COUNTER_DEFENSE: ${target} may deflect to generalities — the cascade structure means each deflection is itself the evidence of bad faith that the next POI will exploit.
 [POI_END]`);
@@ -2484,6 +2873,7 @@ COUNTER_DEFENSE: ${target} may deflect to generalities — the cascade structure
 STRATEGY_TAG: Cascade Level ${i+1} — ${step.tag}
 QUESTION: ${step.q}
 CITATION: ${step.c}
+SOURCED_FROM: ${ctiDocRef}${ctiFPRef ? ' | ' + ctiFPRef.substring(0,80) : ''}
 LOGIC_STEP: ${step.logic}
 WHY_IT_WORKS: Part of a ${chain.length}-step cascade: each question builds on the delegate's prior response, escalating the logical pressure until a specific verifiable commitment is required.
 [POI_END]`);
@@ -2499,8 +2889,9 @@ WHY_IT_WORKS: Part of a ${chain.length}-step cascade: each question builds on th
         blocks.push(`[POI_START]
 STRATEGY_TAG: Socratic Trap — ${trap.tag}
 QUESTION: ${trap.q}
-DOCUMENT_LOGIC: ${tr} → any answer the delegate gives confirms the contradiction
-NEWS_PROOF: ${inc} — factual backstop for the trap
+DOCUMENT_LOGIC: ${ctiDocRef} → any answer the delegate gives confirms the contradiction
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: The question is structured so that any direct answer — yes or no — advances the questioner's argument. Only evasion is available to the delegate, and visible evasion is itself damaging.
 COUNTER_DEFENSE: If ${target} refuses to answer directly, call attention to the refusal as itself revealing.
 [POI_END]`);
@@ -2509,6 +2900,7 @@ COUNTER_DEFENSE: If ${target} refuses to answer directly, call attention to the 
 STRATEGY_TAG: Socratic Trap — ${trap.tag}
 QUESTION: ${trap.q}
 CITATION: ${trap.c}
+SOURCED_FROM: ${ctiDocRef}${ctiNewsRef ? ' | ' + ctiNewsRef.substring(0,80) : ''}
 WHY_IT_WORKS: ${trap.why}
 [POI_END]`);
       }
@@ -2523,8 +2915,10 @@ WHY_IT_WORKS: ${trap.why}
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${exp.tag}
 QUESTION: ${exp.q}
-DOCUMENT_LOGIC: Multi-instrument exposure: legal + factual + incident + normative failure converge simultaneously
-NEWS_PROOF: ${inc} — one of four simultaneous proof layers deployed
+NATIONAL_POLICY: ${ctiCPRef || `${target}'s official position on ${topic}`}
+DOCUMENT_LOGIC: ${ctiDocRef} — multi-instrument exposure: legal + UN record + normative failure converge simultaneously
+NEWS_PROOF: ${ctiNewsRef}
+COMMITTEE_RECORD: ${ctiCommRef}
 ARGUMENT_CHAIN: Overload strategy: the delegate cannot address four independent exposures coherently within the time allowed. Any partial response leaves the remaining dimensions standing as unrebutted.
 COUNTER_DEFENSE: If ${target} tries to rebut only one layer, explicitly note for the record that three remain unanswered. The committee will draw its own inference.
 [POI_END]`);
@@ -2533,6 +2927,7 @@ COUNTER_DEFENSE: If ${target} tries to rebut only one layer, explicitly note for
 STRATEGY_TAG: ${exp.tag}
 QUESTION: ${exp.q}
 CITATION: ${exp.c}
+SOURCED_FROM: ${ctiDocRef}${ctiNewsRef ? ' | ' + ctiNewsRef.substring(0,80) : ''}
 WHY_IT_WORKS: ${exp.why}
 [POI_END]`);
       }
@@ -2544,21 +2939,34 @@ WHY_IT_WORKS: ${exp.why}
       const q   = makeQ(i);
       const tr  = pickedTr[i % pickedTr.length];
       const inc = pickedInc[i % pickedInc.length];
+      const why = whyPool[i % whyPool.length];
+      const chain = chainPool[i % chainPool.length];
+      const docLogicGap = tcdGaps ? `known gap: ${tcdGaps.substring(0,120)}` : 'incomplete implementation record on the instrument';
+      /* CTI2 five-layer source citations */
+      const ctiDocLine  = cti && cti.un_docs        ? `UN DOCUMENT: ${cti.un_docs.split(';')[0].trim()}` : tr;
+      const ctiNewsLine = cti && cti.news           ? `NEWS SOURCE: ${cti.news.split(';')[0].trim()}`    : inc;
+      const ctiCommLine = cti && cti.committee_docs ? `COMMITTEE RECORD: ${cti.committee_docs.split(';')[0].trim()}` : '';
       if (isMerged) {
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${mergedTags[i%mergedTags.length]}
 QUESTION: ${q.q}
-DOCUMENT_LOGIC: ${tr} → binding obligation to ${topic.substring(0,40)} → gap: ${tcd?tcd.treaty_gaps:'incomplete implementation record on the instrument'}
-NEWS_PROOF: ${inc} — documented by Reuters, UN News, and relevant UN monitoring bodies
-ARGUMENT_CHAIN: The instrument creates a binding obligation; the documented incident proves the obligation is not being met; the gap is therefore confirmed by independent evidence, not merely alleged.
-COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementation is in progress — but the timeline and independent documentation undermine any claim of good-faith compliance within a reasonable timeframe.
+NATIONAL_POLICY: ${tcdGaps ? tcdGaps.substring(0,160) : `${target}'s national policy record on ${topic}`}
+DOCUMENT_LOGIC: ${ctiDocLine} → binding obligation on ${topic.substring(0,40)} → ${docLogicGap.substring(0,80)}
+NEWS_PROOF: ${ctiNewsLine}
+COMMITTEE_RECORD: ${ctiCommLine || `First Committee / ${topic.substring(0,30)} — relevant session records`}
+ARGUMENT_CHAIN: ${chain}
+COUNTER_DEFENSE: ${target} may argue the situation is complex or that implementation is in progress — but the documented record and independent UN sources undermine any claim of good-faith compliance.
 [POI_END]`);
       } else {
+        const citeLine = cti
+          ? `${ctiDocLine}${ctiNewsLine ? ' | ' + ctiNewsLine : ''}${ctiCommLine ? ' | ' + ctiCommLine : ''}`
+          : q.c;
         blocks.push(`[POI_START]
 STRATEGY_TAG: ${strategyTagMap[stratHint]}
 QUESTION: ${q.q}
 CITATION: ${q.c}
-WHY_IT_WORKS: Exposes the gap between ${target}'s stated position and its documented treaty obligations and established policy record on ${topic}.
+SOURCED_FROM: ${citeLine}
+WHY_IT_WORKS: ${why}
 [POI_END]`);
       }
     }
@@ -2615,23 +3023,33 @@ function _genIntel(prompt) {
   const wantsSpeech = /COUNTER_SPEECH_START/i.test(prompt);
   const wantsPOI    = /INTEL_POI_START/i.test(prompt);
 
-  const td = _topicDataFor(notes+' '+context, intelComAbbr);
+  const td  = _topicDataFor(notes+' '+context, intelComAbbr);
+  const cti = _ctiFor(speaker, notes+' '+context);   /* CTI2 five-layer intel for the speaking delegation */
   const [res1,res2] = _pickN(td.resolutions,2);
   const [tr1,tr2]   = _pickN(td.treaties,2);
   const [st1,st2]   = _pickN(td.stats,2);
   const inc1 = _pick(td.incidents);
 
+  /* CTI2 priority overrides */
+  const intelStat   = cti && cti.news           ? cti.news.split(';')[0].trim()           : st1;
+  const intelInc    = cti && cti.foreign_policy ? cti.foreign_policy.substring(0,200)     : inc1;
+  const intelDoc    = cti && cti.un_docs        ? cti.un_docs.split(';')[0].trim()        : res1;
+  const intelPolicy = cti && cti.country_policy ? cti.country_policy.substring(0,200)    : '';
+  const intelComDoc = cti && cti.committee_docs ? cti.committee_docs.split(';')[0].trim() : '';
+
   let out='';
 
   if (wantsSpeech) {
+    const policyLine = intelPolicy ? `The documented national policy of ${speaker} states: ${intelPolicy}. ` : '';
+    const docLine    = intelDoc !== res1 ? `The UN record confirms: ${intelDoc}. ` : '';
     out+=`[COUNTER_SPEECH_START]
 Honorable chair — the delegation of ${myCountry} takes the floor in direct response to the statement delivered by the distinguished delegate of ${speaker}.
 
-The delegation heard ${claims.length>0?`claims regarding "${claims[0].substring(0,80)}"`:'a number of assertions that warrant direct engagement'}. The record, however, must be stated plainly. ${st1}. This data — drawn from an authoritative and independent source — does not support the characterization offered by the delegation of ${speaker}.
+The delegation heard ${claims.length>0?`claims regarding "${claims[0].substring(0,80)}"`:'a number of assertions that warrant direct engagement'}. The record, however, must be stated plainly. ${intelStat}. This information — drawn from independently verified sources — does not support the characterization offered by the delegation of ${speaker}.
 
-Furthermore, this committee adopted ${res1}, which establishes obligations all member states — including ${speaker} — have undertaken. The delegation of ${myCountry} submits that the position just articulated fails to account for those obligations. The committee will also recall ${inc1}, which represents a direct and documented example of the consequences of the failure to implement commitments made on this floor.
+${policyLine}${docLine}Furthermore, this committee adopted ${res1}, which establishes obligations all member states — including ${speaker} — have undertaken. The delegation of ${myCountry} submits that the position just articulated fails to account for those obligations. The committee will also recall ${intelInc}, which represents a direct and documented example of the gap between stated commitments and actual conduct.
 
-The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td.operative).toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'urgently ').replace(/^encourages /,'encourage all states to ')}. We stand prepared to work with any delegation committed to a substantive, verifiable, and time-bound outcome. Thank you, chair.
+${intelComDoc ? `For the committee's reference: ${intelComDoc}.\n\n` : ''}The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td.operative).toLowerCase().replace(/^calls upon all member states to /,'').replace(/^urges /,'urgently ').replace(/^encourages /,'encourage all states to ')}. We stand prepared to work with any delegation committed to a substantive, verifiable, and time-bound outcome. Thank you, chair.
 [COUNTER_SPEECH_END]
 
 `;
@@ -2642,10 +3060,22 @@ The delegation of ${myCountry} therefore calls upon this committee to ${_pick(td
       `stated position on ${td.label}`, `treaty compliance assertions`, `data and statistics cited`, `proposed operative framework`
     ];
     const poiQs=[
-      {claim:poiClaims[0]||'opening position',contra:`This conflicts with ${res1} and the documented record under ${tr1}`,q:`The delegate stated "${(poiClaims[0]||'').substring(0,70)}${(poiClaims[0]||'').length>70?'…':''}". Would the delegation reconcile this claim with ${res1}, which this body adopted and which obligates all member states — including ${speaker}?`,c:res1},
-      {claim:poiClaims[1]||'treaty position',contra:`${speaker}'s ratification record raises questions under ${tr1}`,q:`Regarding the position on ${(poiClaims[1]||'treaty compliance').substring(0,60)}, would the delegate confirm whether ${speaker} has ratified ${tr1}, and if so, explain how the domestic implementation record aligns with the position just stated?`,c:tr1},
-      {claim:poiClaims[2]||'data claims',contra:`Independent data contradicts the figures or framing cited`,q:`The delegate's statement referenced "${(poiClaims[2]||'data').substring(0,50)}". Would the delegation reconcile this with ${st1}, which comes from an authoritative independent source?`,c:st1},
-      {claim:poiClaims[3]||'proposal',contra:`The proposal does not address the established legal framework or the documented factual record`,q:`Regarding the proposal on ${(poiClaims[3]||'the topic').substring(0,50)}: in light of ${inc1}, how does ${speaker}'s position translate into specific, independently verifiable commitments — beyond what has been stated on this floor?`,c:`Documented evidence of ${inc1}`}
+      {claim:poiClaims[0]||'opening position',
+       contra: intelPolicy ? `${speaker}'s own national policy states: ${intelPolicy.substring(0,120)}` : `This conflicts with ${res1} and the documented record under ${tr1}`,
+       q:`The delegate stated "${(poiClaims[0]||'').substring(0,70)}${(poiClaims[0]||'').length>70?'…':''}". Would the delegation reconcile this claim with ${intelDoc !== res1 ? intelDoc.substring(0,120) : res1}, which this body adopted and which obligates all member states — including ${speaker}?`,
+       c: intelDoc !== res1 ? `UN DOCUMENT: ${intelDoc.substring(0,80)}` : res1},
+      {claim:poiClaims[1]||'treaty position',
+       contra:`${speaker}'s foreign policy record reveals: ${cti && cti.foreign_policy ? cti.foreign_policy.substring(0,120) : `ratification gaps under ${tr1}`}`,
+       q:`Regarding the position on ${(poiClaims[1]||'treaty compliance').substring(0,60)}, would the delegate confirm whether ${speaker} has ratified ${tr1}, and if so, explain how the domestic implementation record aligns with the position just stated — given the documented foreign policy record?`,
+       c: cti && cti.foreign_policy ? `FOREIGN POLICY: ${cti.foreign_policy.substring(0,60)}` : tr1},
+      {claim:poiClaims[2]||'data claims',
+       contra:`Independent sources contradict the figures or framing cited`,
+       q:`The delegate's statement referenced "${(poiClaims[2]||'data').substring(0,50)}". Would the delegation reconcile this with the following independently sourced information: ${intelStat.substring(0,120)}?`,
+       c: cti && cti.news ? `NEWS SOURCE: ${cti.news.split(';')[0].substring(0,80)}` : st1},
+      {claim:poiClaims[3]||'proposal',
+       contra:`The proposal does not address the documented policy gap or UN record on file`,
+       q:`Regarding the proposal on ${(poiClaims[3]||'the topic').substring(0,50)}: how does ${speaker}'s position translate into specific, independently verifiable commitments — given that ${intelComDoc || inc1} directly bears on this question?`,
+       c: intelComDoc ? `COMMITTEE RECORD: ${intelComDoc.substring(0,80)}` : `Documented evidence of ${inc1}`}
     ];
     poiQs.slice(0,4).forEach(p=>{
       out+=`[INTEL_POI_START]
